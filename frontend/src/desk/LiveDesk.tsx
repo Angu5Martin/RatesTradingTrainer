@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { rememberedSession, useDesk } from "./store";
 import { curveHistory, focusOf, latest, pnlNow, seen } from "./derive";
 import { StartPanel } from "./StartPanel";
@@ -8,6 +8,8 @@ import { Tape } from "./Tape";
 import { Reference } from "./Reference";
 import { LeaveDialog } from "./LeaveDialog";
 import { Debrief } from "./Debrief";
+import { GuideSheet } from "../guide/GuideSheet";
+import { DESK_GUIDES } from "../guide/guides";
 import { DecisionLayout, ResultLayout } from "./layouts";
 import { type Exposures, noAdded, rowsFromEvents } from "./RiskPanel";
 import { SKEW_BIG, SKEW_STEP, stepQuote } from "./tickets/QuoteTicket";
@@ -45,6 +47,8 @@ export function LiveDesk({ onExit }: { onExit: () => void }) {
   const [showRef, setShowRef] = useState(false);
   const [dismissed, setDismissed] = useState<string | null>(null);
   const [leaving, setLeaving] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);              // the How To guide: an overlay, so the desk underneath keeps its state
+  const closeGuide = useCallback(() => setShowGuide(false), []);
 
   useEffect(() => {                                   // a reload lands back in the session in progress (on its pending result, never past it)
     const id = rememberedSession();
@@ -61,7 +65,7 @@ export function LiveDesk({ onExit }: { onExit: () => void }) {
     function onKey(e: KeyboardEvent) {
       const st = useDesk.getState();
       if (e.key === "Escape") { if (leaving) setLeaving(false); else if (showRef) setShowRef(false); else st.disarm(); return; }
-      if (leaving || showRef) return;                 // a dialog is open: no key may arm, commit or continue behind it
+      if (leaving || showRef || showGuide) return;    // a dialog is open: no key may arm, commit or continue behind it
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === "Enter") {
         if (st.phase === "awaiting") { e.preventDefault(); st.arm(); }
@@ -87,10 +91,15 @@ export function LiveDesk({ onExit }: { onExit: () => void }) {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [showRef, leaving]);
+  }, [showRef, leaving, showGuide]);
 
   if (s.phase === "idle" || s.phase === "starting" || (s.phase === "error" && !s.sessionId)) {
-    return <StartPanel onStart={(l, sd) => void s.start(l, sd)} onResume={(id) => void s.resume(id)} busy={s.phase === "starting"} error={s.error} />;
+    return (
+      <>
+        <StartPanel onStart={(l, sd) => void s.start(l, sd)} onResume={(id) => void s.resume(id)} busy={s.phase === "starting"} error={s.error} onGuide={() => setShowGuide(true)} />
+        {showGuide ? <GuideSheet guides={DESK_GUIDES} onClose={closeGuide} /> : null}
+      </>
+    );
   }
   if (s.phase === "finished") return <Debrief onNewEpisode={s.reset} onExit={() => { s.reset(); onExit(); }} />;
   if (!view || !s.episode) return <div className="center dim">{s.error ?? "Loading…"}</div>;
@@ -110,7 +119,7 @@ export function LiveDesk({ onExit }: { onExit: () => void }) {
     <div className="desk">
       <TopBar episode={s.episode} round={view.episode.round} phase={s.phase} book={settled || bookless ? null : book} conditions={conditions} pnl={pnlNow(s)}
         onReference={() => setShowRef(true)} onLevels={() => setLeaving(true)} levelsLocked={s.phase === "submitting" || s.phase === "continuing"} />
-      <Workflow phase={s.phase} kind={view.kind} />
+      <Workflow phase={s.phase} kind={view.kind} onGuide={() => setShowGuide(true)} />
       {settled && s.pending ? (
         <ResultLayout pending={s.pending} book={book} market={market} curves={curves} transcript={s.transcript} dv01After={dv01AfterDecision(s.pending.result)} after={exposuresAfterDecision(s.pending.result)} pnlTotal={pnlNow(s)} busy={s.phase === "continuing"} onContinue={() => void s.next()} />
       ) : obs && draft && s.sessionId ? (
@@ -122,6 +131,7 @@ export function LiveDesk({ onExit }: { onExit: () => void }) {
       <Tape transcript={s.transcript} />
       {leaving ? <LeaveDialog episode={s.episode} round={view.episode.round} phase={s.phase} onStay={() => setLeaving(false)} onLeave={() => { setLeaving(false); s.leave(); }} /> : null}
       {showRef ? <Reference card={view.risk_card} onClose={() => setShowRef(false)} /> : null}
+      {showGuide ? <GuideSheet guides={DESK_GUIDES} onClose={closeGuide} /> : null}
     </div>
   );
 }

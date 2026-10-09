@@ -12,7 +12,7 @@ const LEVELS = [
   { level: 5, title: "Information and views", text: "Named clients, a research view, a data release, a limit cut.", ready: true },
 ] as const;
 
-export function StartPanel(p: { onStart: (level: number, seed?: number) => void; onResume: (id: string) => void; busy: boolean; error: string | null }) {
+export function StartPanel(p: { onStart: (level: number, seed?: number) => void; onResume: (id: string) => void; busy: boolean; error: string | null; onGuide?: () => void }) {
   const [seed, setSeed] = useState("");
   const [live, setLive] = useState<LiveSession[]>([]);
   const [confirm, setConfirm] = useState<string | null>(null);                       // a session id, or "all", awaiting a second click
@@ -34,7 +34,7 @@ export function StartPanel(p: { onStart: (level: number, seed?: number) => void;
   const seedBad = seedNum !== undefined && !Number.isInteger(seedNum);
   return (
     <div className="start">
-      <Panel title="LIVE DESK" aside={<span className="dim">choose a level</span>}>
+      <Panel title="LIVE DESK" aside={<span className="dim">choose a level{p.onGuide ? <> · <button className="btn btn-sm" onClick={p.onGuide}>How to trade the desk</button></> : null}</span>}>
         <table className="tbl levels">
           <tbody>
             {LEVELS.map((l) => (

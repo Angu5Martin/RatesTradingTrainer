@@ -7,7 +7,7 @@ import type { GameSummary, LevelInfo } from "./types";
 const MIX_LABEL: Record<string, string> = { mixed: "Mixed", probability: "Probability only", world: "World knowledge only" };
 
 /** The lobby: pick a level, customise the table, start; or pick up an unfinished game. */
-export function Setup() {
+export function Setup({ onGuide }: { onGuide?: () => void }) {
   const s = useGame();
   const levels = s.list?.levels ?? [];
   const [level, setLevel] = useState(1);
@@ -29,6 +29,7 @@ export function Setup() {
         <h1>MARKET MAKING GAME</h1>
         <p className="dim">Make markets against bots on several questions at once. Each market asks for a number: a probability puzzle (dice, coins, cards) or a fact about the world. You post a bid and an offer;
           bots trade against them; the market settles on the verified answer. Spread, skew and size are yours to manage across the whole table. Turn-based: nothing moves until you play the round.</p>
+        {onGuide ? <div className="row-gap"><button className="btn btn-sm" onClick={onGuide}>How to play well: the guides</button><span className="dim"> overview · world markets · probability markets</span></div> : null}
       </header>
       {s.error ? <div className="alert" role="alert">{s.error}</div> : null}
       <div className="gm-levels" role="radiogroup" aria-label="difficulty level">

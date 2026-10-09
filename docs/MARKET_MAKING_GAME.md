@@ -4,6 +4,8 @@ A separate, standalone game inside the workstation: you make markets against bot
 
 Open it from the left rail (**MARKET MAKING GAME**, `#/game`). From a terminal: `./trainer ui` (or the macOS launcher), then pick the area.
 
+**How to play well** is a separate set of guides, opened in the app with **How to** (lobby, table and debrief) and readable here: [the overview](MARKET_MAKING_GAME/OVERVIEW.md) (quotes, bots, width, skew, size, the debrief), [world markets](MARKET_MAKING_GAME/WORLD_MARKETS.md) and [probability markets](MARKET_MAKING_GAME/PROBABILITY_MARKETS.md). This document is the rules and the design; the guides are the playbook.
+
 ## How a game works
 
 Each market asks for **one number**. You post a **bid** and an **offer** and a **size** (lots per side). Bots trade against your *actual* quotes; each market settles on the verified answer. You manage spread, skew and size across the whole table.
@@ -26,6 +28,18 @@ Then you see a report, may re-quote, pause, resume or acknowledge any market, an
 | opening later | listed with its opening round; nothing about it is shown until it opens |
 
 Limits: a **position limit** per market (a side that would breach it is *closed*: nobody can trade it) and, at level 3, a **firm-wide risk budget** (trades that would add risk beyond it do not happen; trades that reduce risk always do).
+
+## The table's layout
+
+The table adapts to how many markets are **live** (active, shocked or paused), a deterministic function of the game state, so nothing moves while you type:
+
+| Live markets | Cards | What a card adds |
+|---|---|---|
+| 1–2 (roomy) | wide; a single market splits into quote and context columns | the full question, the rules in force (and a world question's settlement definition), the last four trades |
+| 3–4 (standard) | as many columns as fit (three in a row where possible) | the rules in force, the last three trades |
+| 5+ (dense) | narrower columns, the side panel narrower too | the first lines of the rules in force, the last trade |
+
+Every card always has the same controls (bid, offer, size, quote, nudges, acknowledge, pause) and, when shocked, the shock's heading and text on the card itself. Settled markets move to a compact list below the live ones. The summary strip shows the round, total P&L (split settled / open), market counts (live, settled, opening, shocked, paused), net and gross inventory and, at level 3, the risk budget. The side panel keeps the portfolio in view and puts the selected market and the last round's report in two tabs; playing a round opens the report, and selecting a market (on its card, in the portfolio, in the report or in the shocked banner) opens its detail. Below 1,100 px the side panel stacks under the markets. None of this changes what is sent to the server.
 
 ## Levels
 
@@ -129,6 +143,8 @@ For world questions the fair value is the crowd's belief, which is deliberately 
 | `src/rates_trainer/mmgame/` | `rng`, `probability`, `world` (+ `data/world_questions.toml`), `levels`, `markets`, `bots`, `generator`, `game`, `debrief`, `store`. Imports nothing from the rates engine, the question bank or the episodes (a test checks it) |
 | `src/rates_trainer/web/mmgame_routes.py` | the HTTP API (`/api/mmgame`), mounted by one line in `web/app.py` |
 | `frontend/src/game/` | lobby, table, market cards, detail, portfolio, report, debrief |
+| `docs/MARKET_MAKING_GAME/*.md`, `frontend/src/guide/` | the How To guides, and the small Markdown renderer that shows the same files in the app |
+| `scripts/measure_game_policies.py` | plays simple quoting policies through the engine: the source of the guide's measured numbers |
 | `tests/mmgame/`, `tests/web/test_mmgame_api.py` | engine, shocks, bots, hidden information, replay, debrief, HTTP |
 | `frontend/src/__tests__/game*.ts(x)`, `frontend/e2e/game.spec.ts` | unit, component (real recorded payloads, `scripts/dump_game_fixtures.py`) and end-to-end against the real server |
 

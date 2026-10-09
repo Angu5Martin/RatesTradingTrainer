@@ -163,6 +163,7 @@ Frontend tests and end-to-end tests have their own dependencies and setup.
 - [`docs/UI.md`](docs/UI.md) — workstation interface and interaction design
 - [`docs/CURRICULUM.md`](docs/CURRICULUM.md) — question coverage, curriculum mapping and source audit
 - [`docs/MARKET_MAKING_GAME.md`](docs/MARKET_MAKING_GAME.md) — the multi-market game: levels, shocks, bots, accounting, debrief, verification
+- How To guides, also readable in the app (**How to** in the Live Desk and in the game): [`docs/LIVE_DESK_GUIDE.md`](docs/LIVE_DESK_GUIDE.md), and for the game [`docs/MARKET_MAKING_GAME/OVERVIEW.md`](docs/MARKET_MAKING_GAME/OVERVIEW.md), [`WORLD_MARKETS.md`](docs/MARKET_MAKING_GAME/WORLD_MARKETS.md) and [`PROBABILITY_MARKETS.md`](docs/MARKET_MAKING_GAME/PROBABILITY_MARKETS.md)
 
 ## Scope
 

@@ -16,13 +16,14 @@ export function activeStage(phase: Phase, kind: Kind | null): Stage {
   }
 }
 
-export function Workflow({ phase, kind }: { phase: Phase; kind: Kind | null }) {
+export function Workflow({ phase, kind, onGuide }: { phase: Phase; kind: Kind | null; onGuide?: () => void }) {
   const at = STAGES.indexOf(activeStage(phase, kind));
   return (
     <nav className="workflow" aria-label="Trading loop">
       {STAGES.map((s, i) => (
         <span key={s} className={`wf-step ${i === at ? "wf-now" : i < at ? "wf-done" : ""}`} aria-current={i === at ? "step" : undefined}>{s}</span>
       ))}
+      {onGuide ? <button className="wf-help" onClick={onGuide} title="How to trade the desk: decision process, quoting, risk and hedging, worked examples">How to</button> : null}
     </nav>
   );
 }

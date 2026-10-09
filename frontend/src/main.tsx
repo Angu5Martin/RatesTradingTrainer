@@ -7,5 +7,6 @@ import "./styles/desk.css";
 import "./styles/shell.css";
 import "./styles/train.css";
 import "./styles/game.css";
+import "./styles/guide.css";
 
 createRoot(document.getElementById("root")!).render(<StrictMode><App /></StrictMode>);

@@ -1,0 +1,50 @@
+/* HOW TO · BEST PRACTICES: the guides from docs/ in a sheet over the current screen. Readable measure, the desk's tokens, no new colours. */
+.guide-overlay { align-items: stretch; justify-content: flex-end; }
+.guide-sheet { width: min(1120px, 100vw); max-height: none; height: 100%; display: flex; flex-direction: column; overflow: hidden; border-width: 0 0 0 1px; }
+.guide-h { align-items: center; gap: 12px; flex-wrap: wrap; flex: 0 0 auto; }
+.guide-h h2 { white-space: nowrap; }
+.guide-tabs { display: inline-flex; gap: 0; border: 1px solid var(--line-2); }
+.guide-tabs .seg-b { border: 0; }
+.guide-src { font: 400 var(--fs-0) var(--font-num); }
+.guide-main { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 220px minmax(0, 1fr); }
+.guide-toc { border-right: 1px solid var(--line); overflow: auto; padding: 10px 0; }
+.guide-toc ul { list-style: none; margin: 0; padding: 0; }
+.guide-toc button { display: block; width: 100%; text-align: left; background: none; border: 0; border-left: 2px solid transparent; color: var(--text-2); padding: 5px 12px; font-size: var(--fs-1); line-height: 1.35; cursor: pointer; }
+.guide-toc button:hover, .guide-toc button:focus-visible { color: var(--text-1); background: var(--bg-2); border-left-color: var(--accent); }
+.guide-body { overflow: auto; padding: 14px 28px 48px; scroll-padding-top: 8px; }
+
+/* the document */
+.md { max-width: 860px; font-size: var(--fs-2); line-height: 1.6; color: var(--text-1); }
+.md p { margin: 0 0 10px; }
+.md .md-h { scroll-margin-top: 8px; font-weight: 600; line-height: 1.3; }
+.md .md-h1 { font-size: var(--fs-5); margin: 0 0 10px; letter-spacing: .01em; }
+.md .md-h2 { font-size: var(--fs-4); margin: 28px 0 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+.md .md-h3 { font-size: var(--fs-3); margin: 20px 0 8px; color: var(--text-1); }
+.md .md-h4 { font-size: var(--fs-2); margin: 16px 0 6px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-2); }
+.md hr { border: 0; border-top: 1px solid var(--line); margin: 16px 0; }
+.md code { font: 400 .92em var(--font-num); background: var(--bg-2); padding: 0 4px; border-radius: var(--radius); }
+.md .md-code { background: var(--bg-2); border: 1px solid var(--line); border-left: 2px solid var(--accent); padding: 10px 12px; overflow-x: auto; margin: 0 0 12px; }
+.md .md-code code { background: none; padding: 0; font-size: var(--fs-1); line-height: 1.55; white-space: pre; }
+.md ul, .md ol { margin: 0 0 10px; padding-left: 22px; } .md li { margin: 3px 0; } .md li > ul, .md li > ol { margin: 4px 0; }
+.md ul.md-checks { list-style: none; padding-left: 4px; } .md .md-box { color: var(--accent); margin-right: 8px; font-size: var(--fs-3); }
+.md blockquote { margin: 0 0 10px; padding: 6px 12px; border-left: 2px solid var(--line-2); color: var(--text-2); }
+.md a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); } .md a:hover { border-bottom-style: solid; }
+.md .md-ref { border-bottom: 1px dotted var(--text-3); cursor: help; }
+.md .md-table { overflow-x: auto; margin: 0 0 12px; }
+.md .md-table .tbl { min-width: 100%; width: auto; } .md .md-table td, .md .md-table th { vertical-align: top; white-space: normal; line-height: 1.45; padding-top: 4px; padding-bottom: 4px; }
+.md .md-table th { white-space: nowrap; }
+.md .md-details { border: 1px solid var(--line); background: var(--bg-1); margin: 0 0 12px; }
+.md .md-details > summary { cursor: pointer; padding: 7px 12px; font-weight: 600; color: var(--text-1); list-style-position: inside; }
+.md .md-details > summary:hover, .md .md-details > summary:focus-visible { background: var(--bg-2); }
+.md .md-details[open] > summary { border-bottom: 1px solid var(--line); }
+.md .md-details-b { padding: 10px 14px 2px; }
+
+@media (max-width: 860px) {
+  .guide-main { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+  .guide-toc { border-right: 0; border-bottom: 1px solid var(--line); max-height: 30vh; padding: 4px 0; }
+  .guide-body { padding: 12px 14px 40px; }
+}
+
+/* the Live Desk's How To entry, at the end of the trading-loop rail (the top bar has no room to spare at 1280px) */
+.workflow .wf-help { margin-left: auto; background: none; border: 0; padding: 2px 8px; font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--accent); cursor: pointer; }
+.workflow .wf-help:hover, .workflow .wf-help:focus-visible { color: var(--text-1); background: var(--accent-dim); border-radius: var(--radius); }

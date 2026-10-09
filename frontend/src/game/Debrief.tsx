@@ -8,7 +8,7 @@ const dp = (m: DebriefMarket) => Math.max(0, Math.min(4, (String(m.lot_value).le
 const CAUSE: Record<string, string> = { good: "good trades", luck: "unlucky (price was fair)", lucky: "lucky (price was poor)", stale: "stale quote", mispriced: "mispriced quote", informed: "lost to an informed trader", "informed-priced": "informed trader, but spread paid for it" };
 
 /** The debrief: the answers, every trade, and where the P&L came from. Opened only after the last market has resolved; it names the hidden things. */
-export function Debrief() {
+export function Debrief({ onGuide }: { onGuide?: () => void }) {
   const s = useGame();
   const d = s.debrief;
   useEffect(() => { if (!d) void s.loadDebrief(); }, [d]);                           // eslint-disable-line react-hooks/exhaustive-deps
@@ -19,7 +19,7 @@ export function Debrief() {
       <header className="gm-intro">
         <h1>DEBRIEF</h1>
         <p className="dim">Level {d.level} · seed <span className="num">{d.seed}</span> (replays this exact table) · {d.markets.length} markets · {d.game.trades} trades</p>
-        <div className="row-gap"><button className="btn btn-primary" onClick={s.leave}>Back to the lobby</button></div>
+        <div className="row-gap"><button className="btn btn-primary" onClick={s.leave}>Back to the lobby</button>{onGuide ? <> <button className="btn" onClick={onGuide}>How to read this debrief</button></> : null}</div>
       </header>
 
       <Panel title="WHERE THE P&L CAME FROM" aside={<span className="dim">credits</span>}>

@@ -198,3 +198,106 @@ describe("hidden information on the wire", () => {
     }
   });
 });
+
+describe("the layout adapts to the table", () => {
+  type M = (typeof FX.start.markets)[number];
+  const S0 = FX.start, S3 = FX.steps[2].state, S5 = FX.steps[4].state;                       // the start; round 3 (M3 shocked); round 5 (M1, M2 resolved)
+  const clone = (m: M, id: string, patch: Partial<M> = {}): M => ({ ...m, id, ...patch });
+  const dealWith = async (markets: M[], base = S0) => {
+    const start = { ...base, markets };
+    h.server = gameServer({ ...FX, start, quoted: start } as GameFixture);
+    return deal();
+  };
+  const grid = () => screen.getByRole("list", { name: "markets" });
+
+  it("density is a pure function of the number of live markets", async () => {
+    const { densityFor } = await import("../game/Table");
+    expect([1, 2, 3, 4, 5, 8].map(densityFor)).toEqual(["roomy", "roomy", "standard", "standard", "dense", "dense"]);
+  });
+
+  it("one live market gets the room: its question, rules in force and recent trades are on the card", async () => {
+    await dealWith([S0.markets[1]]);
+    expect(grid()).toHaveAttribute("data-density", "roomy"); expect(grid()).toHaveAttribute("data-count", "1");
+    const card = screen.getByLabelText("M2 active");
+    expect(within(card).getByLabelText("M2 rules in force")).toHaveTextContent(/3 still to be drawn/);
+    expect(within(card).getByLabelText("M2 recent trades")).toHaveTextContent(/no trades yet/);
+    expect(within(card).getByText(/How many spades are among the 3 cards drawn/)).toBeInTheDocument();
+  });
+
+  it("two live markets are still roomy; a world market then shows its settlement definition on the card", async () => {
+    await dealWith([S0.markets[0], S0.markets[1]]);
+    expect(grid()).toHaveAttribute("data-density", "roomy"); expect(grid()).toHaveAttribute("data-count", "2");
+    expect(within(screen.getByLabelText("M1 active")).getByLabelText("M1 rules in force")).toHaveTextContent(/Settles on the true value of/);
+  });
+
+  it("many live markets get a dense grid with every quote control still there", async () => {
+    const many = Array.from({ length: 7 }, (_, i) => clone(S0.markets[1 + (i % 2)], `M${i + 1}`));
+    await dealWith(many);
+    expect(grid()).toHaveAttribute("data-density", "dense"); expect(grid()).toHaveAttribute("data-count", "7");
+    for (let i = 1; i <= 7; i++) {
+      for (const f of ["bid", "offer", "size"]) expect(screen.getByLabelText(`M${i} ${f}`)).toBeEnabled();
+      expect(screen.getByLabelText(`M${i} widen`)).toBeInTheDocument();
+    }
+    expect(screen.queryByLabelText("M1 recent trades")).toBeNull();                         // dense cards keep the last trade line, not the list
+    expect(screen.getByRole("complementary")).toBeInTheDocument();
+  });
+
+  it("settled markets move to a compact list below and do not count towards the density", async () => {
+    await dealWith(S5.markets, S5);
+    expect(grid()).toHaveAttribute("data-count", "1");
+    const settled = screen.getByRole("region", { name: "settled markets" });
+    expect(within(settled).getByLabelText("M1 resolved")).toHaveTextContent(/Settled/);
+    expect(within(settled).getByLabelText("M2 resolved")).toBeInTheDocument();
+    expect(within(grid()).queryByLabelText("M1 resolved")).toBeNull();
+    expect(screen.queryByLabelText("M1 bid")).toBeNull();
+  });
+
+  it("an unusually long question is clamped on the card, kept whole in its tooltip and the detail, and leaves the grid alone", async () => {
+    const long = "In what year did a very long-winded question about a treaty, its signatories, the conference at which it was negotiated and the ratification that followed in several parliaments finally enter into force for all of them?";
+    const user = await dealWith([clone(S0.markets[0], "M1", { title: long, question: long }), S0.markets[1], S0.markets[2]]);
+    expect(grid()).toHaveAttribute("data-density", "standard");
+    const title = within(screen.getByLabelText("M1 active")).getByText(long);
+    expect(title).toHaveClass("mk-title"); expect(title).toHaveAttribute("title", long);
+    await user.click(screen.getByLabelText("M1 active").querySelector("button.mk-head")!);
+    expect(within(screen.getByRole("complementary")).getByRole("heading", { name: long })).toBeInTheDocument();
+  });
+
+  it("a shock puts what changed on the card itself, and the banner jumps to the shocked market", async () => {
+    const user = await dealWith(S3.markets, S3);
+    const card = screen.getByLabelText("M3 shocked");
+    const box = within(card).getByRole("status");
+    expect(box).toHaveTextContent("NEW INFORMATION"); expect(box).toHaveTextContent(/still to be rolled under the same rules/);
+    expect(box).toHaveTextContent(/Acknowledge/);
+    await user.click(screen.getByRole("button", { name: "show M3" }));
+    expect(screen.getByRole("tab", { name: /Market M3/ })).toHaveAttribute("aria-selected", "true");
+    expect(within(screen.getByRole("tabpanel")).getByText(/M3 · PROBABILITY/)).toBeInTheDocument();
+  });
+
+  it("the side panel's tabs show the round report after a round and the market on request, without touching quotes being typed", async () => {
+    const user = await deal();
+    await user.type(screen.getByLabelText("M2 bid"), "1.2");
+    expect(screen.getByRole("tab", { name: /^Market/ })).toHaveAttribute("aria-selected", "true");
+    await user.click(screen.getByRole("tab", { name: /Round report/ }));
+    expect(within(screen.getByRole("tabpanel")).getByText("ROUND REPORT")).toBeInTheDocument();
+    await user.click(screen.getByRole("tab", { name: /^Market/ }));
+    expect(screen.getByLabelText("M2 bid")).toHaveValue("1.2");
+    expect(within(screen.getByRole("complementary")).getByText("PORTFOLIO")).toBeInTheDocument();      // the portfolio stays in view whatever the tab
+    await user.clear(screen.getByLabelText("M2 bid"));
+    await user.click(next());
+    await waitFor(() => expect(screen.getByLabelText("round")).toHaveTextContent("2 / 8"));
+    expect(screen.getByRole("tab", { name: /Round 1/ })).toHaveAttribute("aria-selected", "true");
+    expect(within(screen.getByRole("tabpanel")).getByText(/ROUND 1 REPORT/)).toBeInTheDocument();
+  });
+
+  it("a change of layout (a market settling) keeps the quotes being typed and the selection", async () => {
+    const user = await deal();
+    await user.type(screen.getByLabelText("M1 bid"), "1490");
+    await user.click(screen.getByLabelText("M1 active").querySelector("button.mk-head")!);
+    expect(grid()).toHaveAttribute("data-density", "standard");
+    const st = useGame.getState().state!;
+    useGame.setState({ state: { ...st, markets: st.markets.map((m) => (m.id === "M2" ? S5.markets[1] : m)) } });
+    await waitFor(() => expect(grid()).toHaveAttribute("data-density", "roomy"));
+    expect(screen.getByLabelText("M1 bid")).toHaveValue("1490");
+    expect(screen.getByLabelText("M1 active")).toHaveClass("sel");
+  });
+});
