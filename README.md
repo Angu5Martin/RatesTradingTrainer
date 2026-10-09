@@ -36,6 +36,9 @@ What it does, in order: finds the project and its `.venv`; checks the port; buil
 * **Errors** (no `.venv`, no npm, a failed build, the server stopping or not answering) are explained in the window, which stays open until you press Return.
 * The Desktop file is a short stub pointing at the project's `Rates Trainer.command`, so pulling updates needs no reinstall. If you move the project folder, run `scripts/install_launcher.sh` again from the new place.
 
+The question bank covers all 41 skills in ten tracks with standalone questions (curve mathematics and bootstrapping, money markets and bills, swap valuation and conventions, key-rate and factor risk, convexity,
+butterflies, bucketed books and scenarios, quoting, re-quoting, cross-product hedging, events). `docs/CURRICULUM.md` has the coverage table, the audit of the sources and what could and could not be verified from the public book material.
+
 Runs on stock Python 3.11+ with no dependencies. Answers: `225k`, `-1.2m`, `3bp`, `2.85%`, or a letter
 for multiple choice; `skip` reveals the answer; `q` quits.
 

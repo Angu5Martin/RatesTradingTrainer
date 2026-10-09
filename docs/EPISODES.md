@@ -300,7 +300,7 @@ happen are consistent. Pillar-level moves are carried to the curves with `CurveS
 | **5. Information and regime** | any of the above | informed flow, signals with stated reliability, events, stressed vol; quoting for liquidity vs for risk | mixed; RFQ responses |
 
 Each level is a few episode specs with randomised parameters, so the same episode id gives different markets and flows across seeds, as the question
-templates do. Level 1 and 2 cover `mm.requote_loop` (planned today) and deepen `mm.skew`, `mm.client_trade`, `mm.hedge_vs_inventory`; level 3
+templates do. Level 1 and 2 cover `mm.requote_loop` (planned when this was written; it now also has standalone TRAIN questions, see `docs/CURRICULUM.md`) and deepen `mm.skew`, `mm.client_trade`, `mm.hedge_vs_inventory`; level 3
 activates `risk.key_rate`; levels 4-5 are the bridge to the `portfolio.*` skills.
 
 **A level-1 episode, concretely.** Screen: 10Y mid 2.845%, street 2.843/2.847, flat book, limit €500k DV01, normal vol, deep liquidity,
@@ -630,8 +630,8 @@ milliseconds per path).
 ### 17.5 Cross-cutting decisions
 
 * **Skills.** Level 3 → activate `risk.key_rate`; level 4 → a new skill `mm.cross_product_hedging` (prereqs `futures.dv01`, `rv.cash_vs_swaps`,
-  `bonds.repo`); level 5 → `mm.adverse_selection` and a new `mm.views_and_events`. The `portfolio.*` skills stay planned until mixed books are
-  questioned directly.
+  `bonds.repo`); level 5 → `mm.adverse_selection` and a new `mm.views_and_events`. The `portfolio.*` skills stayed planned until mixed books were
+  questioned directly (they now have standalone swap-book questions, `docs/CURRICULUM.md`; a book mixing swaps, bonds and futures is still to come).
 * **Checkpoints**: one per level (level 3 slope exposure; level 4 futures contracts for a DV01 hedge; level 5 none, or a posterior question).
 * **Performance**: level 3 adds bucketed key-rate risk (~0.25s per step); level 4 adds one rolled market and carry calculations per overnight
   (~0.1s); level 5's many-path debrief is first-order (~1s for 200 paths). All within an interactive budget.

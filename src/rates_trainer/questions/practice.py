@@ -25,7 +25,7 @@ from .registry import TemplateSpec, all_specs, from_id, generate, get_spec, sele
 
 KINDS = ("conceptual", "calculation")
 DIFFICULTY = {1: "single concept", 2: "concept and calculation", 3: "multi-step trading situation"}
-UNIT_LABEL = {"EUR": "euros", "bp": "basis points", "%": "percent", "pts": "price points", "contracts": "contracts", "cf": "conversion factor", "years": "years", "x": "multiple"}
+UNIT_LABEL = {"EUR": "euros", "bp": "basis points", "%": "percent", "pts": "price points", "contracts": "contracts", "cf": "conversion factor", "df": "discount factor", "years": "years", "x": "multiple"}
 FORMAT = "rates-trainer-practice"
 VERSION = 1
 
@@ -37,8 +37,9 @@ def kind_of(q: Question) -> str:
 
 @lru_cache(maxsize=1)
 def source_kinds() -> dict[str, str]:
-    """{template id: kind}, found once by generating each source at seed 0 (a source's kind does not change with the seed)."""
-    return {s.id: kind_of(generate(s.id, 0)) for s in all_specs()}
+    """{template id: kind}. A curated question is a single multiple choice, so conceptual; a template that declares its kind is taken at its word (a test generates it and checks);
+    any other source is found once by generating it at seed 0 (a source's kind does not change with the seed)."""
+    return {s.id: s.kind or ("conceptual" if s.curated else kind_of(generate(s.id, 0))) for s in all_specs()}
 
 
 def _entry_hint(p: NumericPart) -> str:

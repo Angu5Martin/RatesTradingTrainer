@@ -9,21 +9,45 @@
      "title": "Forward rates from zero rates / discount factors",
      "planned": false,
      "prereqs": [],
-     "sources": 1,
-     "curated": 0,
+     "sources": 5,
+     "curated": 2,
      "difficulties": {
       "1": 1,
-      "2": 0,
+      "2": 4,
       "3": 0
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 1
+      "conceptual": 2,
+      "calculation": 3
      },
      "items": [
       {
+       "id": "curated.forward_not_forecast",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.ois_policy_reading",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "math.df_forward_solve",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
        "id": "math.forward_1y",
        "difficulty": 1,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "math.ois_policy_path",
+       "difficulty": 2,
        "curated": false,
        "kind": "calculation"
       }
@@ -32,45 +56,89 @@
     {
      "id": "math.bootstrapping",
      "title": "Bootstrapping a curve from par swap rates",
-     "planned": true,
+     "planned": false,
      "prereqs": [
       "math.forward_rates"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 4,
+     "curated": 3,
      "difficulties": {
-      "1": 0,
-      "2": 0,
+      "1": 1,
+      "2": 3,
       "3": 0
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 3,
+      "calculation": 1
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.bootstrap_bump",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.bootstrap_order",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.par_vs_zero_sloped",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "math.bootstrap_par_curve",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     },
     {
      "id": "math.interpolation",
      "title": "Interpolation and what it does to forwards and risk",
-     "planned": true,
+     "planned": false,
      "prereqs": [
       "math.bootstrapping"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 3,
+     "curated": 2,
      "difficulties": {
       "1": 0,
-      "2": 0,
-      "3": 0
+      "2": 2,
+      "3": 1
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 2,
+      "calculation": 1
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.interp_flat_forwards",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.interp_forward_start",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "math.interp_log_linear",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     }
    ],
-   "sources": 1
+   "sources": 12
   },
   {
    "id": "swaps",
@@ -83,20 +151,26 @@
      "prereqs": [
       "math.forward_rates"
      ],
-     "sources": 3,
-     "curated": 2,
+     "sources": 6,
+     "curated": 4,
      "difficulties": {
       "1": 2,
-      "2": 1,
+      "2": 4,
       "3": 0
      },
      "kinds": {
-      "conceptual": 2,
-      "calculation": 1
+      "conceptual": 4,
+      "calculation": 2
      },
      "items": [
       {
        "id": "curated.dv01_30y_vs_10y",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.payer_off_market_asset",
        "difficulty": 2,
        "curated": true,
        "kind": "conceptual"
@@ -108,8 +182,20 @@
        "kind": "conceptual"
       },
       {
+       "id": "curated.unwind_cost",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
        "id": "swaps.dv01_pnl",
        "difficulty": 1,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "swaps.mtm_off_market",
+       "difficulty": 2,
        "curated": false,
        "kind": "calculation"
       }
@@ -122,20 +208,38 @@
      "prereqs": [
       "swaps.dv01"
      ],
-     "sources": 1,
-     "curated": 0,
+     "sources": 4,
+     "curated": 2,
      "difficulties": {
-      "1": 0,
-      "2": 1,
+      "1": 1,
+      "2": 3,
       "3": 0
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 1
+      "conceptual": 2,
+      "calculation": 2
      },
      "items": [
       {
+       "id": "curated.forward_5y5y_relation",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.forward_start_annuity_weights",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
        "id": "swaps.forward_start",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "swaps.forward_start_inverse",
        "difficulty": 2,
        "curated": false,
        "kind": "calculation"
@@ -149,20 +253,50 @@
      "prereqs": [
       "swaps.dv01"
      ],
-     "sources": 1,
-     "curated": 0,
+     "sources": 6,
+     "curated": 3,
      "difficulties": {
       "1": 0,
-      "2": 1,
+      "2": 6,
       "3": 0
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 1
+      "conceptual": 3,
+      "calculation": 3
      },
      "items": [
       {
        "id": "basis.irs_vs_ois",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "curated.estr_not_forward_looking",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.ois_irs_annuity",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.why_discount_estr",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "swaps.cashflow_conventions",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "swaps.estr_compounding",
        "difficulty": 2,
        "curated": false,
        "kind": "calculation"
@@ -176,20 +310,38 @@
      "prereqs": [
       "swaps.dv01"
      ],
-     "sources": 1,
-     "curated": 0,
+     "sources": 4,
+     "curated": 2,
      "difficulties": {
-      "1": 0,
-      "2": 1,
+      "1": 1,
+      "2": 3,
       "3": 0
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 1
+      "conceptual": 2,
+      "calculation": 2
      },
      "items": [
       {
+       "id": "curated.fra_buyer_gains",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.fra_vs_future",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
        "id": "swaps.fra_dv01_pnl",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "swaps.fra_settlement",
        "difficulty": 2,
        "curated": false,
        "kind": "calculation"
@@ -203,16 +355,16 @@
      "prereqs": [
       "swaps.ois_vs_ibor"
      ],
-     "sources": 1,
-     "curated": 0,
+     "sources": 3,
+     "curated": 1,
      "difficulties": {
       "1": 0,
-      "2": 1,
+      "2": 3,
       "3": 0
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 1
+      "conceptual": 1,
+      "calculation": 2
      },
      "items": [
       {
@@ -220,11 +372,23 @@
        "difficulty": 2,
        "curated": false,
        "kind": "calculation"
+      },
+      {
+       "id": "basis.tenor_compounding",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "curated.tenor_basis_meaning",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
       }
      ]
     }
    ],
-   "sources": 7
+   "sources": 23
   },
   {
    "id": "bonds",
@@ -237,43 +401,98 @@
      "prereqs": [
       "swaps.dv01"
      ],
-     "sources": 1,
-     "curated": 0,
+     "sources": 5,
+     "curated": 2,
      "difficulties": {
       "1": 0,
-      "2": 1,
+      "2": 5,
       "3": 0
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 1
+      "conceptual": 2,
+      "calculation": 3
      },
      "items": [
+      {
+       "id": "bonds.clean_dirty_accrued",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
       {
        "id": "bonds.duration_convexity_pnl",
        "difficulty": 2,
        "curated": false,
        "kind": "calculation"
+      },
+      {
+       "id": "bonds.price_to_yield_move",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "curated.duration_falls_with_yield",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.duration_zero_vs_coupon",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
       }
      ]
     },
     {
      "id": "bonds.money_market",
      "title": "Bills, zero-coupon instruments, money-market yields",
-     "planned": true,
+     "planned": false,
      "prereqs": [],
-     "sources": 0,
-     "curated": 0,
+     "sources": 5,
+     "curated": 3,
      "difficulties": {
-      "1": 0,
-      "2": 0,
+      "1": 1,
+      "2": 4,
       "3": 0
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 3,
+      "calculation": 2
      },
-     "items": []
+     "items": [
+      {
+       "id": "bonds.bill_price_yield",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "bonds.mm_day_count",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "curated.act360_vs_act365",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.bill_dv01_small",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.bill_rich_to_ois",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
     },
     {
      "id": "bonds.carry",
@@ -350,7 +569,7 @@
      ]
     }
    ],
-   "sources": 6
+   "sources": 15
   },
   {
    "id": "futures",
@@ -396,16 +615,16 @@
      "prereqs": [
       "futures.conversion_factor"
      ],
-     "sources": 2,
+     "sources": 3,
      "curated": 1,
      "difficulties": {
-      "1": 0,
+      "1": 1,
       "2": 0,
       "3": 2
      },
      "kinds": {
       "conceptual": 1,
-      "calculation": 1
+      "calculation": 2
      },
      "items": [
       {
@@ -413,6 +632,12 @@
        "difficulty": 3,
        "curated": true,
        "kind": "conceptual"
+      },
+      {
+       "id": "futures.contract_specs_pnl",
+       "difficulty": 1,
+       "curated": false,
+       "kind": "calculation"
       },
       {
        "id": "futures.dv01_hedge",
@@ -520,7 +745,7 @@
      ]
     }
    ],
-   "sources": 13
+   "sources": 14
   },
   {
    "id": "risk",
@@ -533,20 +758,32 @@
      "prereqs": [
       "swaps.dv01"
      ],
-     "sources": 2,
-     "curated": 1,
+     "sources": 4,
+     "curated": 3,
      "difficulties": {
-      "1": 1,
-      "2": 1,
+      "1": 2,
+      "2": 2,
       "3": 0
      },
      "kinds": {
-      "conceptual": 1,
+      "conceptual": 3,
       "calculation": 1
      },
      "items": [
       {
        "id": "curated.hedge_2y_notional",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.hedge_ratio_drifts",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.hedge_ratio_notional",
        "difficulty": 1,
        "curated": true,
        "kind": "conceptual"
@@ -566,41 +803,103 @@
      "prereqs": [
       "risk.hedge_ratio"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 6,
+     "curated": 3,
      "difficulties": {
       "1": 0,
-      "2": 0,
-      "3": 0
+      "2": 4,
+      "3": 2
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 3,
+      "calculation": 3
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.kr_curve_not_flat",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.kr_forward_start_hedge",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.kr_residual_curve",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "risk.factor_exposure",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "risk.key_rate_hedge",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "risk.key_rate_read",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     },
     {
      "id": "risk.convexity",
      "title": "Convexity: who is long/short and what it costs",
-     "planned": true,
+     "planned": false,
      "prereqs": [
       "bonds.duration_convexity"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 4,
+     "curated": 3,
      "difficulties": {
-      "1": 0,
-      "2": 0,
-      "3": 0
+      "1": 1,
+      "2": 2,
+      "3": 1
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 3,
+      "calculation": 1
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.convexity_barbell_pays",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.convexity_long_30y",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.swap_convexity_who",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "risk.convexity_barbell",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     }
    ],
-   "sources": 2
+   "sources": 14
   },
   {
    "id": "curve",
@@ -613,21 +912,39 @@
      "prereqs": [
       "risk.hedge_ratio"
      ],
-     "sources": 1,
-     "curated": 0,
+     "sources": 4,
+     "curated": 2,
      "difficulties": {
-      "1": 0,
-      "2": 0,
+      "1": 1,
+      "2": 2,
       "3": 1
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 1
+      "conceptual": 2,
+      "calculation": 2
      },
      "items": [
       {
+       "id": "curated.steepener_in_a_rally",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.steepener_neutral_parallel",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
        "id": "curves.curve_trade",
        "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "curves.equal_notional_trap",
+       "difficulty": 2,
        "curated": false,
        "kind": "calculation"
       }
@@ -640,16 +957,16 @@
      "prereqs": [
       "swaps.dv01"
      ],
-     "sources": 2,
-     "curated": 2,
+     "sources": 5,
+     "curated": 4,
      "difficulties": {
       "1": 2,
-      "2": 0,
+      "2": 3,
       "3": 0
      },
      "kinds": {
-      "conceptual": 2,
-      "calculation": 0
+      "conceptual": 4,
+      "calculation": 1
      },
      "items": [
       {
@@ -663,28 +980,71 @@
        "difficulty": 1,
        "curated": true,
        "kind": "conceptual"
+      },
+      {
+       "id": "curated.move_bear_flattener",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.move_bull_steepener",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curves.move_decomposition",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
       }
      ]
     },
     {
      "id": "curve.butterfly",
      "title": "Butterflies: weights, direction, P&L",
-     "planned": true,
+     "planned": false,
      "prereqs": [
       "curve.steepener"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 4,
+     "curated": 3,
      "difficulties": {
-      "1": 0,
-      "2": 0,
-      "3": 0
+      "1": 1,
+      "2": 2,
+      "3": 1
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 3,
+      "calculation": 1
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.fly_belly_profit",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.fly_equal_notional",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.fly_residual_risk",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curves.butterfly",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     },
     {
      "id": "curve.carry_rolldown",
@@ -761,7 +1121,7 @@
      ]
     }
    ],
-   "sources": 8
+   "sources": 18
   },
   {
    "id": "rv",
@@ -774,16 +1134,16 @@
      "prereqs": [
       "bonds.duration_convexity"
      ],
-     "sources": 2,
+     "sources": 3,
      "curated": 2,
      "difficulties": {
       "1": 0,
-      "2": 2,
+      "2": 3,
       "3": 0
      },
      "kinds": {
       "conceptual": 2,
-      "calculation": 0
+      "calculation": 1
      },
      "items": [
       {
@@ -797,6 +1157,12 @@
        "difficulty": 2,
        "curated": true,
        "kind": "conceptual"
+      },
+      {
+       "id": "rv.swap_spread_pnl",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
       }
      ]
     },
@@ -919,7 +1285,7 @@
      ]
     }
    ],
-   "sources": 11
+   "sources": 12
   },
   {
    "id": "pnl",
@@ -932,16 +1298,16 @@
      "prereqs": [
       "bonds.duration_convexity"
      ],
-     "sources": 1,
+     "sources": 2,
      "curated": 1,
      "difficulties": {
       "1": 0,
-      "2": 1,
+      "2": 2,
       "3": 0
      },
      "kinds": {
       "conceptual": 1,
-      "calculation": 0
+      "calculation": 1
      },
      "items": [
       {
@@ -949,6 +1315,12 @@
        "difficulty": 2,
        "curated": true,
        "kind": "conceptual"
+      },
+      {
+       "id": "pnl.convexity_asymmetry",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
       }
      ]
     },
@@ -1005,16 +1377,16 @@
       "pnl.convexity",
       "curve.carry_rolldown"
      ],
-     "sources": 1,
-     "curated": 0,
+     "sources": 3,
+     "curated": 1,
      "difficulties": {
-      "1": 0,
-      "2": 0,
+      "1": 1,
+      "2": 1,
       "3": 1
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 1
+      "conceptual": 1,
+      "calculation": 2
      },
      "items": [
       {
@@ -1022,11 +1394,23 @@
        "difficulty": 3,
        "curated": false,
        "kind": "calculation"
+      },
+      {
+       "id": "curated.realised_vs_unrealised",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "pnl.realised_unrealised",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
       }
      ]
     }
    ],
-   "sources": 6
+   "sources": 9
   },
   {
    "id": "mm",
@@ -1037,16 +1421,16 @@
      "title": "Bid/offer sides: what each client action leaves you with",
      "planned": false,
      "prereqs": [],
-     "sources": 1,
-     "curated": 1,
+     "sources": 5,
+     "curated": 4,
      "difficulties": {
-      "1": 1,
-      "2": 0,
+      "1": 4,
+      "2": 1,
       "3": 0
      },
      "kinds": {
-      "conceptual": 1,
-      "calculation": 0
+      "conceptual": 4,
+      "calculation": 1
      },
      "items": [
       {
@@ -1054,6 +1438,30 @@
        "difficulty": 1,
        "curated": true,
        "kind": "conceptual"
+      },
+      {
+       "id": "curated.client_hits_wrong_side",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.quote_crossed",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.two_way_request",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "mm.bid_offer_drill",
+       "difficulty": 1,
+       "curated": false,
+       "kind": "calculation"
       }
      ]
     },
@@ -1066,18 +1474,36 @@
       "swaps.dv01",
       "risk.hedge_ratio"
      ],
-     "sources": 1,
-     "curated": 0,
+     "sources": 4,
+     "curated": 2,
      "difficulties": {
-      "1": 0,
-      "2": 0,
-      "3": 1
+      "1": 1,
+      "2": 1,
+      "3": 2
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 1
+      "conceptual": 2,
+      "calculation": 2
      },
      "items": [
+      {
+       "id": "curated.client_package_curve",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.edge_definition",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "mm.client_net_edge",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      },
       {
        "id": "mm.client_trade_risk",
        "difficulty": 3,
@@ -1093,15 +1519,15 @@
      "prereqs": [
       "mm.bid_offer"
      ],
-     "sources": 3,
-     "curated": 2,
+     "sources": 7,
+     "curated": 5,
      "difficulties": {
       "1": 0,
-      "2": 2,
-      "3": 1
+      "2": 4,
+      "3": 3
      },
      "kinds": {
-      "conceptual": 3,
+      "conceptual": 7,
       "calculation": 0
      },
      "items": [
@@ -1112,9 +1538,33 @@
        "kind": "conceptual"
       },
       {
+       "id": "curated.skew_nonlinear_limit",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.skew_short_inventory",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.skew_vs_width",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
        "id": "curated.view_vs_limit",
        "difficulty": 3,
        "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "mm.quote_review",
+       "difficulty": 3,
+       "curated": false,
        "kind": "conceptual"
       },
       {
@@ -1166,23 +1616,47 @@
      "prereqs": [
       "mm.skew"
      ],
-     "sources": 1,
-     "curated": 1,
+     "sources": 5,
+     "curated": 4,
      "difficulties": {
       "1": 0,
-      "2": 1,
-      "3": 0
+      "2": 4,
+      "3": 1
      },
      "kinds": {
-      "conceptual": 1,
-      "calculation": 0
+      "conceptual": 4,
+      "calculation": 1
      },
      "items": [
+      {
+       "id": "curated.adverse_not_observable",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.adverse_response",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.adverse_vs_hedger",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
       {
        "id": "curated.pre_data_client",
        "difficulty": 2,
        "curated": true,
        "kind": "conceptual"
+      },
+      {
+       "id": "mm.adverse_selection_edge",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
       }
      ]
     },
@@ -1194,18 +1668,61 @@
       "mm.skew",
       "mm.client_trade"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 7,
+     "curated": 5,
      "difficulties": {
-      "1": 0,
-      "2": 0,
-      "3": 0
+      "1": 2,
+      "2": 4,
+      "3": 1
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 5,
+      "calculation": 2
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.requote_after_hedge",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.requote_flat_symmetric",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.requote_run_of_flow",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.requote_size",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.requote_trigger",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "mm.requote_sequence",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "mm.stale_quote",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     },
     {
      "id": "mm.cross_product_hedging",
@@ -1216,18 +1733,55 @@
       "rv.cash_vs_swaps",
       "bonds.repo"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 6,
+     "curated": 5,
      "difficulties": {
       "1": 0,
-      "2": 0,
-      "3": 0
+      "2": 3,
+      "3": 3
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 5,
+      "calculation": 1
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.bond_hedge_carry",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.futures_hedge_residual",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.futures_hedge_when",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.hedge_liquidity_stress",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.hedge_overnight",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "mm.cross_product_hedge",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     },
     {
      "id": "mm.views_and_events",
@@ -1237,21 +1791,76 @@
       "mm.skew",
       "mm.adverse_selection"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 9,
+     "curated": 7,
      "difficulties": {
-      "1": 0,
-      "2": 0,
-      "3": 0
+      "1": 1,
+      "2": 4,
+      "3": 4
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 7,
+      "calculation": 2
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.event_size_vs_edge",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.evidence_vs_view",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.post_event_requote",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.pre_event_risk",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.priced_in",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.scheduled_unscheduled",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.view_lean_small",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "mm.event_repricing",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "mm.event_sizing",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     }
    ],
-   "sources": 8
+   "sources": 45
   },
   {
    "id": "portfolio",
@@ -1260,46 +1869,78 @@
     {
      "id": "portfolio.aggregation",
      "title": "Aggregate DV01, key-rate and curve exposure",
-     "planned": true,
+     "planned": false,
      "prereqs": [
       "risk.key_rate"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 3,
+     "curated": 2,
      "difficulties": {
       "1": 0,
-      "2": 0,
-      "3": 0
+      "2": 1,
+      "3": 2
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 2,
+      "calculation": 1
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.portfolio_risk_factors",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.portfolio_total_misleads",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "portfolio.bucket_book",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     },
     {
      "id": "portfolio.scenarios",
      "title": "P&L under multi-factor scenarios",
-     "planned": true,
+     "planned": false,
      "prereqs": [
       "portfolio.aggregation"
      ],
-     "sources": 0,
-     "curated": 0,
+     "sources": 2,
+     "curated": 1,
      "difficulties": {
       "1": 0,
-      "2": 0,
-      "3": 0
+      "2": 1,
+      "3": 1
      },
      "kinds": {
-      "conceptual": 0,
-      "calculation": 0
+      "conceptual": 1,
+      "calculation": 1
      },
-     "items": []
+     "items": [
+      {
+       "id": "curated.scenario_why_many",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "portfolio.scenario_pnl",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
     }
    ],
-   "sources": 0
+   "sources": 5
   }
  ],
- "sources": 62
+ "sources": 167
 }

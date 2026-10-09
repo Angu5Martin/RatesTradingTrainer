@@ -7,7 +7,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from rates_trainer.questions.model import ChoicePart
-from rates_trainer.questions.registry import generate
+from rates_trainer.questions.registry import all_specs, generate
 from rates_trainer.web.app import create_app
 
 
@@ -19,6 +19,13 @@ def client(tmp_path, monkeypatch):
 
 def ref(part) -> str:
     return chr(65 + part.correct) if isinstance(part, ChoicePart) else repr(part.answer)
+
+
+def wrong(part) -> str:
+    """A readable answer that is certainly not right: an implausible number, or a letter other than the correct one."""
+    if isinstance(part, ChoicePart):
+        return chr(65 + (part.correct + 1) % len(part.options))
+    return "123456789"
 
 
 def play(client, body, answer=ref):
@@ -115,7 +122,7 @@ def test_skip_marks_wrong_and_shows_the_expected_answer(client):
 
 
 def test_replaying_missed_questions_regenerates_exactly_those(client):
-    sid, _, _ = play(client, {"skills": ["swaps.dv01"], "kind": "calculation", "count": 2, "seed": 9}, answer=lambda p: "banana" if False else "123456789")
+    sid, _, _ = play(client, {"skills": ["swaps.dv01"], "kind": "calculation", "count": 2, "seed": 9}, answer=wrong)
     missed = client.get(f"/api/train/{sid}/summary").json()["missed"]
     assert missed
     st = client.post("/api/train/start", json={"ids": missed}).json()
@@ -159,4 +166,51 @@ def test_the_catalogue_endpoint_carries_the_new_fields_and_the_old_ones(client):
     t = client.get("/api/catalogue").json()["train"]
     s = t["tracks"][1]["skills"][0]
     assert {"id", "title", "planned", "prereqs", "sources", "curated", "difficulties"} <= set(s) and {"kinds", "items"} <= set(s)
-    assert t["sources"] == 62
+    assert t["sources"] == len(all_specs())
+
+
+NEW_STANDALONE = ["risk.key_rate", "mm.requote_loop", "mm.cross_product_hedging", "mm.views_and_events", "math.bootstrapping", "math.interpolation", "bonds.money_market",
+                  "risk.convexity", "curve.butterfly", "portfolio.aggregation", "portfolio.scenarios"]
+
+
+@pytest.mark.parametrize("skill", NEW_STANDALONE)
+def test_the_newly_covered_skills_run_start_to_summary_over_http_and_record_in_the_test_home(client, tmp_path, skill):
+    """Every skill that used to be planned or episode-only is a normal TRAIN selection now: start, answer each part, continue, summary, one record."""
+    sid, results, states = play(client, {"skills": [skill], "count": 6, "seed": 3})
+    assert results and all(r["correct"] for r in results)
+    assert states[-1]["phase"] == "done" and states[-1]["parts_correct"] == len(results)
+    s = client.get(f"/api/train/{sid}/summary").json()
+    assert s["missed"] == [] and {x["skill"] for x in s["by_skill"]} == {skill}
+    files = list(Path(tmp_path, "practice").glob("*.json"))
+    assert len(files) == 1 and json.loads(files[0].read_text())["id"] == sid          # recorded in the private test home and nowhere else
+
+
+def test_the_new_sources_honour_the_kind_and_difficulty_filters_over_http(client):
+    def part_kinds(body):
+        st, seen = client.post("/api/train/start", json=body).json(), set()
+        while st["phase"] != "done":
+            seen.add(st["question"]["current"]["kind"])
+            q = generate(st["question"]["template_id"], int(st["question"]["id"].rpartition("#")[2]))
+            client.post(f"/api/train/{st['id']}/answer", json={"text": ref(q.parts[st["question"]["current"]["index"]])})
+            st = client.post(f"/api/train/{st['id']}/continue").json()
+        return seen
+
+    assert "numeric" in part_kinds({"skills": ["risk.key_rate"], "kind": "calculation", "count": 8, "seed": 1})      # a calculation has at least one number to work out
+    assert part_kinds({"skills": ["mm.views_and_events"], "kind": "conceptual", "count": 8, "seed": 2}) == {"choice"}   # a conceptual question is only choices
+    hard = client.post("/api/train/start", json={"skills": ["mm.requote_loop"], "difficulty": 3, "count": 4, "seed": 1}).json()
+    assert hard["question"]["difficulty"] == 3 and hard["question"]["template_id"] == "mm.requote_sequence"
+
+
+def test_a_new_numeric_source_refuses_an_unreadable_entry_without_marking_it(client, tmp_path):
+    st = client.post("/api/train/start", json={"template_id": "risk.key_rate_read"}).json()
+    sid = st["id"]
+    assert st["question"]["current"]["kind"] == "numeric"
+    r = client.post(f"/api/train/{sid}/answer", json={"text": "about two hundred"})
+    assert r.status_code == 400
+    assert client.get(f"/api/train/{sid}").json()["parts_answered"] == 0              # not marked, nothing recorded
+    assert not list(Path(tmp_path, "practice").glob("*.json"))
+
+
+def test_the_tests_run_against_a_private_data_home(client, tmp_path):
+    from rates_trainer.web import store
+    assert Path(store.home()).resolve() == Path(tmp_path).resolve()

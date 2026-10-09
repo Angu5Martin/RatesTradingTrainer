@@ -1,0 +1,383 @@
+# Curated market-making judgement questions: bid/offer mechanics, quote skew and width, adverse selection, re-quoting, cross-product hedging, and views and events.
+# FIRST option is the correct one; order is shuffled per seed. Conventions (docs/DESIGN.md): bid = dealer pays fixed, offer = dealer receives fixed;
+# a client who PAYS fixed deals on the offer (dealer ends long duration); a client who RECEIVES fixed deals on the bid (dealer ends short duration).
+# These are judgement questions with a reasoned best answer, not formulas; the rationale says why the others are weaker.
+# Option lengths are kept comparable on purpose (a test checks that the right answer is not systematically the longest): detail belongs in `why`.
+
+# ------------------------------------------------------------------------------------------------------------------ bid / offer
+
+[[question]]
+id = "two_way_request"
+skill = "mm.bid_offer"
+difficulty = 1
+stem = "A client asks for a two-way price in €100m of the EUR 10Y swap without saying which side they want. You show 2.843 / 2.847 and they deal at 2.847. What did they do, and what are you left with?"
+options = [
+  "They paid fixed on your offer; you received fixed and are long duration",
+  "They received fixed on your offer; you paid fixed and are short duration",
+  "They paid fixed on your bid; you received fixed and are long duration",
+  "They received fixed on your bid; you paid fixed and are short duration",
+]
+why = "The offer is the rate at which YOU receive fixed, so a client who deals on it pays fixed. You hold the fixed-rate receiver: long duration, positive DV01. The client trades on the worse side of mid for them, and the spread between your price and mid is your gross margin on the trade."
+
+[[question]]
+id = "quote_crossed"
+skill = "mm.bid_offer"
+difficulty = 1
+stem = "Your 10Y bid is 2.846 and your offer is 2.844. What is wrong?"
+options = [
+  "The market is crossed: anyone can trade both sides against you and lock in a riskless profit",
+  "Nothing is wrong: tight and even negative spreads are used to attract client flow in a liquid swap",
+  "The offer must always be exactly 0.1bp above the bid, which is the minimum allowed increment",
+  "The quote is only wrong if a client actually deals, because only then is a loss locked in",
+]
+why = "You pay fixed at the bid and receive it at the offer, so the offer must be above the bid. If the bid is above the offer, a counterparty can receive fixed at your bid and pay fixed at your offer and lock in the difference. The width of a market is the dealer's margin for the service and the risk."
+
+[[question]]
+id = "client_hits_wrong_side"
+skill = "mm.bid_offer"
+difficulty = 2
+stem = "You are long duration and want to get flatter. Which client request is the most useful to you?"
+options = [
+  "A client who wants to receive fixed, dealing on your bid, so that you pay fixed and reduce your long",
+  "A client who wants to pay fixed, dealing on your offer so that you receive fixed",
+  "Either, provided they trade at your price: the direction matters less than the volume",
+  "Neither: you can reduce risk only by trading in the interdealer market, never with a client",
+]
+why = "You are long duration (you have been receiving fixed). Paying fixed reduces it, and you pay fixed when a client deals on your bid, i.e. when the client receives. A good quote is one that makes that client more likely to show up, and the other one less likely, at a price you are happy with."
+
+# ------------------------------------------------------------------------------------------------------------------ skew and width
+
+[[question]]
+id = "skew_short_inventory"
+skill = "mm.skew"
+difficulty = 2
+stem = "You are short 300k DV01 of 10Y duration (you have been paying fixed), 60% of your limit. Fair value is 2.845 and your normal market is 2.843 / 2.847. Which market is the most sensible?"
+options = [
+  "2.842 / 2.846: centred lower, so your offer is closer to the market for clients who pay",
+  "2.844 / 2.848: centred higher, so your bid is closer to the market for clients who receive",
+  "2.843 / 2.847: unchanged, because a skew should be used only once you are at the limit",
+  "2.840 / 2.850: symmetric and much wider, to be paid for the extra risk you are carrying",
+]
+why = "A short-duration dealer wants to RECEIVE fixed, which happens when clients pay on your offer. Quoting lower in rate moves your offer towards the market (more attractive to a client who pays) and your bid away from it (less attractive to a client who receives, which would make you shorter). The skew grows with the inventory, and does not wait for the limit."
+
+[[question]]
+id = "skew_vs_width"
+skill = "mm.skew"
+difficulty = 2
+stem = "Which situation is best handled by WIDENING the market, rather than skewing it?"
+options = [
+  "Volatility is high and you cannot tell whether the next client knows something you do not",
+  "You are long duration and want to get flat by attracting the clients who pay you",
+  "You expect two-way flow to rebuild your inventory to neutral over the next hour",
+  "You have a mild view that rates will rise and want to lean a little in that direction",
+]
+why = "Skew is a tool for inventory (and expectations about flow or direction): it tilts the price towards the side you want to trade. Width is a tool for uncertainty: it is the premium for being wrong about the next move or the next client, on both sides. Using one as a substitute for the other either pays away edge or leaves risk unpaid."
+
+[[question]]
+id = "skew_nonlinear_limit"
+skill = "mm.skew"
+difficulty = 3
+stem = "Why does a sensible skew grow faster than in proportion to inventory as you approach your limit?"
+options = [
+  "The cost of a breach, or a forced hedge at a bad moment, rises faster than the inventory itself",
+  "Clients become less price-sensitive when your position is large, so each extra bp of skew buys less",
+  "DV01 per euro increases near the limit, so each additional trade adds more risk than the last",
+  "It should not: skew should always be strictly proportional to inventory, or the quote is unstable",
+]
+why = "Inventory has a cost that is convex: a small position is cheap to carry and cheap to work off, a position near the limit leaves no room for the next trade and may have to be hedged into a thin market. The marginal price of risk therefore rises, and the skew that expresses it should too."
+
+# ------------------------------------------------------------------------------------------------------------------ adverse selection
+
+[[question]]
+id = "adverse_response"
+skill = "mm.adverse_selection"
+difficulty = 2
+stem = "A fast-money client has hit your price three times this morning, each time just before the market moved your way for them. Which response is most sensible?"
+options = [
+  "Treat their flow as more likely informed: widen or cut size for them, separately from your skew",
+  "Skew your price harder, so that their next trade is as attractive as possible and you keep the flow",
+  "Ignore it: three trades are noise, and your normal spread already covers every kind of client",
+  "Refuse to deal with them under any circumstances, since they will always be better informed",
+]
+why = "A client's recent record is evidence about their information, not a certainty. The tool for information is width and size (the premium and the amount you offer), not skew, which expresses where you want your inventory to go. Refusing flow entirely gives up the uninformed trades you also see from them; treating it as noise ignores evidence."
+
+[[question]]
+id = "adverse_vs_hedger"
+skill = "mm.adverse_selection"
+difficulty = 2
+stem = "A pension fund calls to receive €300m of 30Y swaps as part of a liability-hedging programme announced to the market last week. Compared with an anonymous electronic request of the same size, how should this flow affect your price?"
+options = [
+  "It is likelier uninformed, so you can quote tighter, but the size's hedging cost stays in the price",
+  "It is certain to be uninformed, so you should quote at mid and skip any charge for the hedging risk",
+  "You should quote wider, because pension funds are large and trade only when they have information",
+  "The type of client should never affect the price: a quote must be the same for every counterparty",
+]
+why = "Hedgers trade because they have to, not because they know where the market is going, so there is less adverse selection and room for a tighter spread. But a large trade in a thin tenor is a large inventory: the part of the price that pays for hedging and carrying it does not fall."
+
+[[question]]
+id = "adverse_not_observable"
+skill = "mm.adverse_selection"
+difficulty = 3
+stem = "Which statement about informed flow is correct?"
+options = [
+  "You infer it from context and what follows, and can be right on the evidence and still lose",
+  "A good dealer can always tell which trades are informed, and avoids them by looking at the client",
+  "A market move after a trade proves the client was informed, and the move is the test of it",
+  "Informed flow occurs only in illiquid products, where one client's trade can move the price",
+]
+why = "You never observe information directly: you infer it from the client, the size, the context and what the market does afterwards. Information shows up in the outcome, and the outcome is noisy. A trade followed by a move against you may be luck, and a client who knows something will not always be right, so the decision has to be judged on what you could know at the time."
+
+# ------------------------------------------------------------------------------------------------------------------ re-quoting
+
+[[question]]
+id = "requote_after_hedge"
+skill = "mm.requote_loop"
+difficulty = 2
+stem = "You received fixed from a client and skewed your market higher in rate to work the long position down. You then hedge the whole position in the interdealer market. What should your next quote look like?"
+options = [
+  "Back centred on fair value with normal width, since the inventory behind the skew is gone",
+  "The same skew as before: skew is a permanent feature of your style, not a response to the position",
+  "Skewed the other way, to offset the hedge you have just done in the interdealer market",
+  "Much wider than normal, because you have just traded and cannot be sure of fair value",
+]
+why = "Skew follows inventory. Once the position is flat, nothing in your state asks the price to lean, so the market recentres on fair value. Your hedging cost is a reason to keep a spread, not to keep a skew."
+
+[[question]]
+id = "requote_run_of_flow"
+skill = "mm.requote_loop"
+difficulty = 2
+stem = "Four clients in a row pay fixed to you, in similar size, with no news. What should you do with your quote?"
+options = [
+  "Skew higher in rate as your long grows, and separately ask whether the run says something about the market",
+  "Do nothing: your market stays unchanged until a limit is reached, since a skew is a late-stage tool",
+  "Quote symmetrically, so that clients do not see that you are leaning against their direction",
+  "Move the mid up with the flow, since four buyers in a row show where the market is going",
+]
+why = "Your inventory has changed four times, so the skew has to change four times: that is the inventory question. Separately, a persistent run in one direction can be a signal that something is moving the market, which belongs in your fair value and your width. Mixing the two is how a dealer ends up chasing flow."
+
+[[question]]
+id = "requote_size"
+skill = "mm.requote_loop"
+difficulty = 2
+stem = "A €10m fill and a €300m fill happen on the same side of your 10Y market at the same price. Which should move your next quote more?"
+options = [
+  "The €300m: skew follows the change in inventory against your limit, and this is thirty times bigger",
+  "Both equally, since the direction of the fill is what tells you which way to shade your price",
+  "The €10m, because small trades come from informed clients who split their orders into pieces",
+  "Neither: you should change quotes only when the interdealer market itself has moved",
+]
+why = "What a fill does to your quote is a function of how far it takes you from flat relative to what you can hold. A small fill barely changes your state, so it should barely change your price; a large one changes it a lot."
+
+[[question]]
+id = "requote_trigger"
+skill = "mm.requote_loop"
+difficulty = 1
+stem = "Which of these is a reason to change your quote immediately?"
+options = [
+  "The 10Y Bund future jumps 30 ticks on screen, so your fair value has moved and your quote is stale",
+  "A colleague tells you he feels that the market is about to move after the lunchtime lull",
+  "It is five minutes since you last changed the quote, and quotes should be refreshed regularly",
+  "A client has just asked for a price in a different tenor, which suggests their interest is shifting",
+]
+why = "A standing quote is a free option for anyone who sees the market move before you do. Observable movement in a related price is evidence that fair value has changed; opinions and the passing of time are not."
+
+[[question]]
+id = "requote_flat_symmetric"
+skill = "mm.requote_loop"
+difficulty = 1
+stem = "Your inventory is back to flat. Which statement is most accurate about your quote?"
+options = [
+  "It centres on fair value with a width set by conditions, unless a view or expected flow justifies a lean",
+  "It must always be exactly symmetric around mid, since any asymmetry means you are taking a position",
+  "It should stay skewed for another hour to be safe, because a flat position can reverse quickly",
+  "It should be as tight as the tightest competitor, so as to win back the flow you gave up",
+]
+why = "Symmetry is the default for a dealer with no reason to lean, not a rule. Expected flow and a considered view can still justify a small tilt, and width responds to conditions regardless of position."
+
+# ------------------------------------------------------------------------------------------------------------------ cross-product hedging
+
+[[question]]
+id = "futures_hedge_residual"
+skill = "mm.cross_product_hedging"
+difficulty = 2
+stem = "You receive fixed on €300m of 10Y swaps from a client and hedge the DV01 by selling Bund futures. What risks remain?"
+options = [
+  "The swap spread, the CTD and repo basis of the future, and any mismatch in the point on the curve",
+  "None: once the DV01s match, a parallel move cannot make or lose money, and nothing else matters",
+  "Only a small convexity difference between the swap and the future, which is paid by carry",
+  "Outright level risk, because bond futures respond to credit spreads and not to swap rates",
+]
+why = "Matching DV01 removes the exposure to a parallel move of both yields. But you are long swap rate and short Bund yield, so you hold the swap spread. The future is also priced off a cheapest-to-deliver bond with its own repo and delivery options, and may sit at a different point on the curve from your swap."
+
+[[question]]
+id = "futures_hedge_when"
+skill = "mm.cross_product_hedging"
+difficulty = 2
+stem = "When is selling futures a good FIRST hedge for a large client swap?"
+options = [
+  "When risk must move at once, in size and cheaply, with a plan to swap the hedge out later",
+  "When you plan to hold the hedge for the whole life of the swap and want the cheapest carry",
+  "When you want no basis risk at all, because futures are priced exactly off the swap curve",
+  "Never: futures are priced off bonds and so cannot be used to hedge an interest rate swap",
+]
+why = "Futures are liquid and quick, which is exactly what a dealer needs in the first minutes after a trade. They leave basis risk, which is acceptable for a short holding period and unattractive for a long one. A hedge is a plan, not a position."
+
+[[question]]
+id = "bond_hedge_carry"
+skill = "mm.cross_product_hedging"
+difficulty = 3
+stem = "You hedge a received-fixed swap by selling a cash Bund and keep the hedge for a week. Compared with a swap hedge, what extra costs and risks come with it?"
+options = [
+  "Repo financing of the short, the risk of the bond going special, coupon carry, and the swap spread",
+  "None: a Bund is a risk-free asset, so selling it leaves no cost or risk other than the DV01",
+  "Only the bid/offer on the bond, since it is the single cost that the swap hedge does not have",
+  "A convexity charge, because the bond's price is more convex in yield than the swap it hedges",
+]
+why = "Short a cash bond means borrowing it in repo: you pay the coupon and receive repo interest on the cash, and if the bond is on special you receive less. Those financing flows are part of the cost of the hedge. The bond also moves against the swap through the swap spread, which an interest-rate swap hedge would not."
+
+[[question]]
+id = "hedge_overnight"
+skill = "mm.cross_product_hedging"
+difficulty = 2
+stem = "You expect to hold a client risk overnight. Which hedge instrument carries a daily cash cost or benefit that you must plan for?"
+options = [
+  "Futures carry daily margin and cash bonds carry repo financing; a swap hedge accrues its net coupon",
+  "None of them: every hedge instrument is free to hold overnight once the trade has been done",
+  "Only the swap hedge, because a swap has no margin and so its coupon has to be paid in cash daily",
+  "Only the bond hedge, because futures and swaps are settled at maturity and carry no daily flows",
+]
+why = "Holding a position overnight is a carry question. A futures position is margined daily (a cash flow to finance), a cash bond is financed in repo, and a swap accrues the difference between its legs. The trade-off between the cost of waiting and the cost of hedging is part of the decision to warehouse."
+
+[[question]]
+id = "hedge_liquidity_stress"
+skill = "mm.cross_product_hedging"
+difficulty = 3
+stem = "In a stressed market, the Bund future trades tightly but the 10Y swap market is thin. You are asked for a price on a large 10Y swap. What is the sensible approach?"
+options = [
+  "Hedge fast in futures, but quote wider for the swap-spread basis, which is volatile in stress",
+  "Quote tight, because the futures market is liquid and the hedge can be done at almost no cost",
+  "Decline all large swap requests until the market has calmed down, since the risk is not hedgeable",
+  "Quote at mid and rely on the spread to protect you, as your hedge will be the future in any case",
+]
+why = "Liquidity in the hedge instrument reduces the cost of managing the DV01, but a futures hedge does not remove the spread between the swap and the bond. In stress that spread moves most and is hardest to unwind, so the charge for it has to be in the price."
+
+# ------------------------------------------------------------------------------------------------------------------ views and events
+
+[[question]]
+id = "evidence_vs_view"
+skill = "mm.views_and_events"
+difficulty = 1
+stem = "Which of these is observable market evidence, rather than a view?"
+options = [
+  "The 10Y future has traded up 40 ticks in two minutes on heavy volume",
+  "Your research team believes that the inflation print on Thursday will be hot",
+  "You think the central bank will sound hawkish at the press conference",
+  "You feel that clients are too short and will have to buy back soon",
+]
+why = "Evidence is something you can see in prices, volumes and trades. A view is an opinion about what will happen next. Good decisions state which is which: the first can change your fair value now, the others are inputs to a position of limited size."
+
+[[question]]
+id = "priced_in"
+skill = "mm.views_and_events"
+difficulty = 2
+stem = "You think the ECB will hike. The market already prices an 85% chance of a hike. What is your edge?"
+options = [
+  "Small: only the unpriced 15% is left, so even a correct view has little room left to pay you",
+  "Large: you are 100% sure and the market is only 85% sure, so the gap is worth 15% of the move",
+  "None: you should always fade what is priced, so the correct trade is the opposite of your view",
+  "Equal to the whole move, because a hike that is not yet in the price will be paid for in full",
+]
+why = "What matters is the difference between your expectation and the price, not the strength of your belief. If the market already discounts most of the outcome, even a correct view earns little, while the cost of being wrong (the 15% of no hike) is large against it."
+
+[[question]]
+id = "pre_event_risk"
+skill = "mm.views_and_events"
+difficulty = 2
+stem = "A major release is due in five minutes. How should a market maker run risk and quotes?"
+options = [
+  "Cut inventory towards a volatility-adjusted limit, widen or reduce size, and be ready to re-centre",
+  "Keep everything unchanged: the print cannot be forecast, so there is nothing to prepare for",
+  "Take the largest position you can, since event days offer the biggest profits to those with conviction",
+  "Quote tighter than usual, to win the extra client flow that arrives around the release",
+]
+why = "The timing is known and the outcome is not. You cannot choose the direction, but you can choose how much risk to be exposed to when the move arrives, and how much you charge for providing liquidity in the minutes around it."
+
+[[question]]
+id = "post_event_requote"
+skill = "mm.views_and_events"
+difficulty = 2
+stem = "After the release the 2Y swap rate has jumped 10bp and the 10Y 3bp. What is the sensible first step?"
+options = [
+  "Update fair value across the curve, more at the front than the back, then look at inventory",
+  "Keep the old prices until a client trades, so as to see how the market responds to the print",
+  "Move every tenor by 10bp, which is the largest move and the safest assumption for a quote",
+  "Move only the 2Y, because it is the tenor where the surprise showed up and leave the rest",
+]
+why = "A surprise reprices the whole curve, not one point; the shape (front end more than long end) is information. Quoting off stale fair values is the quickest way to be picked off, and a parallel shift that ignores the shape misprices every curve trade."
+
+[[question]]
+id = "view_lean_small"
+skill = "mm.views_and_events"
+difficulty = 3
+stem = "How strongly should a trading view lean your quote, relative to your inventory?"
+options = [
+  "Modestly: a small fraction of the expected move, with a limit or a large inventory dominating it",
+  "As much as inventory, since conviction is information and should carry the same weight in the price",
+  "Not at all: a dealer must not hold views, and any lean in a quote is a position taken by stealth",
+  "More than inventory when the view is strong, because strong views are what generate trading profit",
+]
+why = "A view is uncertain by nature and an inventory is a fact. A market maker who tilts the price strongly for a view is taking a position through the quote; a small tilt expresses it while keeping the book's risk under control."
+
+[[question]]
+id = "scheduled_unscheduled"
+skill = "mm.views_and_events"
+difficulty = 2
+stem = "What is the main difference, for a market maker, between a scheduled release and an unscheduled headline?"
+options = [
+  "A scheduled release can be prepared for in advance; a headline can only be met by speed",
+  "Scheduled releases always cause the larger moves, so they are the ones that need extra care",
+  "Unscheduled headlines are always noise and can be ignored until the market confirms them",
+  "There is no real difference, because both are equally unpredictable and are handled the same way",
+]
+why = "Preparation is the difference. With a scheduled event you can reduce risk and set widths beforehand; with a headline all you can do is react, so your protection must be built in before the news arrives: sensible limits, tight stale-quote controls and enough room in the book."
+
+[[question]]
+id = "event_size_vs_edge"
+skill = "mm.views_and_events"
+difficulty = 3
+stem = "Your view has an expected gain of 0.5bp on a day when the standard deviation of the market's move is 8bp. How much risk does that justify?"
+options = [
+  "Very little: the edge is a small fraction of one standard deviation, so noise dominates the outcome",
+  "The full limit: the expected value is positive, so the more risk you take, the more you expect to earn",
+  "None at all: an expected value must exceed one standard deviation before any risk is worth taking",
+  "More than usual, because an event day has more volatility and so more chance to collect the edge",
+]
+why = "Positive expected value is not the same as a good bet. An edge of 0.5bp against an 8bp standard deviation is a risk-reward ratio of 0.06, and the position will lose money on a large share of days. Size follows edge relative to risk, and the limit follows volatility, not the other way round."
+
+# ------------------------------------------------------------------------------------------------------------------ client trades
+
+[[question]]
+id = "edge_definition"
+skill = "mm.client_trade"
+difficulty = 1
+stem = "A market maker says a trade 'had 0.2bp of edge'. What does that mean?"
+options = [
+  "The trade was done 0.2bp better than mid at the moment of the trade, worth 0.2bp x its DV01",
+  "The trade has already made 0.2bp x its DV01 as a realised profit, since the edge is locked in",
+  "The bid/offer spread of the market was 0.2bp wide, so both sides of the quote carry that margin",
+  "The trade made 0.2bp x its DV01 after the hedge was done, with the hedging costs already deducted",
+]
+why = "Edge is the difference between the price dealt and the fair price (mid) when the trade was done, times DV01: an expectation of what the spread is worth, before anything happens to the market and before any hedge. It becomes P&L only if the market stays where it was, and the hedging cost comes out of it."
+
+[[question]]
+id = "client_package_curve"
+skill = "mm.client_trade"
+difficulty = 2
+stem = "A client asks you to take the other side of a DV01-neutral 2s10s steepener: they pay fixed on the 10Y and receive fixed on the 2Y. What do you hold, and what do you want?"
+options = [
+  "A 2s10s flattener, receiving the 10Y and paying the 2Y; it gains if the curve flattens",
+  "A 2s10s steepener, receiving the 10Y and paying the 2Y; it gains if the curve steepens",
+  "A 2s10s flattener, paying the 10Y and receiving the 2Y; it gains if the curve flattens",
+  "Flat risk: a DV01-neutral package leaves the dealer with no exposure after the trade",
+]
+why = "The client pays the 10Y (you receive it) and receives the 2Y (you pay it). You are long 10Y duration and short 2Y duration at equal DV01: you gain if the 10Y falls relative to the 2Y, i.e. if the curve flattens. You hold the client's trade in reverse, and your edge is the spread you were paid for taking it."

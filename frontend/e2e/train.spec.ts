@@ -7,13 +7,17 @@ async function replay(page: Page, id: string) {
   await page.locator(".train-q").waitFor();
 }
 
-test("the catalogue is the real one: ten tracks, every source, planned skills marked", async ({ page }) => {
+test("the catalogue is the real one: ten tracks, every source, no skill left without standalone questions", async ({ page, request }) => {
+  const cat = (await (await request.get("/api/catalogue")).json()).train as { sources: number; tracks: { skills: { id: string; planned: boolean; sources: number }[] }[] };
+  const skills = cat.tracks.flatMap((t) => t.skills);
   await page.goto("/#/train");
-  await expect(page.getByText("62 question sources in 10 tracks")).toBeVisible();
+  await expect(page.getByText(`${cat.sources} question sources in 10 tracks`)).toBeVisible();
   await expect(page.getByRole("checkbox", { name: /practise the .* track/ })).toHaveCount(10);
-  await expect(page.getByText("planned", { exact: true })).toHaveCount(7);
+  await expect(page.getByText("planned", { exact: true })).toHaveCount(skills.filter((s) => s.planned).length);
+  await expect(page.getByText("no standalone questions", { exact: true })).toHaveCount(skills.filter((s) => !s.planned && s.sources === 0).length);
+  expect(skills.filter((s) => s.planned || s.sources === 0)).toEqual([]);
   await page.getByRole("checkbox", { name: "practise Swap DV01 and P&L for a rate move" }).check();
-  await expect(page.getByText(/3 sources match/)).toBeVisible();
+  await expect(page.getByText(new RegExp(`${skills.find((s) => s.id === "swaps.dv01")!.sources} sources match`))).toBeVisible();
   await expect(page.getByRole("button", { name: "Start focused practice" })).toBeVisible();
 });
 
@@ -32,6 +36,7 @@ async function walk(page: Page, how: (n: number, expected: string[]) => "skip" |
     const label = (await next.textContent())!;
     await next.click();
     if (!/Next part/.test(label)) return expected;
+    await expect(page.locator(".result")).toHaveCount(0);                                   // wait for the next part to replace the result before reading it (else its kind is read from the old screen)
   }
 }
 
@@ -107,3 +112,24 @@ test("ending a session keeps what was answered, and switching to the Live Desk a
   expect(mine).toBeTruthy();
   expect(first).toBeTruthy();
 });
+
+// The sources added in the curriculum expansion go through the same interface: one part at a time, nothing of the answer on screen before it, and the expected answers typed back are marked correct.
+for (const id of ["math.bootstrap_par_curve#1", "risk.key_rate_read#1", "mm.quote_review#2", "mm.requote_sequence#3", "portfolio.bucket_book#1"]) {
+  test(`a new source (${id}) is practised through the existing interface and its expected answers mark correct`, async ({ page, request }) => {
+    const seen: string[] = [];
+    page.on("response", async (r) => { if (r.url().includes("/api/train/") && !r.url().endsWith("/answer") && !r.url().endsWith("/continue") && !r.url().endsWith("/finish")) seen.push(await r.text().catch(() => "")); });
+    await replay(page, id);
+    await expect(page.locator(".stem")).toBeVisible();
+    await expect(page.getByText("WORKED SOLUTION")).toHaveCount(0);
+    const expected = await walk(page, () => "skip");
+    await expect(page.getByText("Session complete")).toBeVisible();
+    for (const e of expected) if (!e.startsWith("choice:")) expect(seen.join("")).not.toContain(e);        // no numeric answer was in any response before it was due
+    await expect(page.getByText(/Replay what you missed \(\d+\)/)).toBeVisible();                          // the summary has finished rendering
+    await page.getByRole("button", { name: /Replay what you missed/ }).click();
+    await expect(page.getByText("Session complete")).toHaveCount(0);
+    await page.locator(".train-q").waitFor();
+    await walk(page, (n) => { const e = expected[n]; return e.startsWith("choice:") ? { letter: e.slice(7, 8).toLowerCase() } : { type: e }; }, []);
+    await expect(page.getByText(/nothing missed/)).toBeVisible();
+    expect(((await (await request.get("/api/train/history")).json()) as unknown[]).length).toBeGreaterThanOrEqual(2);
+  });
+}

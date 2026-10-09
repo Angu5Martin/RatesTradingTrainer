@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import multi from "../fixtures/train_multi.json";
 import focus from "../fixtures/train_focus.json";
+import catalogueFx from "../fixtures/train_catalogue.json";
 import { type TrainFixture, trainServer } from "./trainServer";
 
 const h = vi.hoisted(() => ({ server: null as unknown as ReturnType<typeof import("./trainServer").trainServer> }));
@@ -15,6 +16,9 @@ import { useTrain } from "../train/store";
 
 const MULTI = multi as unknown as TrainFixture;
 const FOCUS = focus as unknown as TrainFixture;
+type Skill = { id: string; title: string; planned: boolean; sources: number; items: unknown[]; difficulties: Record<string, number>; kinds: Record<string, number> };
+const SKILLS = (catalogueFx as unknown as { tracks: { skills: Skill[] }[] }).tracks.flatMap((t) => t.skills);
+const skillOf = (id: string) => SKILLS.find((s) => s.id === id)!;
 beforeEach(() => { sessionStorage.clear(); useTrain.getState().reset(); h.server = trainServer(MULTI); });
 afterEach(cleanup);
 
@@ -31,14 +35,32 @@ async function open(fx: TrainFixture = MULTI, opts = {}) {
 const step = (n: number) => MULTI.steps[n];
 
 describe("TRAIN catalogue from the real question catalogue", () => {
-  it("lists the ten real tracks and every source, marks planned skills, and disables what has no questions", async () => {
+  it("lists the ten real tracks and every source, and every skill is now practisable on its own", async () => {
     render(<Train />);
     const tracks = await screen.findAllByRole("checkbox", { name: /practise the .* track/ });
     expect(tracks).toHaveLength(10);
-    expect(screen.getByText(/62 question sources in 10 tracks/)).toBeInTheDocument();
-    expect(screen.getAllByText("planned").length).toBe(7);
-    expect(screen.getByRole("checkbox", { name: "practise Bootstrapping a curve from par swap rates" })).toBeDisabled();
+    expect(screen.getByText(new RegExp(`${(catalogueFx as { sources: number }).sources} question sources in 10 tracks`))).toBeInTheDocument();
+    expect(SKILLS.filter((s) => s.planned || s.sources === 0)).toEqual([]);                        // the catalogue has no planned or question-less skill any more
+    expect(screen.queryAllByText("planned")).toHaveLength(0);
+    expect(screen.queryAllByText("no standalone questions")).toHaveLength(0);
+    expect(screen.getByRole("checkbox", { name: "practise Bootstrapping a curve from par swap rates" })).toBeEnabled();
+    expect(screen.getByRole("checkbox", { name: "practise Key-rate exposure and what a hedge leaves behind" })).toBeEnabled();
     expect(screen.getByRole("checkbox", { name: "practise Swap DV01 and P&L for a rate move" })).toBeEnabled();
+  });
+
+  it("still marks a planned skill, and one practised only in the Live Desk, and disables both", async () => {
+    const edited = JSON.parse(JSON.stringify(catalogueFx)) as { tracks: { skills: Skill[]; sources: number }[] };
+    const [a, b] = [edited.tracks[0].skills[1], edited.tracks[0].skills[2]];
+    for (const sk of [a, b]) { edited.tracks[0].sources -= sk.sources; sk.sources = 0; sk.items = []; sk.difficulties = { "1": 0, "2": 0, "3": 0 }; sk.kinds = { conceptual: 0, calculation: 0 }; }
+    a.planned = true;
+    const real = h.server.api.catalogue;
+    h.server.api.catalogue = async () => ({ ...(await real()), train: edited as never });
+    render(<Train />);
+    await screen.findAllByRole("checkbox", { name: /practise the .* track/ });
+    expect(screen.getAllByText("planned")).toHaveLength(1);
+    expect(screen.getAllByText("no standalone questions")).toHaveLength(1);
+    expect(screen.getByRole("checkbox", { name: `practise ${a.title}` })).toBeDisabled();
+    expect(screen.getByRole("checkbox", { name: `practise ${b.title}` })).toBeDisabled();
   });
 
   it("builds a focused practice from one skill, a mixed one from several, and carries the filters", async () => {
@@ -60,7 +82,7 @@ describe("TRAIN catalogue from the real question catalogue", () => {
     const user = userEvent.setup();
     render(<Train />);
     await user.click(await screen.findByRole("checkbox", { name: "practise Swap DV01 and P&L for a rate move" }));
-    expect(screen.getByText(/3 sources match/)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(`${skillOf("swaps.dv01").sources} sources match`))).toBeInTheDocument();
     await user.click(within(screen.getByRole("group", { name: "difficulty" })).getByRole("button", { name: "3" }));
     expect(screen.getByText(/Nothing matches these filters/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Start focused practice/ })).toBeDisabled();
@@ -72,7 +94,8 @@ describe("TRAIN catalogue from the real question catalogue", () => {
     const row = (await screen.findByText("Swap DV01 and P&L for a rate move")).closest("li")!;
     await user.click(within(row).getByRole("button", { name: "questions" }));
     expect(within(row).getByText("swaps.dv01_pnl")).toBeInTheDocument();
-    await user.click(within(row).getAllByRole("button", { name: "Practise this one" })[2]);
+    const item = within(row).getByText("swaps.dv01_pnl").closest("li")!;
+    await user.click(within(item).getByRole("button", { name: "Practise this one" }));
     await waitFor(() => expect(h.server.log[0]).toBe('start:{"template_id":"swaps.dv01_pnl"}'));
   });
 });

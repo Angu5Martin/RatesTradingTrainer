@@ -44,8 +44,8 @@ def _s(id: str, title: str, prereqs: tuple[str, ...] = (), planned: bool = False
 _SKILLS = [
     # --- maths ---
     _s("math.forward_rates", "Forward rates from zero rates / discount factors"),
-    _s("math.bootstrapping", "Bootstrapping a curve from par swap rates", ("math.forward_rates",), True),
-    _s("math.interpolation", "Interpolation and what it does to forwards and risk", ("math.bootstrapping",), True),
+    _s("math.bootstrapping", "Bootstrapping a curve from par swap rates", ("math.forward_rates",)),
+    _s("math.interpolation", "Interpolation and what it does to forwards and risk", ("math.bootstrapping",)),
     # --- swaps ---
     _s("swaps.dv01", "Swap DV01 and P&L for a rate move", ("math.forward_rates",)),
     _s("swaps.forward_start", "Forward-starting swaps and forward par rates", ("swaps.dv01",)),
@@ -54,7 +54,7 @@ _SKILLS = [
     _s("swaps.basis", "Basis swaps (3s6s, ESTR-Euribor) direction and risk", ("swaps.ois_vs_ibor",)),
     # --- bonds / money markets ---
     _s("bonds.duration_convexity", "Bond DV01, duration and convexity P&L", ("swaps.dv01",)),
-    _s("bonds.money_market", "Bills, zero-coupon instruments, money-market yields", (), True),
+    _s("bonds.money_market", "Bills, zero-coupon instruments, money-market yields", ()),
     _s("bonds.carry", "Bond carry and roll-down against repo: yield pickup, pull-to-par, curve roll, breakeven",
        ("bonds.repo", "curve.carry_rolldown", "bonds.duration_convexity")),
     _s("bonds.repo", "Repo, financing, specialness", ("bonds.duration_convexity",)),
@@ -67,11 +67,11 @@ _SKILLS = [
     # --- risk ---
     _s("risk.hedge_ratio", "DV01-neutral hedge ratios across tenors", ("swaps.dv01",)),
     _s("risk.key_rate", "Key-rate exposure and what a hedge leaves behind", ("risk.hedge_ratio",)),
-    _s("risk.convexity", "Convexity: who is long/short and what it costs", ("bonds.duration_convexity",), True),
+    _s("risk.convexity", "Convexity: who is long/short and what it costs", ("bonds.duration_convexity",)),
     # --- curve ---
     _s("curve.steepener", "Curve trade direction, DV01-neutral sizing and P&L", ("risk.hedge_ratio",)),
     _s("curve.direction", "Bull/bear steepening and flattening", ("swaps.dv01",)),
-    _s("curve.butterfly", "Butterflies: weights, direction, P&L", ("curve.steepener",), True),
+    _s("curve.butterfly", "Butterflies: weights, direction, P&L", ("curve.steepener",)),
     _s("curve.carry_rolldown", "Carry and roll-down of a position: accrual, curve rate for the remaining maturity, breakeven",
        ("swaps.dv01", "math.forward_rates")),
     _s("curve.carry_curve", "Carry and roll-down of curve trades: the forward-implied spread drift",
@@ -100,8 +100,8 @@ _SKILLS = [
     _s("mm.views_and_events", "Views, events and changing conditions: sizing risk by conviction and vol",
        ("mm.skew", "mm.adverse_selection")),
     # --- portfolio ---
-    _s("portfolio.aggregation", "Aggregate DV01, key-rate and curve exposure", ("risk.key_rate",), True),
-    _s("portfolio.scenarios", "P&L under multi-factor scenarios", ("portfolio.aggregation",), True),
+    _s("portfolio.aggregation", "Aggregate DV01, key-rate and curve exposure", ("risk.key_rate",)),
+    _s("portfolio.scenarios", "P&L under multi-factor scenarios", ("portfolio.aggregation",)),
 ]
 
 SKILLS: dict[str, Skill] = {s.id: s for s in _SKILLS}

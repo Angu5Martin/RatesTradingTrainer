@@ -43,10 +43,12 @@ def test_build_queue_has_no_immediate_repeats_and_is_seeded():
     assert all(a.template_id != b.template_id for a, b in zip(q1, q1[1:]))
 
 
-def test_cli_list_and_filters(capsys):
+def test_cli_list_and_filters(capsys, monkeypatch):
+    from rates_trainer.curriculum.skills import SKILLS, Skill
+    monkeypatch.setitem(SKILLS, "math.roadmap_only", Skill("math.roadmap_only", "math", "A skill on the roadmap with no questions yet", (), True))
     assert main(["list"]) == 0
     out = capsys.readouterr().out
-    assert "mm.client_trade" in out and "planned" in out
+    assert "mm.client_trade" in out and "math.roadmap_only" in out and "planned" in out
     assert main(["--skill", "nonexistent.skill"]) == 2
 
 

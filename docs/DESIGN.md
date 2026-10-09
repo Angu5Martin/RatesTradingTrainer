@@ -230,10 +230,16 @@ or a `ChoicePart`. `facts` carries the generation inputs so tests can recompute 
 
 Stateful multi-step episodes are built on top of these pieces (`QuotingContext`, `Portfolio`, `Quote.dealer_swap`): see `docs/EPISODES.md`.
 
+The TRAIN expansion added sources in eight modules under `questions/templates/` (`curve_maths`, `money_market`, `swap_valuation`, `risk_book`, `portfolio`, `rv_spreads`, `futures_specs`, `mm_standalone`)
+and two curated files (`foundations.toml`, `mm_judgement.toml`). They follow the rules above and two more: a source that exists never changes what it generates for a given `(template, seed)`, because a practice
+record and a replay are that pair (a digest test pins 372 draws of the 62 earlier sources), and a part's `kind` must not depend on the seed, because the catalogue classifies a source from seed 0.
+
 ### Curriculum
 
-`curriculum/skills.py` is a graph of 39 skills (30 active) with prerequisites, grouped in tracks. Skills with no content yet are
-`planned`; a test fails if a planned skill gets questions (clear the flag) or an active skill has none. `./trainer list` shows coverage.
+`curriculum/skills.py` is a graph of 41 skills with prerequisites, grouped in ten tracks. A skill is **planned** when it is on the roadmap and has no questions of any kind
+(the TRAIN catalogue shows a *planned* chip); a skill with no standalone questions that is practised only in the Live Desk shows *no standalone questions*
+(`./trainer list`: `NO QUESTIONS`). A test fails if a planned skill gets questions (clear the flag) or an active skill has none. Every skill now has standalone questions: see
+`docs/CURRICULUM.md` for the coverage matrix, the audit of the question sources, the review of the public book material and what remains outside TRAIN.
 
 ## Market conventions
 
@@ -321,6 +327,11 @@ skewing and widening both cost flow.
    round trip (price a future from bond *i*, recover bond *i*'s repo and a zero net basis); `net = CF × (F_i − F)` and `net = gross − carry`; the CTD sets the price and has the highest implied repo (one repo); `F ≤ F_i(y)` at every shock;
    the CTD tendency below and above 6%; higher repo raises the fair futures price by about `dirty × Δrepo × days/360`; the long-basis payoff equals `−net basis + CF × (F_i' − min F_j')` and is bounded below by `−net basis`;
    a CF-weighted hedge neutralises a CTD position and the face-for-face hedge over-hedges by `1/CF`; strip DV01 and hedge against a swap.
+9. **TRAIN expansion** (`tests/questions/test_expansion.py`): 36 templates recomputed from first principles or by a different engine route (an annuity against a bump-and-reprice, an
+   enumeration against a closed form, a finite difference against a duration), their tolerance windows checked against the mental route, the earlier sources pinned by digest, skill coverage,
+   filters, no leakage through the session, and the curated options checked for a length tell (the right answer is neither usually the longest nor usually the shortest). Mutation checks (49 single-point
+   mutations: signs, weights, divisors, day counts) were run with caches cleared; the three that first survived (an `approx` sign, a client-side sign and a model-quote swap, each only checked for
+   self-consistency) now have assertions that tie them to the action or to a hand-built quote, and one equivalent mutant (a redundant guard) remains.
 8. **Mutation checks** (run when each layer was written; caches cleared): flipping hedge direction, skew sign, client↔dealer side,
    basis sign, FRA discounting, the IRS fixed-leg day count, carry sign, forward-roll, realised OIS compounding, fixing source, clean-twin restart,
    breakeven sign, paid-period filtering, ASW sign, financing sign, accrued interest, specialness sign or the ICMA exponent each fail the intended test; and for futures the CF month rounding, the accrued
@@ -346,9 +357,10 @@ Next, in suggested order:
 
 1. **Stateful market-making episodes:** levels 1-5 built (`docs/EPISODES.md`): one trade; an inventory loop; a curve book; hedging with futures
    and bonds and holding risk overnight; information, views and changing conditions. The user interface is the next design step.
-2. **Curve shape and interpolation:** front-end humps, why log-linear discount factors give a sawtooth in forwards, and what that does to roll-down and DV01
-   (this is where the 2Y floating-reset effect belongs).
-3. **Portfolio scenarios:** mixed swap/bond/future books, key-rate profile display, multi-factor shocks.
+2. **Curve shape and interpolation (engine side):** front-end humps and what the sawtooth in log-linear forwards does to roll-down and DV01 (this is where the 2Y floating-reset
+   effect belongs). The TRAIN questions on interpolation exist (`math.interp_log_linear`); alternative interpolators in the engine do not.
+3. **Portfolio scenarios (engine side):** mixed swap/bond/future books in one risk report. TRAIN has bucketed swap books and multi-factor shocks (`portfolio.bucket_book`, `portfolio.scenario_pnl`); a book mixing
+   bonds and futures with the swaps is still to be built.
 4. **Attempt log + review queue** (a plain record, not adaptive). The stateful market-making episodes now exist and their frontend boundary is frozen
    (`docs/EPISODES.md` section 19); the user interface is designed in `docs/UI.md` (not yet built; CLAUDE.md, "UI-agnostic core").
 5. Later, if wanted: a traditional EUR ASW over 6M Euribor (adds the Euribor-ESTR basis), ESTR futures, end-game/wildcard delivery options.

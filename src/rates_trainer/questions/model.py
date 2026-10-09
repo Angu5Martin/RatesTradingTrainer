@@ -91,6 +91,8 @@ class NumericPart:
             return f"{v:+.2f}bp"
         if self.unit == "cf":
             return f"{v:.6f}"
+        if self.unit == "df":
+            return f"{v:.5f}"
         if self.unit == "pts":
             return f"{v:,.3f} pts"
         if self.unit == "contracts":

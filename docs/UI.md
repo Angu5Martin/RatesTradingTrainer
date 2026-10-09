@@ -16,7 +16,7 @@ One application, three areas, one shared vocabulary (skills, DV01 sign conventio
 
 | Area | Purpose | Built on | Visual mode |
 |---|---|---|---|
-| **TRAIN** | Build a skill: focused or mixed question practice | `questions/` (62 sources: 36 curated, 26 parameterised templates; 41 skills in 10 tracks, 7 planned) | Focused: one problem, one answer workspace |
+| **TRAIN** | Build a skill: focused or mixed question practice | `questions/` (167 sources: 105 curated, 62 parameterised templates; 41 skills in 10 tracks, none planned: see `docs/CURRICULUM.md`) | Focused: one problem, one answer workspace |
 | **LIVE DESK** | Apply the skills together under desk conditions, levels 1-5 | `episodes/api.py` (`Session`) | Dense, terminal-like workstation |
 | **REVIEW** | Answer "was that a good decision or did I get lucky?", find weak areas | stored question attempts and stored episode transcripts | Analytical, spacious |
 
@@ -28,15 +28,16 @@ the eye rather than renamed:
 
 | Group in the UI | Tracks (sources today) |
 |---|---|
-| Foundations | math (1), swaps (7), bonds (6) |
-| Risk and hedging | risk (2), portfolio (planned only) |
-| Futures and relative value | futures (13), rv (11), curve (8) |
-| P&L and carry | pnl (6) |
-| Quoting and market making | mm (8) |
+| Foundations | math (12), swaps (23), bonds (15) |
+| Risk and hedging | risk (14), portfolio (5) |
+| Futures and relative value | futures (14), rv (12), curve (18) |
+| P&L and carry | pnl (9) |
+| Quoting and market making | mm (45) |
 | Mixed | any combination, or everything |
 
-The thin tracks (math, risk, portfolio) will show as thin. Planned skills appear greyed with "planned" rather than hidden; the skill graph already has the
-flag and a test keeps it honest. This is a content observation, not a UI problem, and the UI should make it visible instead of hiding it.
+When this section was written the thin tracks (math, risk, portfolio) showed as thin, with seven skills planned and four practised only in the Live Desk; the question bank has since been expanded so that every
+skill has standalone questions (`docs/CURRICULUM.md`). The two chips remain in the interface for any future skill that is planned (no questions of any kind) or practised only in the Live Desk
+("no standalone questions"): the catalogue shows a content gap instead of hiding it, and a test keeps the flag honest.
 
 The illustrative names in the brief (Concepts, Calculations, ...) map onto a real axis the data already has: **difficulty** (1 = single concept, 2 = concept plus
 calculation, 3 = multi-step trading situation) and **kind** (curated conceptual vs parameterised numerical). They become filters, not separate areas.

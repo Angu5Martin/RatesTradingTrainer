@@ -13,7 +13,9 @@ from fastapi.testclient import TestClient
 from rates_trainer.episodes.api import Session, episode_for_level
 from rates_trainer.episodes.episode import reference_decision
 from rates_trainer.episodes.serial import encode_decision
+from rates_trainer.curriculum.skills import SKILLS
 from rates_trainer.questions.api import catalogue
+from rates_trainer.questions.registry import all_specs
 from rates_trainer.web import store
 from rates_trainer.web.app import create_app
 
@@ -267,9 +269,9 @@ def test_input_unit_is_a_unit_not_the_hint():
 
 def test_question_catalogue_is_plain_and_complete(client):
     c = catalogue()
-    assert json.loads(json.dumps(c)) == c and c["sources"] == 62
+    assert json.loads(json.dumps(c)) == c and c["sources"] == len(all_specs())
     skills = [s for t in c["tracks"] for s in t["skills"]]
-    assert len(skills) == 41 and sum(s["sources"] for s in skills) == 62
+    assert len(skills) == len(SKILLS) == 41 and sum(s["sources"] for s in skills) == len(all_specs())
     assert all(s["sources"] == 0 for s in skills if s["planned"])
     assert client.get("/api/catalogue").json()["train"] == c
     assert [e["level"] for e in client.get("/api/catalogue").json()["episodes"]] == [1, 2, 3, 3, 4, 5]

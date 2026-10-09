@@ -22,6 +22,7 @@ class TemplateSpec:
     difficulty: int  # 1 = single concept, 2 = concept + calculation, 3 = multi-step trading situation
     fn: Generator
     curated: bool = False
+    kind: str | None = None  # "conceptual" | "calculation" when declared; the catalogue then need not generate the source to classify it (a test checks the declaration)
 
 
 _REGISTRY: dict[str, TemplateSpec] = {}
@@ -34,11 +35,11 @@ def register(spec: TemplateSpec) -> None:
     _REGISTRY[spec.id] = spec
 
 
-def template(id: str, skill: str, difficulty: int = 1) -> Callable[[Generator], Generator]:
-    """Decorator registering a parameterised template."""
+def template(id: str, skill: str, difficulty: int = 1, kind: str | None = None) -> Callable[[Generator], Generator]:
+    """Decorator registering a parameterised template. `kind` is optional documentation-as-data for the catalogue: a calculation has a number to work out, a conceptual question is all choices."""
 
     def deco(fn: Generator) -> Generator:
-        register(TemplateSpec(id, skill, difficulty, fn))
+        register(TemplateSpec(id, skill, difficulty, fn, kind=kind))
         return fn
 
     return deco

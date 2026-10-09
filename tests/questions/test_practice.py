@@ -251,7 +251,7 @@ def test_difficulty_and_kind_filters_use_the_catalogues_classification():
 
 
 def test_bad_selections_are_refused_not_widened():
-    for kw in ({"tracks": ["nonsense"]}, {"skills": ["nonsense"]}, {"kind": "speed"}, {"count": 0}, {"count": 500}, {"skills": ["math.bootstrapping"]},
+    for kw in ({"tracks": ["nonsense"]}, {"skills": ["nonsense"]}, {"kind": "speed"}, {"count": 0}, {"count": 500}, {"skills": ["math.bootstrapping"], "difficulty": 3},
                {"skills": ["swaps.dv01"], "difficulty": 3}):
         with pytest.raises(ValueError):
             QuestionSession.start(**kw)
@@ -263,8 +263,9 @@ def test_the_same_seed_gives_the_same_session_and_curated_questions_are_not_repe
     assert a.plan == b.plan and [a._q(i).stem for i in range(a.total)] == [b._q(i).stem for i in range(b.total)]
     conceptual = QuestionSession.start(skills=["swaps.dv01"], kind="conceptual", count=10, seed=1)
     ids = [t for t, _ in conceptual.plan]
-    assert len(ids) == len(set(ids)) == 2                         # two curated questions exist for this skill: each once
-    assert conceptual.selection["pool"] == 2
+    n_curated = sum(sp.curated and sp.skill == "swaps.dv01" for sp in all_specs())
+    assert len(ids) == len(set(ids)) == n_curated                                      # every curated question of this skill, each once
+    assert conceptual.selection["pool"] == n_curated
 
 
 def test_the_plan_is_exactly_what_the_terminal_would_build():
@@ -288,7 +289,7 @@ def test_single_question_by_source_and_exact_replay_by_id():
 # --------------------------------------------------------------------------------------------------------------------- record and catalogue
 
 def test_the_record_keeps_what_review_needs_and_survives_ending_early():
-    s = QuestionSession.start(skills=["mm.client_trade"], count=3, seed=3)
+    s = QuestionSession.single("mm.client_trade_risk", 3)                  # a multi-part source, chosen by name (a skill filter may now also draw a single-part curated question)
     q = s._q(0)
     s.submit(reference(q.parts[0]))
     s.next()

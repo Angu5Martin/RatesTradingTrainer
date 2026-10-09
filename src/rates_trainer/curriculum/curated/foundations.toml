@@ -1,0 +1,553 @@
+# Curated conceptual questions on curve mathematics, money markets, swap mechanics, key-rate risk, convexity, curve shape and portfolio aggregation.
+# FIRST option is the correct one; order is shuffled per seed. Conventions (docs/DESIGN.md): DV01 = P&L for a 1bp FALL in rates; bid = dealer pays fixed,
+# offer = dealer receives fixed; "long duration" = receiver / long bond (never "long rates").
+# Option lengths are kept comparable on purpose (a test checks that the right answer is not systematically the longest): detail belongs in `why`.
+
+# ------------------------------------------------------------------------------------------------------------------ curve mathematics
+
+[[question]]
+id = "bootstrap_order"
+skill = "math.bootstrapping"
+difficulty = 1
+stem = "A curve is built from par swap rates at 1Y, 2Y, 3Y and 5Y. Why do you solve for the discount factors from the shortest maturity outwards?"
+options = [
+  "Each swap's fixed leg includes all earlier dates, so only the last factor is unknown when you reach it",
+  "Short maturities are the most liquid, so their factors are the most reliable and must be fixed first",
+  "The longest par rate is the most accurate, so you start there and work back towards the short end",
+  "Shorter swaps have fewer cash flows, and a solver cannot handle more than one unknown at a time",
+]
+why = "A par swap is worth zero: fixed leg = floating leg = 1 - DF(maturity). The fixed leg is the rate times the sum of ALL the discount factors up to maturity. Solving in order means the earlier factors are already known and each swap pins down exactly one new factor. That sequential dependence is why a change in a short quote moves every longer factor. (Global fits that solve for all factors at once exist, but they still respect the same dependence.)"
+
+[[question]]
+id = "bootstrap_bump"
+skill = "math.bootstrapping"
+difficulty = 2
+stem = "You bump the 5Y par swap rate by +1bp and re-bootstrap the curve (nodes at 1Y, 2Y, 3Y, 5Y, 7Y and 10Y, quotes for all of them). Which discount factors change?"
+options = [
+  "The 5Y node, every later node, and the dates between 3Y and 5Y through interpolation",
+  "Only the 5Y node: every other factor was solved from its own par quote",
+  "Every discount factor on the curve, because the whole curve is re-fitted at once to the new quote set",
+  "Only nodes after 5Y, because the 5Y quote is an input and a quote cannot change its own node",
+]
+why = "Bootstrapping works outwards, so a quote only affects its own node and those built after it. Between nodes the interpolation also moves, so the dates between the previous node (3Y) and the bumped node change too. Earlier nodes were solved without any knowledge of the 5Y rate. This is why risk on a bootstrapped curve is naturally bucketed by pillar, and why a change in a short quote shifts the whole long end."
+
+[[question]]
+id = "par_vs_zero_sloped"
+skill = "math.bootstrapping"
+difficulty = 2
+stem = "On an upward-sloping curve, how does the 10Y par swap rate compare with the 10Y zero rate (annually compounded)?"
+options = [
+  "Par is lower: it averages in the lower, earlier zero rates through the coupon dates",
+  "Par is higher: it includes the final coupon, which is discounted at the highest zero rate on the curve",
+  "They are equal: a par swap rate is, by definition, the zero rate for its own maturity",
+  "It depends on the notional, because larger swaps are discounted on a different part of the curve",
+]
+why = "The par rate solves 'PV of fixed coupons = 1 - final discount factor', so it blends the zero rates for all ten payment dates, weighted by their discount factors. On a rising curve the nearer ones are lower, so the par rate sits below the 10Y zero rate. On an inverted curve the reverse holds. The gap grows with the steepness and the maturity."
+
+[[question]]
+id = "interp_flat_forwards"
+skill = "math.interpolation"
+difficulty = 2
+stem = "A curve is built by interpolating the logarithm of the discount factor linearly between nodes. What does its forward curve look like, and what does bumping one node do?"
+options = [
+  "Flat between nodes with steps at nodes; a bump moves the two segments either side of that node",
+  "Smooth and continuous everywhere; a bump moves every forward on the curve by a decaying amount",
+  "Rising linearly between nodes, from one node's forward to the next; a bump moves only the node itself",
+  "Flat between nodes with steps at nodes; a bump moves every forward after the bumped node",
+]
+why = "Linear interpolation of ln DF means a constant instantaneous forward within each segment, with a jump at each node. A node controls the two segments around it, so a bump is local: this is what makes bucketed risk clean. The price is a stepped forward curve, which is why some desks prefer smoother schemes for forward-starting trades."
+
+[[question]]
+id = "interp_forward_start"
+skill = "math.interpolation"
+difficulty = 3
+stem = "Two desks start from the same par quotes (including 5Y and 10Y but not 7Y) but interpolate differently. Which trade will they most likely price differently?"
+options = [
+  "A 7y1y forward-starting swap, and how its risk splits across the 5Y and 10Y buckets",
+  "A spot-starting 5Y par swap, because the 5Y bucket is where the two methods diverge the most",
+  "A spot-starting 10Y par swap, because it depends on every node up to 10Y and so accumulates the differences",
+  "None: identical inputs always give identical prices, so only the risk reports can differ",
+]
+why = "Both curves are fitted to reprice the quoted instruments exactly, so quoted par swaps agree. Anything that depends on the curve BETWEEN the quotes, such as off-pillar swaps, forward-starting swaps and FRAs, depends on the interpolation scheme. The same goes for how the risk is allocated to the pillars, which is what a hedge is sized from."
+
+[[question]]
+id = "ois_policy_reading"
+skill = "math.forward_rates"
+difficulty = 2
+stem = "The 3M ESTR OIS rate is 2.60% and the 6M ESTR OIS rate is 2.45%. What is the most direct reading about months 3 to 6?"
+options = [
+  "ESTR is expected to average about 30bp lower than in the first three months, so a cut or more is priced",
+  "ESTR is expected to average 2.45% over months 3 to 6, 15bp below the first three months",
+  "The market expects a 15bp cut at the first meeting and no further change after it",
+  "Nothing: an OIS rate is an overnight rate, and says nothing about expectations for later periods",
+]
+why = "The 6M rate is the average of the first quarter and the 3x6 forward. With the 3M at 2.60 and the 6M at 2.45, the 3x6 forward must be about 2 x 2.45 - 2.60 = 2.30%. A 30bp step is a little more than one 25bp cut. The forward also contains a small term premium, so read it as 'about', and as a probability-weighted path."
+
+[[question]]
+id = "forward_not_forecast"
+skill = "math.forward_rates"
+difficulty = 2
+stem = "The 1Y rate is 2.0% and the 1y1y forward rate is 3.0%. Which statement is correct?"
+options = [
+  "3.0% is a breakeven: if the 1Y rate in a year ends up lower, rolling short deposits underperforms",
+  "The market forecasts that the 1Y rate in one year will be exactly 3.0%, since forwards are unbiased",
+  "Rolling 1Y deposits for two years will earn 3.0% in the second year, which is locked in today",
+  "The curve is inconsistent: a forward rate must equal today's spot rate for the same tenor",
+]
+why = "A forward rate is the rate that makes you indifferent between the long investment and rolling the short one. It equals the expected future short rate only if there is no term premium and no risk aversion; in reality it also contains compensation for risk and for liquidity. It is the price you can lock in today (by buying the 2Y), not the rate that a rolled deposit will earn."
+
+# ------------------------------------------------------------------------------------------------------------------ money markets
+
+[[question]]
+id = "bill_rich_to_ois"
+skill = "bonds.money_market"
+difficulty = 2
+stem = "A 6M German bill yields 2.28% and 6M ESTR OIS is 2.40% (both ACT/360 simple). What does it mean that the bill yields below OIS?"
+options = [
+  "The bill is rich to OIS: demand for safe, collateral-eligible paper lets it trade through the overnight rate",
+  "The bill is cheap to OIS, so buying it funded at ESTR earns a pickup of 12bp for the same maturity",
+  "The two must yield the same, so one of the quotes contains an error, or the bill carries a credit risk",
+  "The bill has negative convexity, so investors demand a lower yield for the shorter duration it gives them",
+]
+why = "Bills have no credit risk of note and are prized as collateral, so in many conditions they trade through OIS. A buyer who funds at ESTR therefore loses carry: this is the price of holding the collateral. When bills trade ABOVE OIS they are cheap, and funding them is a positive-carry trade."
+
+[[question]]
+id = "bill_dv01_small"
+skill = "bonds.money_market"
+difficulty = 1
+stem = "Roughly, how do the DV01s compare for €500m of a 3-month bill and €500m of a 10-year Bund (price near par)?"
+options = [
+  "Bill about €12k per bp, Bund about €425k: the bill's risk is a few per cent of the Bund's",
+  "Bill about €425k per bp, Bund about €12k: short maturities reprice faster, so carry more risk",
+  "They are about equal at roughly €125k per bp, because DV01 depends only on the notional",
+  "Bill about €125k per bp, Bund about €250k: DV01 grows with the square root of maturity",
+]
+why = "DV01 is roughly market value x modified duration x 1bp. A 3M bill has a duration of about 0.25 years: 500m x 0.25 x 0.0001 = €12.5k. A 10Y Bund has a modified duration of about 8.5: 500m x 8.5 x 0.0001 = €425k. Shorter instruments carry far less rate risk per euro, so bills are funding and collateral instruments before they are rate-risk instruments."
+
+[[question]]
+id = "act360_vs_act365"
+skill = "bonds.money_market"
+difficulty = 2
+stem = "A deposit pays 2.50% on an ACT/360 basis. What is the equivalent rate on an ACT/365 basis?"
+options = [
+  "About 2.535%: the same cash interest over a longer year needs a higher quoted rate",
+  "About 2.465%: a 365-day year spreads the interest over more days, so the rate is lower",
+  "Exactly 2.50%: day counts only matter once the interest is compounded over several periods",
+  "About 2.50% for short deposits and noticeably different for long ones, where the extra days accumulate",
+]
+why = "Interest = rate x days / basis. For the same cash, a bigger denominator (365) needs a bigger rate: 2.50% x 365/360 = 2.535%. Always compare rates on the same basis before concluding that one market is cheaper; the euro market quotes money-market rates ACT/360, sterling ACT/365."
+
+[[question]]
+id = "estr_not_forward_looking"
+skill = "swaps.ois_vs_ibor"
+difficulty = 2
+stem = "How does the ESTR fixing used in an OIS compare with the 6M Euribor fixing used in an IRS, in timing?"
+options = [
+  "ESTR is compounded in arrears, so the leg's rate is known only as days pass; Euribor is set at the start",
+  "Both are set in advance for the whole period, which is why they can be swapped against each other",
+  "ESTR is set in advance for each month, while 6M Euribor is set in arrears at the end of the period",
+  "Both are compounded in arrears; the difference between the legs is only the day-count convention",
+]
+why = "An OIS floating leg compounds each day's realised ESTR and pays the result at the end. A 6M Euribor leg is fixed at the start (the term rate then known), and paid at the end. As a consequence an OIS reprices day by day with realised policy, while a Euribor IRS locks its next payment at each reset."
+
+[[question]]
+id = "why_discount_estr"
+skill = "swaps.ois_vs_ibor"
+difficulty = 2
+stem = "Why is a collateralised EUR swap discounted on the ESTR curve rather than on the Euribor curve?"
+options = [
+  "Cash collateral earns the overnight rate, so ESTR is the opportunity cost of funding the position",
+  "ESTR is higher than Euribor at every maturity, and a higher discount rate gives a cleaner price",
+  "Euribor is fixed only monthly, so it cannot be used to discount cash flows that fall on other days",
+  "Dealers fund each other for six months at ESTR, which makes it the natural term funding rate",
+]
+why = "The value of a collateralised position is what you would pay or receive to hold it with cash margin; the margin earns the overnight rate, so cash flows are discounted at that rate. This is also why swap curves are bootstrapped in two steps: first the ESTR discount curve, then the Euribor projection curve using it for discounting."
+
+[[question]]
+id = "ois_irs_annuity"
+skill = "swaps.ois_vs_ibor"
+difficulty = 2
+stem = "A 10Y IRS (30E/360 fixed leg) and a 10Y OIS (ACT/360 fixed leg) are both quoted at 2.85%. Which has the larger DV01 per €1m, and why?"
+options = [
+  "The OIS, by about 1.4%: its ACT/360 fixed leg accrues 365/360 as much per year at the same rate",
+  "The IRS, by about 1.4%: Euribor is above ESTR, so its fixed-leg annuity is worth more per year",
+  "They are identical: the quoted rate and the tenor alone determine a swap's DV01 per euro",
+  "The IRS, because its fixed leg is paid annually and so is discounted over a longer average life",
+]
+why = "The fixed leg of the OIS accrues on actual days over 360, which averages about 1.014 per year versus 1.000 under 30E/360. At the same rate the OIS fixed leg is bigger, and so is the annuity that drives its DV01. It is why equal notionals of an IRS and an OIS are NOT quite DV01-neutral."
+
+# ------------------------------------------------------------------------------------------------------------------ swap valuation and FRAs
+
+[[question]]
+id = "payer_off_market_asset"
+skill = "swaps.dv01"
+difficulty = 2
+stem = "You pay fixed at 2.00% on a 10Y EUR swap. The 10Y market rate is now 3.00%. Which statement is correct?"
+options = [
+  "It is an asset worth about 100bp x PV01: the floating leg you receive is worth more than the fixed leg",
+  "It is a liability worth about 100bp x PV01, because you are committed to paying a rate that has risen",
+  "It is worth zero: it was struck at the market and later rate changes affect both legs equally",
+  "It is an asset only at maturity, when the difference between the legs is finally paid in cash",
+]
+why = "You lock in a fixed rate 100bp below today's. The floating leg you receive is worth the market rate times the annuity, the fixed leg you pay is 2.00% times the annuity, so your position is worth (3.00% - 2.00%) x annuity x notional = 100 x PV01. A cleared or collateralised swap has this amount posted to you as variation margin."
+
+[[question]]
+id = "unwind_cost"
+skill = "swaps.dv01"
+difficulty = 2
+stem = "You want to close an off-market swap before maturity. What do you actually receive or pay?"
+options = [
+  "Its present value at the dealer's bid or offer: the mid value less half the spread x the PV01",
+  "Nothing: a swap can be cancelled at par by both parties agreeing to stop exchanging payments",
+  "Exactly its mid value: dealers do not charge to unwind positions they originally priced",
+  "The notional, as with a bond redemption, with the accrued fixed and floating payments netted",
+]
+why = "Closing a swap means doing an offsetting trade or agreeing a termination price; either way the other side quotes around mid, and you cross half the bid/offer on the PV01. The cash settlement is the swap's PV, which can be large for an old, off-market swap."
+
+[[question]]
+id = "fra_buyer_gains"
+skill = "swaps.fra"
+difficulty = 1
+stem = "You BUY (pay the fixed rate on) a 3x6 FRA at 2.50%. 3M Euribor fixes at 2.80% on the start date. What happens?"
+options = [
+  "You receive a cash settlement for the 30bp over the period, discounted to the start date",
+  "You pay a cash settlement for the 30bp, because the fixing is above the rate you agreed to pay",
+  "Nothing changes hands until the end of the period, when 2.80% interest is exchanged for 2.50%",
+  "You receive the full 2.80% interest on the notional, and pay your 2.50% at the end of the period",
+]
+why = "The FRA buyer pays the agreed rate and receives the fixing, so gains when the fixing is above the agreed rate. The cash difference is settled at the START of the period, discounted by 1/(1 + fixing x tau), since the interest it represents would otherwise be paid at the end."
+
+[[question]]
+id = "fra_vs_future"
+skill = "swaps.fra"
+difficulty = 2
+stem = "What are the main differences between a 3M FRA and the corresponding 3M Euribor future, for the same period?"
+options = [
+  "Daily margining gives the future a convexity adjustment, and it sits on fixed IMM dates",
+  "The future carries the exchange's credit risk while the FRA has none, and its rate is lower",
+  "The future's rate is always below the FRA's, because futures are quoted as 100 minus the rate",
+  "There is no difference in pricing: both settle once, at the start, and the future is simply listed",
+]
+why = "A FRA settles once, at the start of the period. A future settles daily, which means gains are reinvested (or financed) at current rates; the correlation of that financing with the future's own P&L makes the future's rate a little higher than the forward, by a convexity adjustment that grows with the square of the time to the contract. Futures also live on a standard IMM calendar, so hedging a FRA with them leaves a date mismatch."
+
+[[question]]
+id = "tenor_basis_meaning"
+skill = "swaps.basis"
+difficulty = 2
+stem = "In EUR, why does a 3M Euribor leg need a positive spread to match a 6M Euribor leg?"
+options = [
+  "6M Euribor embeds more credit and liquidity premium than rolling 3M, which the spread compensates",
+  "3M Euribor is set below ESTR, so a spread is needed to bring the leg up to the overnight rate",
+  "The 3M leg pays twice as often, and more frequent payments always cost more in discounting",
+  "The spread is set by the central bank to keep short-term funding costs consistent across tenors",
+]
+why = "Lending for six months is riskier and less liquid than rolling three-month loans, so the 6M fixing includes a larger premium. The basis swap prices that difference: it is usually a few basis points, widening in stress. A basis swap has little exposure to the level of rates and almost all of its risk is the spread."
+
+# ------------------------------------------------------------------------------------------------------------------ key-rate risk and hedging
+
+[[question]]
+id = "kr_curve_not_flat"
+skill = "risk.key_rate"
+difficulty = 2
+stem = "A book's total DV01 is +€2k per bp, but its buckets are +€500k at 5Y and -€498k at 10Y. What is it?"
+options = [
+  "A large 5s10s steepener: long 5Y duration, short 10Y, and nearly flat to a parallel move",
+  "A flat book: the total shows it carries almost no risk, and the buckets only reflect trade structure",
+  "A large 5s10s flattener, because it is long the shorter bucket and so profits as the curve narrows",
+  "A large outright long-duration position, with a small offset in the 10Y bucket from a hedge",
+]
+why = "The total DV01 nets the buckets, hiding the structure. Long 5Y duration gains when 5Y rates fall; short 10Y gains when 10Y rates rise: together they make money if the 10Y rises relative to the 5Y, i.e. the curve steepens. Reading the buckets, not the total, is what key-rate risk is for."
+
+[[question]]
+id = "kr_forward_start_hedge"
+skill = "risk.key_rate"
+difficulty = 2
+stem = "You hold a 7y3y forward-starting receiver (starts in 7 years, ends in 10). Which set of spot swaps hedges its key-rate risk best?"
+options = [
+  "Pay a 10Y and receive a 7Y swap, each at the same notional as the forward-starting swap itself",
+  "Receive the 10Y and pay the 7Y at the same notional, which copies the position and doubles it",
+  "Pay a 10Y swap sized to the forward swap's total DV01, which neutralises a parallel move",
+  "Pay a 3Y swap, because the forward swap covers three years of exposure at the end of the curve",
+]
+why = "A forward swap's par-rate risk sits at its start and end dates: in terms of spot swaps it is the 10Y minus the 7Y, at the same notional. So the hedge is the opposite: pay the 10Y and receive the 7Y at that notional. A single swap sized to the total DV01 neutralises only parallel moves."
+
+[[question]]
+id = "kr_residual_curve"
+skill = "risk.key_rate"
+difficulty = 2
+stem = "You receive fixed on a €100m 10Y swap and hedge its DV01 by paying a 5Y swap. A parallel move leaves you flat. What position do you now hold?"
+options = [
+  "A 5s10s flattener: you gain if the 10Y rate falls relative to the 5Y, whatever the level does",
+  "A 5s10s steepener: you gain if the 10Y rises relative to the 5Y, because you are short the 5Y",
+  "No position: a DV01-neutral hedge removes all interest-rate risk, so only the carry remains",
+  "An outright long duration position, since receiving fixed is long duration and the hedge is small",
+]
+why = "Receiving the 10Y is long 10Y duration (gains when the 10Y falls); paying the 5Y is short 5Y duration (gains when the 5Y rises). Together you profit when the 5Y-10Y spread narrows, which is a flattener. A hedge in a different tenor always turns the trade into a curve position."
+
+[[question]]
+id = "hedge_ratio_notional"
+skill = "risk.hedge_ratio"
+difficulty = 1
+stem = "To hedge a €100m 10Y swap with 5Y swaps you need a notional of about €190m. Why more than €100m?"
+options = [
+  "A 5Y swap has about half the DV01 per euro of a 10Y, so twice the notional matches the DV01",
+  "5Y swaps are less liquid than 10Y swaps, so a larger notional is needed to execute the hedge",
+  "The hedge must be larger than the position to cover the transaction costs of crossing two spreads",
+  "The 5Y rate is lower than the 10Y rate, and a lower rate needs more notional for the same cash flows",
+]
+why = "DV01 per euro rises with maturity: roughly €455 per €1m at 5Y against €870 at 10Y. Matching DV01 is matching 'rate sensitivity', not notional. Hedges are therefore a ratio of DV01s (about 1.9 here), and an equal-notional hedge in a different tenor is not neutral."
+
+[[question]]
+id = "hedge_ratio_drifts"
+skill = "risk.hedge_ratio"
+difficulty = 2
+stem = "You DV01-hedge a 10Y swap with a 5Y swap in the morning. After a large rally, the hedge is no longer neutral. Why?"
+options = [
+  "The two swaps' DV01s change by different amounts as rates move, so the ratio has to be re-set",
+  "DV01-neutral hedges stay neutral by definition, so a residual means the original ratio was miscalculated",
+  "The 5Y swap is one day closer to maturity, and its DV01 falls with time while the 10Y's does not",
+  "The notional of the hedge changes with the market, as a swap's notional is marked to its value",
+]
+why = "DV01 is the slope at today's rates and it changes as rates move, at a different speed for different tenors. A hedge sized from today's DV01s is a local hedge. For big moves, or when the curve changes shape, the ratio drifts, and good risk management means re-hedging when the exposure has moved enough to matter."
+
+# ------------------------------------------------------------------------------------------------------------------ convexity
+
+[[question]]
+id = "swap_convexity_who"
+skill = "risk.convexity"
+difficulty = 1
+stem = "In a vanilla swap, who is long convexity?"
+options = [
+  "The receiver of fixed, like a bondholder: it gains more in a rally than it loses in a sell-off",
+  "The payer of fixed, because its value rises with rates and the gains compound in the payer's favour",
+  "Neither: a swap is a linear instrument, so its value changes in proportion to the rate move",
+  "Both, because each side holds the opposite leg of the same trade and convexity cancels out",
+]
+why = "A receiver's DV01 grows when rates fall (its annuity lengthens in value) and shrinks when rates rise: it gains more than the linear estimate in a rally and loses less in a sell-off, like a bond. The payer is the mirror image. Over small moves it does not matter; over big ones it does."
+
+[[question]]
+id = "convexity_barbell_pays"
+skill = "risk.convexity"
+difficulty = 2
+stem = "You are long a duration-matched 2Y and 30Y barbell against a 10Y bullet. Realised volatility turns out to be very low and the curve barely moves. Which is most likely?"
+options = [
+  "You lose the carry and roll-down you gave up, with no convexity gain to offset it",
+  "You make money anyway, because convexity pays in every market, however quiet it turns out to be",
+  "You roughly break even, because the position is DV01-neutral and so insensitive to what the curve does",
+  "You gain the convexity P&L in full, because it does not depend on the size of the moves",
+]
+why = "Convexity P&L scales with the square of the move. If rates barely move it is near zero, while the lower yield of the barbell (its carry and roll-down) is a steady cost. A long-convexity position is a bet that realised moves are bigger than the market's price for convexity implies."
+
+[[question]]
+id = "convexity_long_30y"
+skill = "risk.convexity"
+difficulty = 2
+stem = "Which position is long convexity, to first order DV01-neutral?"
+options = [
+  "Long a 30Y bond, short a 5Y bond sized to the same DV01, since convexity grows with maturity",
+  "Long a 5Y bond, short a 30Y bond sized to the same DV01, because the shorter bond is less volatile",
+  "Long a 10Y bond and short another 10Y bond with the same DV01 but a different coupon",
+  "Pay fixed on a 10Y swap and receive fixed on a 10Y swap with a different strike",
+]
+why = "Convexity rises faster than duration with maturity, so for equal DV01 the 30Y bond has far more convexity than the 5Y. Being long the 30Y and short the 5Y is therefore long convexity (and, usually, short carry: you pay for it in yield)."
+
+# ------------------------------------------------------------------------------------------------------------------ butterflies and curve shape
+
+[[question]]
+id = "fly_belly_profit"
+skill = "curve.butterfly"
+difficulty = 1
+stem = "You pay fixed on 2Y and 10Y swaps and receive fixed on a 5Y swap, with the 2Y and 10Y legs each carrying half the 5Y's DV01. What does the position make money from?"
+options = [
+  "The 5Y rate falling relative to the average of the 2Y and 10Y: the belly outperforming",
+  "A parallel fall in rates, because the 5Y leg carries the whole DV01 of the position",
+  "A steepening of the whole curve, since you are short the wings and long the middle of it",
+  "The 5Y rate rising relative to the wings, which makes the receiver in the belly more valuable",
+]
+why = "You are long the belly (receiving 5Y is long 5Y duration) and short the wings. Weighted 50:50 by DV01, level cancels, and a slope change that leaves the belly at the wings' average cancels too. What is left is curvature: you gain when the belly richens relative to the wings."
+
+[[question]]
+id = "fly_equal_notional"
+skill = "curve.butterfly"
+difficulty = 2
+stem = "Why is a 2s5s10s butterfly weighted by DV01, not by equal notional?"
+options = [
+  "Equal notionals have unequal DV01, so the fly would carry a net level and slope exposure",
+  "DV01 weighting is required by clearing houses, which margin on risk rather than on notional",
+  "Equal notionals cannot be executed, because the three swaps trade on different days of the week",
+  "Equal notionals give a smaller profit, since the belly is then under-weighted against the wings",
+]
+why = "A fly should isolate curvature. With equal notionals the legs' DV01s differ greatly (the 10Y has far more per euro than the 2Y), so a parallel move or a simple steepening produces a P&L that has nothing to do with the belly. Weighting by DV01 (belly = sum of wings) makes the position flat to level, and a half-and-half split also makes it flat to a slope move centred on the belly."
+
+[[question]]
+id = "fly_residual_risk"
+skill = "curve.butterfly"
+difficulty = 2
+stem = "A 50:50 DV01-weighted butterfly is flat to parallel moves. Which move does it still lose on if you are long the belly?"
+options = [
+  "The belly cheapening against the average of the wings (the 5Y rate rising relative to them)",
+  "Any parallel move, because the swaps' DV01s drift apart as soon as rates start to move",
+  "A steepening that leaves the 5Y exactly at the average of the 2Y and 10Y moves",
+  "A fall in all rates, which hurts the wings by more than it helps the belly in the position",
+]
+why = "What is left is the butterfly spread itself (2 x belly - wings): the 5Y rate rising relative to the average of the 2Y and 10Y. It is zero to level moves by weights and zero to a slope move that keeps the belly at the wings' average. Only a change in curvature moves it."
+
+[[question]]
+id = "move_bull_steepener"
+skill = "curve.direction"
+difficulty = 2
+stem = "The 2Y swap rate falls 8bp and the 10Y falls 2bp. How is this move described?"
+options = [
+  "A bull steepening: rates fall, and the short end falls more, so the curve steepens",
+  "A bull flattening: rates fall, and the larger fall in the short end pulls the two rates together",
+  "A bear steepening: the 2Y moves by more than the 10Y, so the curve has moved in the bearish direction",
+  "A parallel rally: both rates fell, and the small difference between the moves is not significant",
+]
+why = "Both rates fall, so it is a bull move. The 10Y minus the 2Y rises by 6bp, so the curve is steeper. Bull steepeners typically accompany easing expectations, where the front end reprices most."
+
+[[question]]
+id = "move_bear_flattener"
+skill = "curve.direction"
+difficulty = 2
+stem = "The 2Y swap rate rises 10bp and the 10Y rises 4bp. How is this move described, and what typically drives it?"
+options = [
+  "A bear flattening, typically a hawkish repricing of policy that moves the front end most",
+  "A bear steepening, typically a rise in term premium that lifts the long end of the curve the most",
+  "A bull flattening, typically a flight to quality that pulls long yields down faster than short ones",
+  "A bull steepening, typically cuts being priced into the front end of the curve ahead of a meeting",
+]
+why = "Both rates rise (bear) and the 10Y minus 2Y spread narrows by 6bp (flattening). The front end is the one that is sensitive to central-bank expectations, so a hawkish surprise moves it more."
+
+# ------------------------------------------------------------------------------------------------------------------ portfolio
+
+[[question]]
+id = "portfolio_total_misleads"
+skill = "portfolio.aggregation"
+difficulty = 2
+stem = "Desk A has a DV01 of zero in every bucket. Desk B has +€300k in the 2Y bucket and -€300k in the 10Y bucket. Both report a total DV01 of zero. Which statement is right?"
+options = [
+  "Desk B carries a large curve exposure that its total hides, while desk A is flat in every bucket",
+  "They carry the same risk, because a total DV01 of zero means neither desk can lose money on rates",
+  "Desk A has the larger risk, since a desk with no hedges in any bucket cannot offset a market move",
+  "Both are exposed to a parallel move, because the buckets of each desk net to zero only on paper",
+]
+why = "A total DV01 only measures parallel moves. Desk B loses money if the curve flattens (or gains if it steepens) by about €300k per bp of spread move. Limits on a single number miss this, which is why books report by bucket and why traders look at the shape first."
+
+[[question]]
+id = "portfolio_risk_factors"
+skill = "portfolio.aggregation"
+difficulty = 3
+stem = "A book holds euro swaps, Bunds and an asset-swap package. What is the right way to aggregate its risk?"
+options = [
+  "Map each position onto common risk factors, then sum the exposures factor by factor to see the net",
+  "Add up the notionals of all the positions, since notional is the common unit across products",
+  "Add up the DV01 of each position and compare the sum with a single DV01 limit for the book",
+  "Report each product on its own risk sheet and never add them, because the products differ",
+]
+why = "The unit of risk is a factor (curve buckets, swap spread, basis), not a product. A Bund and a swap both have bucketed rate risk; the Bund also carries swap-spread risk that the swap does not. Summing by factor shows the offsets and the leftovers, such as a swap-spread exposure behind a flat DV01."
+
+[[question]]
+id = "scenario_why_many"
+skill = "portfolio.scenarios"
+difficulty = 2
+stem = "A risk manager asks for a book to be run through parallel, curve-steepening and swap-spread scenarios, not just a parallel shock. Why?"
+options = [
+  "A book can be flat to one factor and exposed to another, with offsets that differ by scenario",
+  "A parallel shock is always the worst case, and the other scenarios are shown only to be thorough",
+  "Several scenarios make the P&L numbers larger, which gives the limits more room to be binding",
+  "Regulators only accept steepening scenarios, so a parallel shock is reported for internal use",
+]
+why = "Each scenario flexes a different combination of risk factors. A book that looks safe in a parallel shock may be a large curve position, and offsets between buckets disappear in a different scenario. Stress tests are chosen to find the factor combinations a total DV01 hides."
+
+[[question]]
+id = "realised_vs_unrealised"
+skill = "pnl.attribution"
+difficulty = 1
+stem = "A market maker receives fixed from clients all morning, then pays fixed to close part of it at a lower rate. Which statement about the P&L is correct?"
+options = [
+  "The closed part is realised and fixed; the open part is unrealised and moves with its DV01",
+  "All of it is unrealised until the swaps mature, since a swap's P&L is only final at maturity",
+  "Nothing is realised until month end, when the accounting system marks the book and books a P&L",
+  "The closed part can still gain or lose, because rates keep moving while the offsetting trade exists",
+]
+why = "Closing with an offsetting trade locks in the difference between the two rates, whatever happens next. What remains open is marked to market, so its value moves with rates until it is closed or hedged. The split matters because only the unrealised part is still exposed, and the total is what a trader is judged on."
+
+# ------------------------------------------------------------------------------------------------------------------ bonds, forward-starting swaps and curve trades (added to deepen thin skills)
+
+[[question]]
+id = "duration_zero_vs_coupon"
+skill = "bonds.duration_convexity"
+difficulty = 2
+stem = "Two 10-year EUR government bonds both yield 3%: a zero-coupon bond and a 5% coupon bond. Which statement about their rate risk is correct?"
+options = [
+  "The zero has the higher duration, but the 5% bond has the larger DV01 per 100 face because its price is higher",
+  "The 5% bond has both the higher duration and the larger DV01, since its coupons are paid for years",
+  "The zero has both the higher duration and the larger DV01 per 100 face, as all its value comes at maturity",
+  "They have the same duration and the same DV01 per 100 face, because maturity and yield are equal",
+]
+why = "Duration is the weighted-average time of the cash flows: the zero pays everything at year 10, so its modified duration is about 9.7 against about 8.0 for the 5% bond. But DV01 per 100 face is price x modified duration x 1bp: the zero is priced near 74 and the 5% bond near 117, so the coupon bond carries the larger DV01 per 100 face (about 0.094 against 0.072). Duration is a percentage sensitivity, DV01 an amount, and the two rank differently when prices differ."
+
+[[question]]
+id = "duration_falls_with_yield"
+skill = "bonds.duration_convexity"
+difficulty = 2
+stem = "A 30-year bond's yield rises from 2% to 5%. What happens to its modified duration and its convexity?"
+options = [
+  "Both fall: later cash flows are discounted more heavily, so the bond behaves like a shorter, less convex one",
+  "Both rise: a higher yield leaves more of the bond's return in its coupons, which are paid later in time",
+  "Duration falls but convexity rises, because the price falls faster than the coupons can compensate for it",
+  "Neither changes: duration and convexity depend only on the maturity and the coupon of the bond",
+]
+why = "At a higher yield the distant cash flows are worth less, so a smaller share of the bond's value sits far out: its duration shortens, and so does its convexity. The same bond is less sensitive when yields are high than when they are low, which is why DV01 per euro of a long bond was so large in the low-yield years."
+
+[[question]]
+id = "forward_5y5y_relation"
+skill = "swaps.forward_start"
+difficulty = 1
+stem = "The spot 5Y EUR swap rate is 2.40% and the spot 10Y is 2.80%. Where is the 5y5y forward swap rate?"
+options = [
+  "Above 2.80%, around 3.2-3.3%: the later five years must be priced higher than the average",
+  "Below 2.80%, around 2.6%: the forward averages the 5Y and 10Y rates",
+  "At 2.80%: a forward swap rate equals the longer spot rate it ends at",
+  "At 2.40%: the forward swap starts at the 5Y point, so it takes that point's rate",
+]
+why = "The 10Y swap is the 5Y swap followed by the 5y5y, so the 10Y rate is a weighted average of the 5Y rate and the forward. If the 10Y is 40bp above the 5Y, the forward must be well above the 10Y: about 2 x 2.80 - 2.40 = 3.20% by year-weighting, and a little higher (about 3.27%) once you weight by annuities, because the earlier years are discounted less and so carry more weight."
+
+[[question]]
+id = "forward_start_annuity_weights"
+skill = "swaps.forward_start"
+difficulty = 2
+stem = "Why is the 5y5y forward swap rate not simply (10 x S10 - 5 x S5) / 5?"
+options = [
+  "The weights should be the swaps' annuities, because later payments are discounted and carry less weight",
+  "That formula is correct as long as the curve is flat; otherwise the forward needs a convexity adjustment",
+  "It would be correct if the rates were compounded continuously, but swap rates are quoted as annual rates",
+  "The forward starts in five years, so it must be discounted back to today, which year-weighting ignores",
+]
+why = "Fixed and floating legs are additive across periods, so S10 x A10 = S5 x A5 + F x (A10 - A5), where A is the annuity (the PV of one unit paid each year). The weights are annuities, not years: the first five years, discounted less, have more weight than the next five. Year-weighting overstates the forward on an upward-sloping curve."
+
+[[question]]
+id = "steepener_in_a_rally"
+skill = "curve.steepener"
+difficulty = 2
+stem = "You hold a DV01-neutral 2s10s steepener. Rates rally strongly, and the curve flattens as they do. What happens to your P&L?"
+options = [
+  "You lose: the steepener is long the spread, and the spread narrowed, whatever the rally did to level",
+  "You gain: the 2Y and 10Y legs both rally, and the position was constructed to profit from a fall in rates",
+  "Nothing: DV01-neutral positions are insensitive to the market, so only carry changes the P&L",
+  "You gain, because the flattening is a move of the curve and the steepener is built to profit from curve moves",
+]
+why = "A steepener makes money when the spread between the long and short ends widens, whatever the level does. A strong rally led by the long end flattens the curve, and the position loses, even though rates are falling. This is why a curve trade should be judged on the spread, not on the direction of rates."
+
+[[question]]
+id = "steepener_neutral_parallel"
+skill = "curve.steepener"
+difficulty = 1
+stem = "You hold a DV01-neutral 2s10s flattener. Both rates then rise 15bp in parallel. What is the P&L to a good approximation?"
+options = [
+  "About zero: the legs' DV01s offset, leaving only a small convexity term",
+  "A gain of about 15bp x the 10Y leg's DV01, because the flattener is short the long end",
+  "A loss of about 15bp x the 2Y leg's DV01, because the front end is the one that reprices most",
+  "About 15bp x the sum of the two legs' DV01s, since both legs move by the same amount",
+]
+why = "The legs have equal and opposite DV01, so a parallel move gains on one leg what it loses on the other. What is left is the difference in convexity (the longer leg has more) and any slope change. A curve trade expresses a view on the spread; the sizing in DV01 is what removes the view on the level."
