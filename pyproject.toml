@@ -20,7 +20,7 @@ rates-trainer = "rates_trainer.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-rates_trainer = ["curriculum/curated/*.toml", "web/static/**/*"]
+rates_trainer = ["curriculum/curated/*.toml", "mmgame/data/*.toml", "web/static/**/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

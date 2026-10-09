@@ -24,6 +24,9 @@ TRAIN (question practice; the Live Desk's episode machinery is not involved):
     GET  /api/train/{id}/summary           -> summary
     GET  /api/train/history                -> saved practice sessions (for Review)
 
+MARKET MAKING GAME (a separate game; its own registry and files; see web/mmgame_routes.py):
+    /api/mmgame ...                        start, state, quote, quotes, pause, ack, advance, debrief, abandon
+
 state = {id, phase: awaiting | settled | done, episode, observation | null, pending: {observation, decision, result} | null}.
 The live desk runs sessions with reveal_inference=False: the model's P(informed) is not in any result (it is in the debrief).
 """
@@ -45,6 +48,7 @@ from ..episodes.api import Session, catalogue as episode_catalogue, episode_for_
 from ..episodes.serial import decode_decision, encode_decision
 from ..questions.api import QuestionSession, catalogue as question_catalogue
 from . import store
+from .mmgame_routes import make_router as mmgame_router
 
 MAX_SESSIONS = 20
 
@@ -144,6 +148,8 @@ def create_app(static_dir: str | Path | None = None) -> FastAPI:
             return desks[desk_id]
         except KeyError:
             raise HTTPException(404, "unknown session") from None
+
+    app.include_router(mmgame_router())
 
     @app.get("/api/health")
     def health():

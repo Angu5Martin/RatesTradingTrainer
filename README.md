@@ -80,7 +80,7 @@ Use `./trainer --help` for the available options.
 
 ### Option 2 — Web workstation on macOS
 
-The browser interface brings TRAIN and Live Desk together in one workstation.
+The browser interface brings TRAIN, the Live Desk and the **Market Making Game** together in one workstation. The game is a separate, standalone area: you make markets against bots on several dice, card and world-knowledge questions at once, with shocks that change the rules, new information, stale quotes to defend and a debrief that separates decision quality from luck (see [`docs/MARKET_MAKING_GAME.md`](docs/MARKET_MAKING_GAME.md)). Open it from the left-hand navigation (`#/game`).
 
 **One-time setup**
 
@@ -142,7 +142,7 @@ These conventions are used consistently throughout the questions and trading sim
 
 ## Local data and testing
 
-The web application stores user data locally, normally under `~/.rates_trainer`, or under `$RATES_TRAINER_HOME` if configured. Practice history and completed episodes are separate from the source code.
+The web application stores user data locally, normally under `~/.rates_trainer`, or under `$RATES_TRAINER_HOME` if configured. Practice history, completed episodes and Market Making Game files (`mmgame/`) are separate from the source code and from each other.
 
 Automated tests should use isolated temporary data directories so test sessions do not appear in your personal training history.
 
@@ -162,6 +162,7 @@ Frontend tests and end-to-end tests have their own dependencies and setup.
 - [`docs/EPISODES.md`](docs/EPISODES.md) — Live Desk mechanics and episode design
 - [`docs/UI.md`](docs/UI.md) — workstation interface and interaction design
 - [`docs/CURRICULUM.md`](docs/CURRICULUM.md) — question coverage, curriculum mapping and source audit
+- [`docs/MARKET_MAKING_GAME.md`](docs/MARKET_MAKING_GAME.md) — the multi-market game: levels, shocks, bots, accounting, debrief, verification
 
 ## Scope
 

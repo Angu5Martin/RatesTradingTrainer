@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
+import { Game } from "../game/Game";
 import { LiveDesk } from "../desk/LiveDesk";
 import { Review } from "../review/Review";
 import { Train } from "../train/Train";
 
-export type Area = "train" | "desk" | "review";
+export type Area = "train" | "desk" | "game" | "review";
 const AREAS: { id: Area; label: string; hint: string }[] = [
   { id: "train", label: "TRAIN", hint: "focused practice" },
   { id: "desk", label: "LIVE DESK", hint: "market making" },
+  { id: "game", label: "MARKET MAKING GAME", hint: "multi-table vs bots" },
   { id: "review", label: "REVIEW", hint: "history and debriefs" },
 ];
 
-const fromHash = (): Area => { const h = window.location.hash.replace("#/", ""); return h === "train" || h === "review" ? h : "desk"; };
+const fromHash = (): Area => { const h = window.location.hash.replace("#/", ""); return h === "train" || h === "review" || h === "game" ? h : "desk"; };
 
 export function App() {
   const [area, setArea] = useState<Area>(fromHash());
@@ -29,6 +31,7 @@ export function App() {
       <main className="content">
         {area === "train" ? <Train /> : null}
         {area === "desk" ? <LiveDesk onExit={() => go("review")} /> : null}
+        {area === "game" ? <Game /> : null}
         {area === "review" ? <Review /> : null}
       </main>
     </div>
