@@ -1,0 +1,1305 @@
+{
+ "tracks": [
+  {
+   "id": "math",
+   "title": "Rates mathematics",
+   "skills": [
+    {
+     "id": "math.forward_rates",
+     "title": "Forward rates from zero rates / discount factors",
+     "planned": false,
+     "prereqs": [],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 1,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "math.forward_1y",
+       "difficulty": 1,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "math.bootstrapping",
+     "title": "Bootstrapping a curve from par swap rates",
+     "planned": true,
+     "prereqs": [
+      "math.forward_rates"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    },
+    {
+     "id": "math.interpolation",
+     "title": "Interpolation and what it does to forwards and risk",
+     "planned": true,
+     "prereqs": [
+      "math.bootstrapping"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    }
+   ],
+   "sources": 1
+  },
+  {
+   "id": "swaps",
+   "title": "Swaps, OIS and FRAs",
+   "skills": [
+    {
+     "id": "swaps.dv01",
+     "title": "Swap DV01 and P&L for a rate move",
+     "planned": false,
+     "prereqs": [
+      "math.forward_rates"
+     ],
+     "sources": 3,
+     "curated": 2,
+     "difficulties": {
+      "1": 2,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 2,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curated.dv01_30y_vs_10y",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.positive_dv01",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "swaps.dv01_pnl",
+       "difficulty": 1,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "swaps.forward_start",
+     "title": "Forward-starting swaps and forward par rates",
+     "planned": false,
+     "prereqs": [
+      "swaps.dv01"
+     ],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "swaps.forward_start",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "swaps.ois_vs_ibor",
+     "title": "OIS vs Euribor swaps, discounting and tenor basis",
+     "planned": false,
+     "prereqs": [
+      "swaps.dv01"
+     ],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "basis.irs_vs_ois",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "swaps.fra",
+     "title": "FRAs: pricing, DV01, hedging with swaps and futures",
+     "planned": false,
+     "prereqs": [
+      "swaps.dv01"
+     ],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "swaps.fra_dv01_pnl",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "swaps.basis",
+     "title": "Basis swaps (3s6s, ESTR-Euribor) direction and risk",
+     "planned": false,
+     "prereqs": [
+      "swaps.ois_vs_ibor"
+     ],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "basis.tenor_3s6s",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    }
+   ],
+   "sources": 7
+  },
+  {
+   "id": "bonds",
+   "title": "Bonds, money markets and repo",
+   "skills": [
+    {
+     "id": "bonds.duration_convexity",
+     "title": "Bond DV01, duration and convexity P&L",
+     "planned": false,
+     "prereqs": [
+      "swaps.dv01"
+     ],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "bonds.duration_convexity_pnl",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "bonds.money_market",
+     "title": "Bills, zero-coupon instruments, money-market yields",
+     "planned": true,
+     "prereqs": [],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    },
+    {
+     "id": "bonds.carry",
+     "title": "Bond carry and roll-down against repo: yield pickup, pull-to-par, curve roll, breakeven",
+     "planned": false,
+     "prereqs": [
+      "bonds.repo",
+      "curve.carry_rolldown",
+      "bonds.duration_convexity"
+     ],
+     "sources": 2,
+     "curated": 1,
+     "difficulties": {
+      "1": 0,
+      "2": 1,
+      "3": 1
+     },
+     "kinds": {
+      "conceptual": 1,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "bonds.carry_rolldown",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "curated.funded_bond_forwards_zero",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
+    },
+    {
+     "id": "bonds.repo",
+     "title": "Repo, financing, specialness",
+     "planned": false,
+     "prereqs": [
+      "bonds.duration_convexity"
+     ],
+     "sources": 3,
+     "curated": 2,
+     "difficulties": {
+      "1": 0,
+      "2": 3,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 2,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "bonds.repo_carry",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "curated.negative_carry_low_coupon",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.short_special_bond",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
+    }
+   ],
+   "sources": 6
+  },
+  {
+   "id": "futures",
+   "title": "Interest-rate futures",
+   "skills": [
+    {
+     "id": "futures.conversion_factor",
+     "title": "Conversion factors, invoice price and gross basis",
+     "planned": false,
+     "prereqs": [
+      "bonds.duration_convexity"
+     ],
+     "sources": 2,
+     "curated": 1,
+     "difficulties": {
+      "1": 1,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 1,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curated.cf_flat_yield",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "futures.conversion_factor",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "futures.dv01",
+     "title": "Bund/Bobl/Schatz futures DV01 and CF-weighted hedges",
+     "planned": false,
+     "prereqs": [
+      "futures.conversion_factor"
+     ],
+     "sources": 2,
+     "curated": 1,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 2
+     },
+     "kinds": {
+      "conceptual": 1,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curated.future_short_convexity",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "futures.dv01_hedge",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "futures.ctd",
+     "title": "Cheapest-to-deliver: net basis ranking, implied repo, why it switches",
+     "planned": false,
+     "prereqs": [
+      "futures.conversion_factor",
+      "bonds.repo"
+     ],
+     "sources": 6,
+     "curated": 4,
+     "difficulties": {
+      "1": 0,
+      "2": 4,
+      "3": 2
+     },
+     "kinds": {
+      "conceptual": 4,
+      "calculation": 2
+     },
+     "items": [
+      {
+       "id": "curated.ctd_high_yield_rule",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.ctd_low_yield_rule",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.repo_up_futures_price",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.special_repo_ctd",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "futures.ctd_ranking",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "futures.ctd_switch",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "futures.stir",
+     "title": "3M Euribor futures and strips: price, DV01, direction, hedging a swap, convexity adjustment",
+     "planned": false,
+     "prereqs": [
+      "swaps.fra"
+     ],
+     "sources": 3,
+     "curated": 2,
+     "difficulties": {
+      "1": 1,
+      "2": 2,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 2,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curated.stir_convexity_sign",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.stir_long_is_long_duration",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "futures.stir_strip",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    }
+   ],
+   "sources": 13
+  },
+  {
+   "id": "risk",
+   "title": "Risk and hedging",
+   "skills": [
+    {
+     "id": "risk.hedge_ratio",
+     "title": "DV01-neutral hedge ratios across tenors",
+     "planned": false,
+     "prereqs": [
+      "swaps.dv01"
+     ],
+     "sources": 2,
+     "curated": 1,
+     "difficulties": {
+      "1": 1,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 1,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curated.hedge_2y_notional",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "hedging.swap_swap",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "risk.key_rate",
+     "title": "Key-rate exposure and what a hedge leaves behind",
+     "planned": false,
+     "prereqs": [
+      "risk.hedge_ratio"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    },
+    {
+     "id": "risk.convexity",
+     "title": "Convexity: who is long/short and what it costs",
+     "planned": true,
+     "prereqs": [
+      "bonds.duration_convexity"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    }
+   ],
+   "sources": 2
+  },
+  {
+   "id": "curve",
+   "title": "Curve trades",
+   "skills": [
+    {
+     "id": "curve.steepener",
+     "title": "Curve trade direction, DV01-neutral sizing and P&L",
+     "planned": false,
+     "prereqs": [
+      "risk.hedge_ratio"
+     ],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curves.curve_trade",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "curve.direction",
+     "title": "Bull/bear steepening and flattening",
+     "planned": false,
+     "prereqs": [
+      "swaps.dv01"
+     ],
+     "sources": 2,
+     "curated": 2,
+     "difficulties": {
+      "1": 2,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 2,
+      "calculation": 0
+     },
+     "items": [
+      {
+       "id": "curated.bear_steepener",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.bull_flattener",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
+    },
+    {
+     "id": "curve.butterfly",
+     "title": "Butterflies: weights, direction, P&L",
+     "planned": true,
+     "prereqs": [
+      "curve.steepener"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    },
+    {
+     "id": "curve.carry_rolldown",
+     "title": "Carry and roll-down of a position: accrual, curve rate for the remaining maturity, breakeven",
+     "planned": false,
+     "prereqs": [
+      "swaps.dv01",
+      "math.forward_rates"
+     ],
+     "sources": 4,
+     "curated": 3,
+     "difficulties": {
+      "1": 2,
+      "2": 2,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 3,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "carry.swap_carry_roll",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "curated.forward_start_carry",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.inverted_curve_receiver",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.weekend_carry",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
+    },
+    {
+     "id": "curve.carry_curve",
+     "title": "Carry and roll-down of curve trades: the forward-implied spread drift",
+     "planned": false,
+     "prereqs": [
+      "curve.carry_rolldown",
+      "curve.steepener"
+     ],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "carry.curve_trade",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    }
+   ],
+   "sources": 8
+  },
+  {
+   "id": "rv",
+   "title": "Relative value and basis",
+   "skills": [
+    {
+     "id": "rv.swap_spread",
+     "title": "Swap spreads and asset swaps: direction and packages",
+     "planned": false,
+     "prereqs": [
+      "bonds.duration_convexity"
+     ],
+     "sources": 2,
+     "curated": 2,
+     "difficulties": {
+      "1": 0,
+      "2": 2,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 2,
+      "calculation": 0
+     },
+     "items": [
+      {
+       "id": "curated.swap_spread_haven_demand",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.swap_spread_vs_asw",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
+    },
+    {
+     "id": "rv.asw",
+     "title": "Asset-swap packages: sizing and P&L",
+     "planned": false,
+     "prereqs": [
+      "rv.swap_spread"
+     ],
+     "sources": 3,
+     "curated": 2,
+     "difficulties": {
+      "1": 1,
+      "2": 2,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 2,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curated.asw_package_direction",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.asw_sign_cheap_bond",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "rv.asw_package",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "rv.futures_basis",
+     "title": "Cash-futures basis: net basis vs delivery-option value, buy/sell the basis, what the position owns",
+     "planned": false,
+     "prereqs": [
+      "futures.ctd",
+      "futures.dv01"
+     ],
+     "sources": 4,
+     "curated": 3,
+     "difficulties": {
+      "1": 0,
+      "2": 3,
+      "3": 1
+     },
+     "kinds": {
+      "conceptual": 3,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curated.convergence",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.implied_repo_arbitrage",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.long_basis_wins_when",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "futures.basis_trade",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "rv.cash_vs_swaps",
+     "title": "Cash vs swaps relative value",
+     "planned": false,
+     "prereqs": [
+      "rv.asw"
+     ],
+     "sources": 2,
+     "curated": 1,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 2
+     },
+     "kinds": {
+      "conceptual": 1,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curated.rate_vs_spread_hedge",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "rv.bond_swap_hedge",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    }
+   ],
+   "sources": 11
+  },
+  {
+   "id": "pnl",
+   "title": "P&L and attribution",
+   "skills": [
+    {
+     "id": "pnl.convexity",
+     "title": "Convexity in P&L: asymmetry for large moves",
+     "planned": false,
+     "prereqs": [
+      "bonds.duration_convexity"
+     ],
+     "sources": 1,
+     "curated": 1,
+     "difficulties": {
+      "1": 0,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 1,
+      "calculation": 0
+     },
+     "items": [
+      {
+       "id": "curated.convexity_hedged_book",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
+    },
+    {
+     "id": "pnl.warehousing",
+     "title": "Warehousing: carry as the market's expected drift, breakeven versus volatility",
+     "planned": false,
+     "prereqs": [
+      "curve.carry_rolldown"
+     ],
+     "sources": 4,
+     "curated": 3,
+     "difficulties": {
+      "1": 0,
+      "2": 3,
+      "3": 1
+     },
+     "kinds": {
+      "conceptual": 3,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "carry.warehousing",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      },
+      {
+       "id": "curated.carry_is_expected_drift",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.carry_vs_risk",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.what_breakeven_means",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
+    },
+    {
+     "id": "pnl.attribution",
+     "title": "Attribution: carry, roll, delta, curve, convexity",
+     "planned": false,
+     "prereqs": [
+      "pnl.convexity",
+      "curve.carry_rolldown"
+     ],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "carry.attribution",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    }
+   ],
+   "sources": 6
+  },
+  {
+   "id": "mm",
+   "title": "Market making and quoting",
+   "skills": [
+    {
+     "id": "mm.bid_offer",
+     "title": "Bid/offer sides: what each client action leaves you with",
+     "planned": false,
+     "prereqs": [],
+     "sources": 1,
+     "curated": 1,
+     "difficulties": {
+      "1": 1,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 1,
+      "calculation": 0
+     },
+     "items": [
+      {
+       "id": "curated.bid_when_client_receives",
+       "difficulty": 1,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
+    },
+    {
+     "id": "mm.client_trade",
+     "title": "Client trade -> position -> DV01 -> edge -> hedge -> P&L",
+     "planned": false,
+     "prereqs": [
+      "mm.bid_offer",
+      "swaps.dv01",
+      "risk.hedge_ratio"
+     ],
+     "sources": 1,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 1
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "mm.client_trade_risk",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "mm.skew",
+     "title": "Quote skew and width: inventory, flow, view, vol, liquidity",
+     "planned": false,
+     "prereqs": [
+      "mm.bid_offer"
+     ],
+     "sources": 3,
+     "curated": 2,
+     "difficulties": {
+      "1": 0,
+      "2": 2,
+      "3": 1
+     },
+     "kinds": {
+      "conceptual": 3,
+      "calculation": 0
+     },
+     "items": [
+      {
+       "id": "curated.skew_direction_long_duration",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "curated.view_vs_limit",
+       "difficulty": 3,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "mm.skew_and_width",
+       "difficulty": 2,
+       "curated": false,
+       "kind": "conceptual"
+      }
+     ]
+    },
+    {
+     "id": "mm.hedge_vs_inventory",
+     "title": "Hedge now vs manage through flow",
+     "planned": false,
+     "prereqs": [
+      "mm.skew",
+      "mm.client_trade"
+     ],
+     "sources": 2,
+     "curated": 1,
+     "difficulties": {
+      "1": 0,
+      "2": 1,
+      "3": 1
+     },
+     "kinds": {
+      "conceptual": 1,
+      "calculation": 1
+     },
+     "items": [
+      {
+       "id": "curated.hedge_or_warehouse",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      },
+      {
+       "id": "mm.warehouse_carry",
+       "difficulty": 3,
+       "curated": false,
+       "kind": "calculation"
+      }
+     ]
+    },
+    {
+     "id": "mm.adverse_selection",
+     "title": "Adverse selection and protecting the market",
+     "planned": false,
+     "prereqs": [
+      "mm.skew"
+     ],
+     "sources": 1,
+     "curated": 1,
+     "difficulties": {
+      "1": 0,
+      "2": 1,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 1,
+      "calculation": 0
+     },
+     "items": [
+      {
+       "id": "curated.pre_data_client",
+       "difficulty": 2,
+       "curated": true,
+       "kind": "conceptual"
+      }
+     ]
+    },
+    {
+     "id": "mm.requote_loop",
+     "title": "Multi-step: quote, trade, new inventory, re-quote",
+     "planned": false,
+     "prereqs": [
+      "mm.skew",
+      "mm.client_trade"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    },
+    {
+     "id": "mm.cross_product_hedging",
+     "title": "Hedging swaps with futures and bonds: cost, spread and basis risk, carry, overnight",
+     "planned": false,
+     "prereqs": [
+      "futures.dv01",
+      "rv.cash_vs_swaps",
+      "bonds.repo"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    },
+    {
+     "id": "mm.views_and_events",
+     "title": "Views, events and changing conditions: sizing risk by conviction and vol",
+     "planned": false,
+     "prereqs": [
+      "mm.skew",
+      "mm.adverse_selection"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    }
+   ],
+   "sources": 8
+  },
+  {
+   "id": "portfolio",
+   "title": "Portfolio risk",
+   "skills": [
+    {
+     "id": "portfolio.aggregation",
+     "title": "Aggregate DV01, key-rate and curve exposure",
+     "planned": true,
+     "prereqs": [
+      "risk.key_rate"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    },
+    {
+     "id": "portfolio.scenarios",
+     "title": "P&L under multi-factor scenarios",
+     "planned": true,
+     "prereqs": [
+      "portfolio.aggregation"
+     ],
+     "sources": 0,
+     "curated": 0,
+     "difficulties": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+     },
+     "kinds": {
+      "conceptual": 0,
+      "calculation": 0
+     },
+     "items": []
+    }
+   ],
+   "sources": 0
+  }
+ ],
+ "sources": 62
+}

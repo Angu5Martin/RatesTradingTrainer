@@ -1,0 +1,159 @@
+# Bond futures: conversion factors, CTD, implied repo, the basis. Every claim is checked by the engine in tests/engine/test_futures.py.
+# Conventions: gross basis = clean - F x CF; net basis = gross basis - carry; CTD = lowest net basis (= highest implied repo at one repo rate).
+# FIRST option is the correct one; order is shuffled per seed.
+
+[[question]]
+id = "cf_flat_yield"
+skill = "futures.conversion_factor"
+difficulty = 1
+stem = "The Bund future's conversion factors make each deliverable bond's price, divided by its CF, roughly comparable to the futures price. Yet one deliverable is nearly always clearly cheapest."
+ask = "Why does the CF not make all the deliverable bonds equally attractive to deliver?"
+options = [
+  "Because the CF values every bond at one flat 6% yield, whereas the market prices them at today's much lower yields, so bonds of different duration and coupon are misvalued by different amounts",
+  "Because the CF is rounded to six decimal places",
+  "Because the CF ignores accrued interest, which differs between bonds",
+  "Because the CF is recalculated every day from the repo rate",
+]
+why = "The CF is the price of the bond at a 6% yield on the delivery date, a fixed number published in advance. It would equalise bonds perfectly only if the market yielded 6%. At a market yield of 2-3% a long-duration bond is worth far more relative to its CF-implied price than a short-duration one, so the ratio price / CF differs across the basket. The bond with the lowest price / CF (after carry) is the CTD: the short keeps the option to deliver it."
+
+[[question]]
+id = "ctd_low_yield_rule"
+skill = "futures.ctd"
+difficulty = 2
+stem = "Market yields are about 2.7%, well below the 6% notional coupon. Two deliverables have similar carry and trade on one smooth curve: a 3.0% coupon bond with 8.7 years to go (modified duration 7.6) and a 1.5% coupon bond with 10.3 years to go (modified duration 9.5)."
+ask = "Which tends to be the cheapest to deliver, and why?"
+options = [
+  "The shorter bond (modified duration 7.6): at yields below 6% the long-duration bond is worth far more at today's yield than at the CF's 6%, so its price / CF is the higher and the short-duration bond is cheapest",
+  "The longer bond (modified duration 9.5): it has the lower price, so it is cheapest",
+  "The higher-coupon bond, because it has the larger carry",
+  "Neither: with CFs the two are equally cheap",
+]
+why = "With yields below the 6% notional coupon, the bond with the LOWEST duration tends to be cheapest to deliver; above 6% it is the HIGHEST duration. Why: price / CF compares the bond's price at today's yield with its price at 6%. A long-duration bond gains far more from the fall from 6% to 2.7% than a short one, so its price / CF is higher, i.e. it is the more expensive one to deliver. Carry and the shape of the curve can override this, which is why the ranking is by net basis, but it is the right first guess."
+
+[[question]]
+id = "ctd_high_yield_rule"
+skill = "futures.ctd"
+difficulty = 2
+stem = "Suppose yields rise to 7.5%, above the 6% notional coupon, with a smooth curve and similar carry. The deliverables again include a short-duration bond and a long-duration bond."
+ask = "Which tends to be the cheapest to deliver now?"
+options = [
+  "The long-duration bond: above 6% it is worth LESS at today's yield than at the CF's 6% by more than a short bond is, so it has the lowest price / CF",
+  "The short-duration bond, as always",
+  "The one with the highest coupon",
+  "There is no CTD above 6%: the contract trades on the notional bond",
+]
+why = "The relationship flips at the notional coupon. Below 6% the lowest-duration bond tends to be cheapest; above 6% the highest-duration one is. At exactly 6% every bond has price / CF equal to 1 whatever its duration, so the CTD is decided by carry and the curve alone. This is also why a Bund future is the shortest-duration bond's future in a low-yield market, and why its DV01 jumps as yields climb towards 6% and the CTD switches to a longer bond."
+
+[[question]]
+id = "implied_repo_arbitrage"
+skill = "rv.futures_basis"
+difficulty = 2
+stem = "For the CTD, the implied repo to delivery is 2.60%. You can finance the bond in term repo at 2.30%."
+ask = "What is the trade, and what do you earn?"
+options = [
+  "Buy the bond, repo it at 2.30%, sell the future and deliver: lock in about 30bp a year on the money, with no outright rate risk",
+  "Sell the bond and buy the future: you pay 2.30% and earn 2.60%",
+  "Nothing: implied repo must equal the repo rate by definition",
+  "Buy the future outright: it is cheap to the bond by 30bp",
+]
+why = "Implied repo is the return on buying the bond, selling the future and delivering. If it exceeds what it costs to finance the bond, the cash-and-carry earns the difference: 30bp here. The future is RICH to the bond (the net basis is negative: you are paid to be long the basis). Normally the CTD's implied repo is a little BELOW the repo rate, because the short owns delivery options; an implied repo above repo is the signal that the future is too high."
+
+[[question]]
+id = "special_repo_ctd"
+skill = "futures.ctd"
+difficulty = 2
+stem = "A bond in the delivery basket goes 30bp special in repo: it can now be financed 30bp below general collateral, while the other bonds' financing and all prices are unchanged."
+ask = "What does that do to the bond's chance of being the CTD?"
+options = [
+  "It raises it: cheaper financing means more carry, so its net basis falls by about dirty price x 30bp x days/360 and it moves up the ranking",
+  "It lowers it: a special bond is dearer to hold",
+  "It makes no difference: the CTD depends only on prices and conversion factors",
+  "It makes it the CTD at once, whatever its net basis was",
+]
+why = "Net basis = gross basis - carry, and carry is coupon accrual minus financing. Financing 30bp cheaper for d days saves about dirty price x 0.30% x d/360, which comes straight off the net basis (by 0.075 per 100 face for 90 days). A bond only a few cents behind the CTD can be pulled ahead by specialness; one a long way behind cannot. Note that the CTD is ranked on net basis with each bond financed at its own repo."
+
+[[question]]
+id = "repo_up_futures_price"
+skill = "futures.ctd"
+difficulty = 2
+stem = "Bond prices and the CTD are unchanged, but the term repo rate rises by 25bp."
+ask = "What happens to the fair futures price (the CTD's forward clean price divided by its CF)?"
+options = [
+  "It rises: financing the bond to delivery costs more, so the forward price you must receive to break even is higher",
+  "It falls: higher repo means the bond is worth less",
+  "It is unchanged: the futures price depends only on the bond's price",
+  "It rises only if the CTD has a coupon",
+]
+why = "The forward price of a bond is its spot price plus the cost of carrying it: financing minus coupon income. Raise the financing rate and the forward price rises, so the fair futures price rises (and the net basis of a long-basis trade rises with it). This is the same arithmetic as a forward on any asset: forward = spot x (1 + r x t) - income."
+
+[[question]]
+id = "future_short_convexity"
+skill = "futures.dv01"
+difficulty = 3
+stem = "You hold the CTD bond outright. A colleague holds the equivalent number of futures contracts, sized to the same DV01. A very large parallel move in yields follows (up or down), large enough to change which bond is cheapest to deliver."
+ask = "Compared with your bond, what does your colleague's position do?"
+options = [
+  "It does worse in both directions: the future is priced off whichever bond is cheapest, so its price is never above the old CTD's, and the gap opens when the CTD switches",
+  "It does better in both directions, because the future has positive convexity",
+  "It does the same: the future tracks the CTD one for one",
+  "It does better in a rally and worse in a selloff, like a bond with a longer duration",
+]
+why = "The future's price is the MINIMUM over the basket of each bond's futures-equivalent price. A minimum of several prices lies at or below any one of them, with equality only while that bond is the cheapest. So for a big move the future underperforms a position in the original CTD, whichever way yields go. The holder of the future is short the delivery option, and the short of the future (the deliverer) owns it. That is the 'short convexity' of a bond future relative to its CTD."
+
+[[question]]
+id = "long_basis_wins_when"
+skill = "rv.futures_basis"
+difficulty = 2
+stem = "You are long the basis: long a CTD bond, short its future in CF-weighted size, so the position is DV01-neutral. You paid a net basis of 0.12 points per 100 face."
+ask = "When does this position make money?"
+options = [
+  "When yields move far enough to change the CTD (the option you own pays out by more than the 0.12 you paid); if nothing happens you lose the 0.12",
+  "Whenever yields fall, because you own a bond",
+  "Whenever yields rise, because you are short futures",
+  "Always: DV01-neutral basis trades are riskless arbitrage",
+]
+why = "Long basis = long the short's delivery option. Held to delivery with the curve unchanged you lose exactly the net basis, because the future converges to the CTD's forward price and the premium decays to zero. If yields move enough to make another bond cheapest, the old CTD becomes dearer than the cheapest by an amount you collect. P&L = -net basis + CF x (old CTD's futures-equivalent price - lowest futures-equivalent price). It is DV01-neutral, not risk-free: you are long volatility and short time."
+
+[[question]]
+id = "convergence"
+skill = "rv.futures_basis"
+difficulty = 2
+stem = "On the delivery date the future settles at the price the cheapest bond implies."
+ask = "What is the gross basis (clean price - F x CF) of the CTD, and of a bond that is not the CTD?"
+options = [
+  "Zero for the CTD; positive for every other deliverable (it is dearer to deliver than the CTD)",
+  "Zero for every deliverable",
+  "Negative for the CTD; zero for the others",
+  "Positive for the CTD; negative for the others",
+]
+why = "At delivery there is no carry left, so the net basis equals the gross basis, and the future settles at the lowest clean price / CF, the CTD's. The CTD's gross basis is therefore exactly zero: delivering it costs nothing relative to the invoice. Every other bond has a higher clean price / CF than the future, so its gross basis is positive by the amount it is out of the money. Convergence is the mechanism that pays (or costs) a basis trade."
+
+# --- 3M Euribor futures (checked in tests/engine/test_stir.py) ---
+
+[[question]]
+id = "stir_long_is_long_duration"
+skill = "futures.stir"
+difficulty = 1
+stem = "A 3M Euribor future is quoted as 100 minus the rate, EUR 1m notional, EUR 25 per bp. You buy 200 contracts of the Dec-27 contract at 97.60."
+ask = "The Dec-27 3M rate implied by the futures market then rises 3bp. What happens to you?"
+options = [
+  "You lose €15,000: you are long the price, the price falls 0.03 to 97.57, and 200 x 3bp x €25 = €15,000",
+  "You gain €15,000: higher rates mean a higher futures rate",
+  "You lose €7,500: only half of a contract's move reaches the holder",
+  "You gain €1,500: each tick is €5 per contract",
+]
+why = "Futures are quoted as 100 minus the rate, so a LONG position gains when the price rises, i.e. when rates fall: it is long duration, the same direction as receiving fixed in a FRA or swap. A 3bp rise in the rate is a 0.03 fall in the price (6 ticks of 0.005 = €12.50 each, i.e. €75 a contract), so 200 contracts lose €15,000, which is also 200 x 3 x €25. To hedge a receive-fixed swap you SELL futures."
+
+[[question]]
+id = "stir_convexity_sign"
+skill = "futures.stir"
+difficulty = 2
+stem = "The 3M forward rate for a period two years out, from the Euribor curve, is 2.400%. The futures price for the same period implies a futures rate."
+ask = "Which futures rate is most plausible, and why?"
+options = [
+  "About 2.410%: higher than the forward, because daily margining makes a long future worth less than a FRA, so the futures price is lower",
+  "About 2.390%: lower than the forward, because futures are exchange-traded and carry less credit risk",
+  "Exactly 2.400%: a future is a FRA with a different name",
+  "About 2.410%: the exchange adds a fee to the futures rate",
+]
+why = "A FRA settles once; a future settles every day. A long future collects margin when rates fall and pays it when they rise, which is the wrong way round for a long (cash comes in when it can only be reinvested cheaply, goes out when funding is dear). So a future is worth LESS to the long than a FRA, its price is lower and its rate higher: the futures rate exceeds the forward rate by the convexity adjustment, about 1/2 sigma^2 T1 T2. It is small near term (about 1bp at two years) and grows with the square of time. Hedgers who use futures to hedge FRAs or swaps must allow for it."

@@ -1,0 +1,12 @@
+.shell { display: grid; grid-template-columns: 148px 1fr; height: 100%; }
+.rail { background: var(--bg-1); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 10px 0; }
+.brand { padding: 4px 14px 14px; font-weight: 700; letter-spacing: .08em; font-size: var(--fs-1); }
+.rail-item { text-align: left; background: transparent; border: 0; border-left: 2px solid transparent; padding: 8px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 1px; }
+.rail-item:hover { background: var(--bg-2); }
+.rail-item.on { border-left-color: var(--accent); background: var(--bg-2); }
+.rail-l { font-size: var(--fs-1); font-weight: 600; letter-spacing: .08em; } .rail-h { font-size: var(--fs-0); color: var(--text-3); }
+.content { min-width: 0; min-height: 0; overflow: auto; }
+.page { max-width: 880px; margin: 0 auto; padding: 16px; }
+.mode-train .page { max-width: 760px; }
+.mode-review .page { max-width: 1000px; }
+@media (max-width: 760px) { .shell { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } .rail { flex-direction: row; overflow-x: auto; padding: 0; } .brand { display: none; } .rail-h { display: none; } }

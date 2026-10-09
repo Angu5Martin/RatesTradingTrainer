@@ -1,0 +1,101 @@
+# Bonds vs swaps, repo and bond carry. Every claim is checked by the engine in tests/engine/test_bonds_relvalue.py.
+# Conventions: ASW = par-par asset-swap spread over the OIS curve; CHEAP bond => POSITIVE ASW. Repo spread = repo - ESTR.
+# FIRST option is the correct one; order is shuffled per seed.
+
+[[question]]
+id = "asw_sign_cheap_bond"
+skill = "rv.asw"
+difficulty = 1
+stem = "A 10Y government bond yields 3.40%. The OIS swap curve's par yield at 10Y, on the same annual bond basis, is 3.10%."
+ask = "What is the bond's asset-swap spread, roughly, and what does it say?"
+options = [
+  "About +30bp: the bond is cheap against swaps",
+  "About -30bp: the bond is cheap against swaps",
+  "About +30bp: the bond is rich against swaps",
+  "About zero: ASW only matters for bonds priced away from par",
+]
+why = "ASW is approximately the bond yield minus the swap rate, 3.40% - 3.10% = +30bp. A bond that yields more than the swap curve is cheap to it: you are paid 30bp over the floating rate to hold it. Cheap = positive ASW. (It is only approximate: the exact figure uses the bond's price and the swap curve's annuity, and drifts from the quick rule for bonds far from par.)"
+
+[[question]]
+id = "asw_package_direction"
+skill = "rv.asw"
+difficulty = 2
+stem = "You buy an asset-swap package: you buy a government bond and pay its coupons in a swap, receiving ESTR plus the asset-swap spread, for par. Over the next week, outright swap rates fall 20bp but the bond's ASW tightens by 4bp."
+ask = "Where does your P&L come from?"
+options = [
+  "From the 4bp ASW tightening: the package is a spread position and gains as the bond richens against swaps. The 20bp fall in rates is essentially irrelevant",
+  "From the 20bp fall in rates: you are long a bond, so you gain when yields fall",
+  "From the ASW tightening, which LOSES you money because the spread you receive is smaller",
+  "It is a loss: the swap you pay fixed in loses more than the bond gains",
+]
+why = "The coupons you pay in the swap hedge the bond's coupons, and the upfront is exchanged at par, so the at-market package is worth par whatever the curve does (engine check: a 50bp parallel move leaves it exactly at par). What changes its value is the bond's spread to swaps. A tighter ASW means the bond got richer, and you own it: you gain about ASW01 x 4bp. The spread you RECEIVE is locked in at the level you traded, so it is the market ASW tightening that pays you, not your receipt shrinking."
+
+[[question]]
+id = "swap_spread_vs_asw"
+skill = "rv.swap_spread"
+difficulty = 2
+stem = "Quoted Bund-style, the swap spread is the swap rate MINUS the bond yield. Today it widens by 5bp because the bond yield falls while swap rates are unchanged."
+ask = "What has happened to the bond's asset-swap spread, and who gained?"
+options = [
+  "ASW tightened by about 5bp (the bond richened against swaps); holders of the bond against swaps gained",
+  "ASW widened by about 5bp (the bond cheapened against swaps); holders of the bond against swaps gained",
+  "ASW tightened by about 5bp; holders of the bond against swaps lost",
+  "ASW is unchanged because swap rates did not move",
+]
+why = "Swap spread (swap - bond) and ASW (bond - swap, roughly) are mirror images: swap spread widening 5bp = ASW tightening 5bp. The bond yield fell, so its price rose against an unchanged swap: it richened, and an owner who is hedged with swaps (long the bond, paying fixed) gains. Always check which way round a spread is quoted before you say 'wider'."
+
+[[question]]
+id = "short_special_bond"
+skill = "bonds.repo"
+difficulty = 2
+stem = "A government bond is trading 40bp special in repo (its repo rate is 40bp below general collateral)."
+ask = "Who benefits, and who pays?"
+options = [
+  "Owners who can lend the bond out or finance it cheaply benefit; shorts must borrow it and pay the specialness, in effect earning 40bp less on their cash",
+  "Shorts benefit: the bond is special, so borrowing it pays them",
+  "Everyone is unaffected: specialness only changes the repo rate, never anyone's P&L",
+  "Owners pay: the 40bp is a fee for holding a scarce bond",
+]
+why = "The repo rate is the interest paid on cash lent against the bond. A special bond is in demand, so lenders of cash accept less: repo falls below GC. The OWNER financing the bond earns the benefit (cheaper funding, engine check: carry improves by market value x 40bp x days/360). A SHORT must reverse the bond in, lending cash at that low rate, so he earns 40bp less than he would on the same cash at GC: a cost. Specialness is therefore usually capitalised in the price: special bonds tend to trade rich."
+
+[[question]]
+id = "negative_carry_low_coupon"
+skill = "bonds.repo"
+difficulty = 2
+stem = "A 1% annual-coupon bond is priced at 84.0. You can finance it in repo at 2.0%. Ignore compounding and day-count details."
+ask = "What is the sign of your carry, and why?"
+options = [
+  "Negative: the coupon earns only 1/84 = 1.19% of the cash you tie up, below the 2.0% repo cost",
+  "Positive: you receive a coupon and the bond is below par",
+  "Negative, but only because the bond is below par: a 1% coupon would be positive carry at par",
+  "Zero: coupon and repo always offset in a funded position",
+]
+why = "Carry compares the coupon income, as a share of the CASH you have invested (the dirty price), with the repo rate: current yield = 1.00 / 84.0 = 1.19% < 2.0% repo, so each period costs you the difference on the amount invested (engine check: carry changes sign near repo = coupon / price, within the 360/365 factor). Pull-to-par on a discount bond is separate: it pays you back something as the price accretes, which is why traders quote carry plus pull-to-par, the 'yield pickup over repo', as well."
+
+[[question]]
+id = "funded_bond_forwards_zero"
+skill = "bonds.carry"
+difficulty = 2
+stem = "You buy a bond with positive carry, funded at ESTR flat (no repo spread). Over three months, with forward rates realised exactly:"
+ask = "What is your total P&L (carry plus mark-to-market) over the period?"
+options = [
+  "About zero: the mark-to-market falls by about the carry. A bond funded at the forward ESTR path earns nothing if forwards are realised, whatever its price or spread",
+  "The carry: the coupon income is certain and the mark-to-market is unaffected",
+  "Negative: carry is always more than offset by pull-to-par",
+  "The pull-to-par plus the carry, since both are earned",
+]
+why = "Positive carry is compensation for the forward drift: the curve is upward-sloping, forwards imply yields rise, and when they do your bond loses value by exactly what you earned. The engine proves it: total P&L = 0 for any price and any ASW when funding is the forward ESTR path. Only a repo spread (specialness) or a curve that does something other than the forwards imply gives a profit or loss."
+
+[[question]]
+id = "rate_vs_spread_hedge"
+skill = "rv.cash_vs_swaps"
+difficulty = 3
+stem = "You buy €100m of a government bond and hedge its DV01 with a paying swap in the same maturity. Over the week, all swap rates rise 15bp and the bond's yield rises by exactly the same 15bp."
+ask = "What is the P&L of the hedged position, approximately?"
+options = [
+  "About zero: rates and the bond moved together, and the swap hedge removed the outright rate risk. What is left is the ASW, which barely changed",
+  "A loss of 15 x the bond DV01: the hedge only protects against the spread",
+  "A gain of 15 x the swap DV01: you are paying fixed",
+  "A loss equal to the hedging cost",
+]
+why = "A DV01 hedge removes the outright rate exposure; when the bond yield moves one-for-one with swap rates the ASW is unchanged and the hedged book makes (almost) nothing. The risk the hedge leaves is the spread between cash and swaps: ASW01 per bp. If the bond had cheapened against swaps by 5bp instead, the hedged book would have lost about 5 x ASW01 whatever swap rates did."

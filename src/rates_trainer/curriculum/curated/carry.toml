@@ -1,0 +1,86 @@
+# Carry, roll-down and warehousing. Every claim here is checked by the engine in tests/engine/test_carry.py.
+# FIRST option is the correct one; order is shuffled per seed.
+
+[[question]]
+id = "carry_is_expected_drift"
+skill = "pnl.warehousing"
+difficulty = 2
+stem = "You receive fixed on an at-market 10Y swap in an upward-sloping curve and earn positive carry. If the curve rolls exactly to the forward rates implied today, what is your P&L over the period?"
+ask = "Your P&L over the period is:"
+options = [
+  "About zero: the mark-to-market falls by about the carry you earned",
+  "The carry you earned plus the roll-down",
+  "The carry you earned only",
+  "Negative: you were short convexity",
+]
+why = "Forwards are the market's expected path. They already price the rise in the swap rate that the upward slope implies, so as time passes and forwards are realised, your swap loses value by exactly the carry it earned. Carry is the premium for taking the other side of that expected drift. You only profit if rates rise LESS than the forwards imply."
+
+[[question]]
+id = "what_breakeven_means"
+skill = "pnl.warehousing"
+difficulty = 2
+stem = "Your receiver has carry + roll-down of €300k over three months and a DV01 of €100k. The forward curve implies the rate for your remaining maturity rises by 3bp over the same period. What is the 3bp telling you?"
+ask = "What does the 3bp tell you?"
+options = [
+  "It is (about) your breakeven: you keep the carry only if rates rise by less than the forwards imply",
+  "It is an arbitrage: you earn €300k with no risk",
+  "It is the maximum the rate can possibly move in three months",
+  "It is the roll-down alone, without the carry",
+]
+why = "Total / DV01 = €300k / €100k = 3bp, and for a par swap that equals the forward-minus-spot drift: carry + roll-down is DV01 x (forward rate - spot rate). If rates end up where the forwards say, you earn nothing; if they rise less, you keep some of it; if they rise more, you lose."
+
+[[question]]
+id = "inverted_curve_receiver"
+skill = "curve.carry_rolldown"
+difficulty = 1
+stem = "The curve is inverted: short rates are well above 10Y swap rates. You receive fixed on a 10Y swap at the market rate. Ignoring any market move, over the next three months:"
+ask = "Over the next three months:"
+options = [
+  "Your carry is negative AND your roll-down is negative: you pay to wait on both counts",
+  "Your carry is negative but your roll-down is positive",
+  "Your carry is positive because you receive fixed",
+  "Your carry is zero because the swap is at the market rate",
+]
+why = "You receive 10Y fixed (low) and pay a floating rate set off the high short end: negative carry. As the swap ages it rolls up the curve to a higher-rate shorter maturity, so the rate for your remaining maturity is ABOVE the one you hold: negative roll-down too. A payer in the same curve earns both."
+
+[[question]]
+id = "forward_start_carry"
+skill = "curve.carry_rolldown"
+difficulty = 2
+stem = "You receive fixed on a 5y5y forward-starting swap (it starts in 5 years) struck at the market forward rate, in an upward-sloping curve. Over the next three months, with the curve unchanged:"
+ask = "Over three months:"
+options = [
+  "You earn no carry (nothing accrues before the start) but you do get roll-down, as the swap's start date moves closer along the curve",
+  "You earn the same carry as a spot-starting 5Y swap",
+  "You earn neither carry nor roll-down: nothing happens before the start",
+  "You earn carry but no roll-down",
+]
+why = "A forward-starting swap pays no coupons and accrues nothing until it starts, so its carry is exactly zero. But it is still a position on a point of the curve (5y into 10y); three months on that point is 4y9m into 9y9m, and in an upward-sloping curve that forward rate is lower, which a receiver gains on. Roll-down needs no accrual: it comes from the position moving along the curve."
+
+[[question]]
+id = "carry_vs_risk"
+skill = "pnl.warehousing"
+difficulty = 2
+stem = "A 10Y swap earns about 1bp of carry + roll-down per month in DV01 terms. The 10Y rate has a daily volatility of 3.5bp. A colleague argues the carry makes it safe to warehouse a large inventory over a month."
+ask = "What is the right way to think about it?"
+options = [
+  "A month is about 21 trading days: one standard deviation is roughly 16bp. The carry is a small fraction of that, so the position is a directional bet that happens to pay carry",
+  "The carry covers a one-sigma move, so the risk is acceptable",
+  "Carry is reported with the P&L, so it should be added to the risk limit",
+  "Carry only matters if the position is hedged",
+]
+why = "Volatility grows with the square root of time: 3.5bp x √21 ≈ 16bp, versus about 1bp of carry. Carry is the steady, small part of the P&L; the market move is the large, noisy part. Use carry to choose the more favourable of two similar positions or to price a skew, never to justify more risk."
+
+[[question]]
+id = "weekend_carry"
+skill = "curve.carry_rolldown"
+difficulty = 1
+stem = "A swap accrues interest on calendar days, not business days. You hold an at-market receiver over a Friday-to-Monday weekend, and the position earns €1,000 of carry per calendar day."
+ask = "How much carry does the position accrue between Friday's close and Monday's close?"
+options = [
+  "About €3,000: three calendar days of accrual (Saturday, Sunday and Monday)",
+  "About €1,000: only one business day passes",
+  "Nothing over the weekend: carry accrues only on business days",
+  "About €2,000: weekend days count half",
+]
+why = "Accrual runs on calendar days under ACT/360 (and 30E/360 counts every calendar day within the month). Between Friday close and Monday close three days of accrual are earned, which is why carry arrives in lumps over weekends and holidays."

@@ -1,0 +1,167 @@
+# Curated conceptual questions. FIRST option is the correct one; order is shuffled per seed.
+# Conventions (docs/DESIGN.md): DV01 = P&L for a 1bp FALL in rates; bid = dealer pays fixed,
+# offer = dealer receives fixed; "long duration" = receiver / long bond (never "long rates").
+
+[[question]]
+id = "positive_dv01"
+skill = "swaps.dv01"
+difficulty = 1
+stem = "Which of these positions has POSITIVE DV01 (it makes money when rates fall)?"
+options = [
+  "Receive fixed on a 5Y swap",
+  "Pay fixed on a 5Y swap",
+  "Short €50m of 10Y Bunds",
+  "Pay fixed on a 10Y forward-starting swap",
+]
+why = "Receiving fixed is like owning a bond: you lock in a fixed rate that becomes more valuable as market rates fall. Paying fixed and shorting bonds are short duration (negative DV01)."
+
+[[question]]
+id = "bid_when_client_receives"
+skill = "mm.bid_offer"
+difficulty = 1
+stem = "Your EUR 10Y swap market is 2.843 / 2.847. A client calls and wants to RECEIVE fixed on €100m. At what rate does the trade happen, and what are you left with?"
+options = [
+  "2.843: you pay fixed at your bid and are left short duration",
+  "2.847: you pay fixed and are left short duration",
+  "2.843: you receive fixed and are left long duration",
+  "2.847: you receive fixed and are left long duration",
+]
+why = "The bid is the rate at which YOU pay fixed. The client receives fixed, so the trade is on your bid, 2.843, and you are the payer: short duration, negative DV01. The client always trades on the worse side of mid for them (receives less than 2.845)."
+
+[[question]]
+id = "skew_direction_long_duration"
+skill = "mm.skew"
+difficulty = 2
+stem = "You are long duration (you have been receiving fixed from clients) and want to get flatter. Your market is 2.843 / 2.847. Which re-quote best encourages the right flow?"
+ask = "Which re-quote?"
+options = [
+  "Move both sides UP in rate, e.g. 2.845 / 2.849",
+  "Move both sides DOWN in rate, e.g. 2.841 / 2.845",
+  "Leave it at 2.843 / 2.847 and hedge everything in the market",
+  "Widen only the bid, e.g. 2.841 / 2.847",
+]
+why = "You are long duration, i.e. short the swap rate as a price: you want to pay fixed. You pay fixed when clients hit your bid, so raise the bid to make receiving more attractive to clients. Raise the offer too, so you discourage clients from paying (which would add to your long). Quoting higher in rate is the 'long duration, skew to sell' instinct."
+
+[[question]]
+id = "swap_spread_haven_demand"
+skill = "rv.swap_spread"
+difficulty = 2
+stem = "Define the 10Y Bund swap spread as 10Y swap rate MINUS 10Y Bund yield. Safe-haven buying pushes the 10Y Bund yield down 4bp while the 10Y swap rate is unchanged. What happens, and which package makes money?"
+ask = "What happens?"
+options = [
+  "The spread widens by 4bp; long Bund + pay fixed in the swap (an asset-swap package) gains",
+  "The spread tightens by 4bp; long Bund + pay fixed in the swap gains",
+  "The spread widens by 4bp; short Bund + receive fixed in the swap gains",
+  "The spread tightens by 4bp; short Bund + receive fixed in the swap gains",
+]
+why = "Spread = swap rate - Bund yield. Bund yield down 4bp with the swap rate flat raises the spread by 4bp. Long Bund gains as its yield falls; the pay-fixed swap leg is flat. The long Bund / pay swap package is long the swap spread (it profits when swap rate rises relative to the bond yield)."
+
+[[question]]
+id = "dv01_30y_vs_10y"
+skill = "swaps.dv01"
+difficulty = 2
+stem = "A €100m 30Y EUR par swap has a DV01 of roughly how many times that of a €100m 10Y par swap?"
+ask = "Roughly how many times?"
+options = [
+  "A bit over twice (about 2.1 - 2.6x)",
+  "About 3x, since 30Y is three times 10Y",
+  "About 1.5x",
+  "About 4x",
+]
+why = "DV01 per unit notional is the swap's annuity (PV of 1bp per year of fixed payments). Discounting means distant payments are worth less, so the annuity grows much more slowly than maturity: roughly 8.5-9 for 10Y but ~19-22 for 30Y. Do not scale DV01 linearly with tenor."
+
+[[question]]
+id = "bear_steepener"
+skill = "curve.direction"
+difficulty = 1
+stem = "Over a day the 2Y swap rate rises 3bp and the 10Y swap rate rises 9bp. How would you describe the move?"
+options = [
+  "Bear steepening: rates up, curve steeper",
+  "Bull steepening: rates down, curve steeper",
+  "Bear flattening: rates up, curve flatter",
+  "Bull flattening: rates down, curve flatter",
+]
+why = "'Bear' = rates up (prices down). The 2s10s spread went from X to X+6bp: steeper. Bull / bear describes the direction of rates; steepening / flattening describes the spread."
+
+[[question]]
+id = "bull_flattener"
+skill = "curve.direction"
+difficulty = 1
+stem = "After a growth scare the 2Y swap rate falls 4bp and the 10Y swap rate falls 10bp. How would you describe the move?"
+options = [
+  "Bull flattening: rates down, 2s10s spread narrows by 6bp",
+  "Bull steepening: rates down, 2s10s spread widens by 6bp",
+  "Bear flattening: rates up, 2s10s spread narrows by 6bp",
+  "A parallel move, since both rates fell",
+]
+why = "Both rates fell (bull), but the 10Y fell by more, so 10Y - 2Y narrowed from X to X-6bp: flatter."
+
+[[question]]
+id = "hedge_2y_notional"
+skill = "risk.hedge_ratio"
+difficulty = 1
+stem = "You want to DV01-hedge a €100m 10Y receiver using 2Y swaps. Compared with €100m, the 2Y hedge notional is..."
+ask = "The 2Y notional is..."
+options = [
+  "Several times larger than €100m, because a 2Y swap has far less DV01 per euro",
+  "About €100m, since hedges are one-for-one in notional",
+  "Smaller than €100m, because shorter maturities are less risky",
+  "Zero: a parallel move cannot hurt a hedged book",
+]
+why = "Hedge ratio = DV01 to hedge / DV01 per unit of the hedge instrument. A 2Y swap carries roughly a fifth of the DV01 per euro of a 10Y, so the 2Y notional must be several times larger. Notional-matching is not risk-matching. (And a DV01-neutral 10Y/2Y book still carries curve risk.)"
+
+[[question]]
+id = "convexity_hedged_book"
+skill = "pnl.convexity"
+difficulty = 2
+stem = "You are long €100m of 30Y receivers, DV01-hedged with 10Y payers (the book is DV01-flat). Rates then move 75bp in parallel (direction unknown). Ignoring carry, what is your P&L?"
+ask = "What is your P&L?"
+options = [
+  "Positive either way: the 30Y leg has more convexity per unit of DV01, so you are net long convexity",
+  "Zero: DV01-neutral means no P&L from parallel moves",
+  "Negative either way: you are short convexity because you hold payers",
+  "Positive only if rates fall, because you own the receiver",
+]
+why = "DV01-neutral removes first-order risk only. Convexity per unit of DV01 rises with maturity, so the long 30Y / short 10Y book is long convexity and gains from a big move in either direction. The price is carry: long convexity usually bleeds carry, and that bleed is what you pay for owning it."
+
+[[question]]
+id = "hedge_or_warehouse"
+skill = "mm.hedge_vs_inventory"
+difficulty = 2
+stem = "Client flow has left you long 280k DV01 of 10Y against a 400k limit. Flow in this name is historically two-way and the market is calm. How should you think about hedging?"
+ask = "What is the sensible approach?"
+options = [
+  "Hedge enough to get comfortably inside the limit, skew to attract offsetting flow, and warehouse the rest for a while",
+  "Hedge 100% immediately: any open risk is unacceptable",
+  "Do not hedge at all: two-way flow always mean-reverts",
+  "Hedge nothing and widen the market so no further flow arrives",
+]
+why = "Hedging in the market pays away bid/offer, giving back the edge you just earned. Skewing is the cheap way to shed inventory when flow is two-way and the market is calm. But 70% of limit leaves little room for the next trade, so it is right to cut some risk. There is no universal rule: more hedging as volatility, limit usage or adverse selection rise; more warehousing when flow is reliably two-way and hedging is expensive."
+
+[[question]]
+id = "pre_data_client"
+skill = "mm.adverse_selection"
+difficulty = 2
+stem = "Five minutes before a major euro-area inflation print, a hedge fund asks you for a price in €500m 5Y. How should your quote differ from a normal day?"
+ask = "How should your quote differ?"
+options = [
+  "Wider: volatility and the chance this client knows more both raise the cost of providing liquidity",
+  "Tighter: a large client before a big print is a chance to earn spread",
+  "The same: consistency matters more than conditions",
+  "Same width, but skewed heavily toward your inventory",
+]
+why = "Two things argue for more edge: higher volatility (hedging and warehousing risk is more expensive) and adverse selection (clients active just before data are more likely to be informed). You may lose the trade; that is an acceptable price for not being picked off. Width protects against information; skew manages inventory: do not confuse them."
+
+[[question]]
+id = "view_vs_limit"
+skill = "mm.skew"
+difficulty = 3
+stem = "You are long duration and near your limit. A client wants to receive fixed (you pay) in size. You also have a mild view that rates will fall. What do you do?"
+ask = "What is the sound judgement?"
+options = [
+  "Let inventory and the limit lead: price the client's receive keenly to reduce risk, and treat the view as a modest lean only",
+  "Follow the view: refuse to pay fixed because you expect rates to fall",
+  "Ignore inventory because the view is probably right",
+  "Quote a very wide bid and keep the position",
+]
+why = "A mild view is weak evidence; a limit is a hard constraint, and being near it is a cost of every additional unit of risk. The view can justify skewing slightly less aggressively than inventory alone would, but it should not make you hold or add risk at the limit. Large convictions get sized as positions with their own risk budget, not smuggled in through quotes."

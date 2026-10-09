@@ -1,0 +1,26 @@
+:root {
+  color-scheme: dark;
+  --bg-0: #0b0d10;      /* app */
+  --bg-1: #111519;      /* panel */
+  --bg-2: #171c22;      /* raised: inputs, hovers */
+  --bg-3: #1d242c;
+  --line: #222a33;
+  --line-2: #2c3641;
+  --text-1: #d7dde4;
+  --text-2: #97a1ac;
+  --text-3: #5c6670;
+  --accent: #4c8dff;
+  --accent-dim: #1d3557;
+  --pos: #3fb68b;
+  --neg: #e5534b;
+  --warn: #d4a72c;
+  --bid: #6aa6e0;
+  --offer: #c9835f;
+
+  --font-ui: Inter, "IBM Plex Sans", -apple-system, "Segoe UI", system-ui, sans-serif;
+  --font-num: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --fs-0: 11px; --fs-1: 12px; --fs-2: 13px; --fs-3: 15px; --fs-4: 20px; --fs-5: 24px;
+  --row: 24px;
+  --gap: 8px;
+  --radius: 2px;
+}

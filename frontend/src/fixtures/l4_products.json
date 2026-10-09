@@ -1,0 +1,4266 @@
+{
+ "steps": [
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "rfq",
+    "episode": {
+     "id": "mm.ep4_products_overnight",
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "level": 4,
+     "round": 0,
+     "rounds": 5,
+     "round_title": "Day 1, 16:00"
+    },
+    "header": {
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "round": 0,
+     "rounds": 5,
+     "round_title": "Day 1, 16:00",
+     "briefing": "It is late afternoon and you are carrying a 5Y client position. Swaps are expensive to trade this late; futures are not. A hedge is a trade: choose the product by its cost, the risk it leaves (swap spread, futures basis), what it carries overnight and how long you will hold it.",
+     "notes": [],
+     "show_risk_card": true
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 0.6,
+     "step_days": 0.0625,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      },
+      {
+       "name": "swap_spread",
+       "label": "swap spread (bond ASW against swaps)",
+       "normal_daily_vol": 0.8,
+       "vol_unit": "bp",
+       "loadings": null
+      },
+      {
+       "name": "fut_basis",
+       "label": "futures basis (futures against their CTD)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": " tick",
+       "loadings": null
+      }
+     ]
+    },
+    "market": {
+     "mode": "ladder",
+     "curve": [],
+     "focus": null,
+     "ladder": [
+      {
+       "tenor": 2,
+       "mid": 0.018559999999999986,
+       "bid": 0.018553099999999986,
+       "offer": 0.018566899999999987,
+       "dv01_per_m": 194.7443900646717,
+       "cost_bp": 0.06
+      },
+      {
+       "tenor": 5,
+       "mid": 0.021690000000000004,
+       "bid": 0.021679650000000005,
+       "offer": 0.021700350000000004,
+       "dv01_per_m": 471.64863373976016,
+       "cost_bp": 0.09
+      },
+      {
+       "tenor": 10,
+       "mid": 0.025429999999999984,
+       "bid": 0.025416199999999983,
+       "offer": 0.025443799999999985,
+       "dv01_per_m": 885.8492105303651,
+       "cost_bp": 0.12
+      },
+      {
+       "tenor": 30,
+       "mid": 0.027870000000000023,
+       "bid": 0.027842400000000024,
+       "offer": 0.027897600000000022,
+       "dv01_per_m": 2061.205798008836,
+       "cost_bp": 0.24
+      }
+     ],
+     "products": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "label": "Bobl future (FGBM)",
+       "price": 119.33,
+       "dv01_per_unit": 55.40620741347084,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.00% Jul-31."
+      },
+      {
+       "code": "FGBL",
+       "kind": "future",
+       "label": "Bund future (FGBL)",
+       "price": 131.67,
+       "dv01_per_unit": 108.46445894503267,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.25% Sep-35, CF 0.7467."
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "label": "the 2.25% Sep-35 Bund (Bund CTD)",
+       "clean": 98.56,
+       "yield": 0.024256242004086503,
+       "asw_bp": -2.057368996730332,
+       "dv01_per_unit": 830.2751490669325,
+       "unit": "EUR 1m face",
+       "half_spread": 0.01,
+       "cost_per_unit": 100.0,
+       "info": "Repo at general collateral, ESTR +0bp."
+      }
+     ]
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "client at 15:30",
+       "side": "receive",
+       "notional": 625000000.0,
+       "tenor": 5,
+       "rate": 0.021659
+      }
+     ],
+     "hedges": [],
+     "dv01": 294753.456367659,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": [
+      {
+       "tenor": 2,
+       "dv01": -10.69806072722713
+      },
+      {
+       "tenor": 5,
+       "dv01": 294764.1494147491
+      },
+      {
+       "tenor": 10,
+       "dv01": 0.0
+      },
+      {
+       "tenor": 30,
+       "dv01": 0.0
+      }
+     ],
+     "slope": {
+      "exposure": -184216.67365746235,
+      "limit": 500000.0
+     },
+     "curvature": 294766.8171776867,
+     "curve_position": null,
+     "spreads": null,
+     "pnl_so_far": 0
+    },
+    "conditions": {
+     "volatility": "calm",
+     "liquidity": "normal",
+     "flow": "late afternoon: swap liquidity is thin, futures still trade tight.",
+     "swap_cost": {
+      "multiplier": 2.0,
+      "depth_dv01": 125000.0
+     },
+     "desk_expectation": null,
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [],
+    "inquiry": {
+     "name": null,
+     "ctype": "bank_treasury",
+     "description": "Bank treasury managing its balance-sheet hedge",
+     "short": "bank treasury managing its balance-sheet hedge",
+     "action": "pays",
+     "notional": 225000000.0,
+     "tenor": 5,
+     "dv01": 106120.94259144603
+    },
+    "last_inquiry": null,
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": null,
+    "checkpoint": null,
+    "prompt": "Your rate for the client to pay at (or 'pass')?",
+    "input": {
+     "type": "rfq",
+     "hint": "a rate in %, e.g. 2.8465, or 'pass'",
+     "unit": "%"
+    }
+   },
+   "decision": {
+    "type": "rfq",
+    "level": 0.021706021051865143
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "fill",
+      "filled": false,
+      "p_win": 0.23394921673653898
+     }
+    ],
+    "assessment": {
+     "kind": "rfq",
+     "rating": "sound",
+     "reasons": [
+      "Risk-adding trade with your limit getting full: pricing it wide is the right instinct."
+     ],
+     "expected_pnl": 1743.1103258085723,
+     "variance": 9949143.99682744,
+     "table": [],
+     "metrics": {
+      "ref_level": 0.021706021051865143,
+      "ref_charge": 0.16021051865138664,
+      "charge": 0.16021051865138664,
+      "street_level": 0.021700350000000004,
+      "p_win": 0.23394921673653898,
+      "p_win_ref": 0.23394921673653898,
+      "trade_dv01": 106120.94259144603,
+      "dv01_after": 400874.398959105,
+      "reduces": false,
+      "breach": false,
+      "x_after": {
+       "level": 400874.398959105,
+       "slope": -250542.2623808304,
+       "curvature": 400887.7584531417,
+       "swap_spread": 0.0,
+       "fut_basis": 0.0
+      }
+     }
+    },
+    "grade": null,
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "checkpoint",
+    "episode": {
+     "id": "mm.ep4_products_overnight",
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "level": 4,
+     "round": 0,
+     "rounds": 5,
+     "round_title": "Day 1, 16:00"
+    },
+    "header": {
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "round": 0,
+     "rounds": 5,
+     "round_title": "Day 1, 16:00",
+     "briefing": null,
+     "notes": [],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 0.6,
+     "step_days": 0.0625,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      },
+      {
+       "name": "swap_spread",
+       "label": "swap spread (bond ASW against swaps)",
+       "normal_daily_vol": 0.8,
+       "vol_unit": "bp",
+       "loadings": null
+      },
+      {
+       "name": "fut_basis",
+       "label": "futures basis (futures against their CTD)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": " tick",
+       "loadings": null
+      }
+     ]
+    },
+    "market": null,
+    "book": null,
+    "conditions": null,
+    "clients_today": [],
+    "inquiry": null,
+    "last_inquiry": null,
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": null,
+    "checkpoint": {
+     "intro": "Before you decide on a hedge:",
+     "with_screen": false,
+     "inquiry": null,
+     "prompt": "How many FGBM contracts would hedge your book's DV01? (sell = negative)",
+     "note": "book DV01 / DV01 per contract, opposite sign"
+    },
+    "prompt": "How many FGBM contracts would hedge your book's DV01? (sell = negative)",
+    "input": {
+     "type": "number",
+     "hint": "book DV01 / DV01 per contract, opposite sign",
+     "unit": "contracts"
+    }
+   },
+   "decision": {
+    "type": "checkpoint",
+    "raw": "-5319.863425555382"
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "checkpoint_grade",
+      "correct": true,
+      "feedback": "Correct.",
+      "expected": "-5,320 contracts",
+      "label": null
+     }
+    ],
+    "assessment": null,
+    "grade": {
+     "correct": true,
+     "feedback": "Correct.",
+     "expected": "-5,320 contracts"
+    },
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "hedge",
+    "episode": {
+     "id": "mm.ep4_products_overnight",
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "level": 4,
+     "round": 0,
+     "rounds": 5,
+     "round_title": "Day 1, 16:00"
+    },
+    "header": {
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "round": 0,
+     "rounds": 5,
+     "round_title": "Day 1, 16:00",
+     "briefing": null,
+     "notes": [],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 0.6,
+     "step_days": 0.0625,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      },
+      {
+       "name": "swap_spread",
+       "label": "swap spread (bond ASW against swaps)",
+       "normal_daily_vol": 0.8,
+       "vol_unit": "bp",
+       "loadings": null
+      },
+      {
+       "name": "fut_basis",
+       "label": "futures basis (futures against their CTD)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": " tick",
+       "loadings": null
+      }
+     ]
+    },
+    "market": {
+     "mode": "ladder",
+     "curve": [],
+     "focus": null,
+     "ladder": [
+      {
+       "tenor": 2,
+       "mid": 0.018559999999999986,
+       "bid": 0.018553099999999986,
+       "offer": 0.018566899999999987,
+       "dv01_per_m": 194.7443900646717,
+       "cost_bp": 0.06
+      },
+      {
+       "tenor": 5,
+       "mid": 0.021690000000000004,
+       "bid": 0.021679650000000005,
+       "offer": 0.021700350000000004,
+       "dv01_per_m": 471.64863373976016,
+       "cost_bp": 0.09
+      },
+      {
+       "tenor": 10,
+       "mid": 0.025429999999999984,
+       "bid": 0.025416199999999983,
+       "offer": 0.025443799999999985,
+       "dv01_per_m": 885.8492105303651,
+       "cost_bp": 0.12
+      },
+      {
+       "tenor": 30,
+       "mid": 0.027870000000000023,
+       "bid": 0.027842400000000024,
+       "offer": 0.027897600000000022,
+       "dv01_per_m": 2061.205798008836,
+       "cost_bp": 0.24
+      }
+     ],
+     "products": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "label": "Bobl future (FGBM)",
+       "price": 119.33,
+       "dv01_per_unit": 55.40620741347084,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.00% Jul-31."
+      },
+      {
+       "code": "FGBL",
+       "kind": "future",
+       "label": "Bund future (FGBL)",
+       "price": 131.67,
+       "dv01_per_unit": 108.46445894503267,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.25% Sep-35, CF 0.7467."
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "label": "the 2.25% Sep-35 Bund (Bund CTD)",
+       "clean": 98.56,
+       "yield": 0.024256242004086503,
+       "asw_bp": -2.057368996730332,
+       "dv01_per_unit": 830.2751490669325,
+       "unit": "EUR 1m face",
+       "half_spread": 0.01,
+       "cost_per_unit": 100.0,
+       "info": "Repo at general collateral, ESTR +0bp."
+      }
+     ]
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "client at 15:30",
+       "side": "receive",
+       "notional": 625000000.0,
+       "tenor": 5,
+       "rate": 0.021659
+      }
+     ],
+     "hedges": [],
+     "dv01": 294753.456367659,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": [
+      {
+       "tenor": 2,
+       "dv01": -10.69806072722713
+      },
+      {
+       "tenor": 5,
+       "dv01": 294764.1494147491
+      },
+      {
+       "tenor": 10,
+       "dv01": 0.0
+      },
+      {
+       "tenor": 30,
+       "dv01": 0.0
+      }
+     ],
+     "slope": {
+      "exposure": -184216.67365746235,
+      "limit": 500000.0
+     },
+     "curvature": 294766.8171776867,
+     "curve_position": null,
+     "spreads": null,
+     "pnl_so_far": 0
+    },
+    "conditions": {
+     "volatility": "calm",
+     "liquidity": "normal",
+     "flow": "late afternoon: swap liquidity is thin, futures still trade tight.",
+     "swap_cost": {
+      "multiplier": 2.0,
+      "depth_dv01": 125000.0
+     },
+     "desk_expectation": null,
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [],
+    "inquiry": null,
+    "last_inquiry": {
+     "short": "bank treasury managing its balance-sheet hedge",
+     "action": "pays",
+     "notional": 225000000.0,
+     "tenor": 5,
+     "outcome": "it dealt elsewhere"
+    },
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": {
+     "trading_hours": 0.5
+    },
+    "checkpoint": null,
+    "prompt": "Hedge, partly hedge, or warehouse?",
+    "input": {
+     "type": "hedge",
+     "hint": "'none'; '100% 10y' (of your DV01); 'flatten' (level, slope and curvature); or legs: 'pay 150m 10y + receive 60m 30y'; futures and bonds: 'sell 300 fgbl', 'buy 120 fgbm', 'sell 50m ctd'; 'switch' closes product hedges into swaps",
+     "swap_tenors": [
+      2,
+      5,
+      10,
+      30
+     ],
+     "products": [
+      "FGBM",
+      "FGBL",
+      "CTD"
+     ],
+     "can_flatten": true,
+     "can_switch": false,
+     "can_target": false
+    }
+   },
+   "decision": {
+    "type": "hedge",
+    "label": "sell 5,000 FGBM",
+    "trades": [
+     {
+      "kind": "future",
+      "code": "FGBM",
+      "contracts": -5000.0
+     }
+    ]
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "hedge_trade",
+      "kind": "future",
+      "code": "FGBM",
+      "contracts": -5000.0,
+      "cost": -25000.0
+     },
+     {
+      "type": "market",
+      "focus_tenor": 5,
+      "move_bp": -0.40187424783941117,
+      "release": false,
+      "tenor_moves": [
+       {
+        "tenor": 2,
+        "bp": -0.6453222178683794
+       },
+       {
+        "tenor": 5,
+        "bp": -0.40187424783941117
+       },
+       {
+        "tenor": 10,
+        "bp": -0.31061429331554613
+       },
+       {
+        "tenor": 30,
+        "bp": -0.1106863668446051
+       }
+      ],
+      "factor_moves": [
+       {
+        "name": "level",
+        "value": -0.3405654040004111
+       },
+       {
+        "name": "slope",
+        "value": 0.2897812585255359
+       },
+       {
+        "name": "curvature",
+        "value": 0.11980444273945981
+       },
+       {
+        "name": "swap_spread",
+        "value": -0.13710779040952936
+       },
+       {
+        "name": "fut_basis",
+        "value": 0.12784983962980145
+       }
+      ],
+      "first_order": [
+       {
+        "name": "level",
+        "pnl": 6035.642888852841
+       },
+       {
+        "name": "slope",
+        "pnl": 5947.48613047747
+       },
+       {
+        "name": "curvature",
+        "pnl": -118.09073444197685
+       },
+       {
+        "name": "swap_spread",
+        "pnl": -47641.70095156443
+       },
+       {
+        "name": "fut_basis",
+        "pnl": 6392.491981490072
+       }
+      ],
+      "first_total": -29384.170685186025,
+      "full_revaluation": -29387.297887533932,
+      "convexity_cross": -3.1272023479068594
+     },
+     {
+      "type": "round_pnl",
+      "round_pnl": -54387.29788753393,
+      "total_pnl": -54387.29788753393
+     }
+    ],
+    "assessment": {
+     "kind": "hedge",
+     "rating": "poor",
+     "reasons": [
+      "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge level and curve (10y + 2y).",
+      "Your choice: cost now \u20ac25,000, risk over the next step sigma \u20ac44,828 (keeping the book as it is: sigma \u20ac232,118).",
+      "You are left with swap-spread risk: -347,476 EUR per bp of ASW tightening. Futures and bonds hedge rates, but they are not swaps: if bonds cheapen against swaps your hedge underperforms."
+     ],
+     "expected_pnl": -75157.608273795,
+     "variance": 2009507828.43146,
+     "table": [
+      {
+       "label": "Warehouse (no hedge)",
+       "expected": -47238.02175939994,
+       "sigma": 232118.4260267699,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 2Y",
+       "expected": -37252.727844717796,
+       "sigma": 120609.09655542803,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 100% of the level in the 2Y",
+       "expected": -67677.67410485138,
+       "sigma": 59781.98692345803,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 5Y",
+       "expected": -51031.77621411977,
+       "sigma": 116059.25268565257,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 5Y",
+       "expected": -89081.4407627523,
+       "sigma": 2.373442802374707,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 10Y",
+       "expected": -67574.13815441586,
+       "sigma": 129493.07378235279,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 10Y",
+       "expected": -132591.08132748157,
+       "sigma": 64450.93746066022,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 30Y",
+       "expected": -117163.70131438742,
+       "sigma": 158643.94148449576,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 30Y",
+       "expected": -273472.4156669518,
+       "sigma": 158258.18421332826,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge level and curve (10Y + 2Y)",
+       "expected": -52336.23523295796,
+       "sigma": 43523.9560006056,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge level and curve (2Y + 30Y)",
+       "expected": -61027.827794893514,
+       "sigma": 52850.49606258931,
+       "rating": "poor"
+      },
+      {
+       "label": "Flatten level, slope and curvature (2Y + 5Y + 30Y)",
+       "expected": -89087.0237172786,
+       "sigma": 9.548077727300027,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with Bobl future (FGBM)",
+       "expected": -77353.12832376387,
+       "sigma": 45256.23869215825,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with Bund future (FGBL)",
+       "expected": -71737.47355372983,
+       "sigma": 71266.33744856114,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with the 2.25% Sep-35 Bund (Bund CTD)",
+       "expected": -91744.60495988121,
+       "sigma": 69208.78723745185,
+       "rating": "poor"
+      }
+     ],
+     "metrics": {
+      "dv01_before": 294753.456367659,
+      "dv01_after": 17722.419300304784,
+      "cost": 25000.0,
+      "sigma": 44827.534266692164,
+      "exposures": {
+       "level": 17722.419300304784,
+       "slope": -20524.05376638181,
+       "curvature": 985.6957867568126,
+       "swap_spread": -347476.2506875413,
+       "fut_basis": -50000.0
+      },
+      "gap": 1.7309174053685488,
+      "r_ref": 625000.0,
+      "curve_after": -9447.54170369132,
+      "slope_after": -20524.05376638181
+     }
+    },
+    "grade": null,
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "rfq",
+    "episode": {
+     "id": "mm.ep4_products_overnight",
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "level": 4,
+     "round": 1,
+     "rounds": 5,
+     "round_title": "Day 1, 16:30"
+    },
+    "header": {
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "round": 1,
+     "rounds": 5,
+     "round_title": "Day 1, 16:30",
+     "briefing": null,
+     "notes": [],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 0.6,
+     "step_days": 0.0625,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      },
+      {
+       "name": "swap_spread",
+       "label": "swap spread (bond ASW against swaps)",
+       "normal_daily_vol": 0.8,
+       "vol_unit": "bp",
+       "loadings": null
+      },
+      {
+       "name": "fut_basis",
+       "label": "futures basis (futures against their CTD)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": " tick",
+       "loadings": null
+      }
+     ]
+    },
+    "market": {
+     "mode": "ladder",
+     "curve": [],
+     "focus": null,
+     "ladder": [
+      {
+       "tenor": 2,
+       "mid": 0.01849546777821308,
+       "bid": 0.018488567778213078,
+       "offer": 0.01850236777821308,
+       "dv01_per_m": 194.76356069762778,
+       "cost_bp": 0.06
+      },
+      {
+       "tenor": 5,
+       "mid": 0.02164981257521606,
+       "bid": 0.02163946257521606,
+       "offer": 0.02166016257521606,
+       "dv01_per_m": 471.7191192345066,
+       "cost_bp": 0.09
+      },
+      {
+       "tenor": 10,
+       "mid": 0.02539893857066846,
+       "bid": 0.02538513857066846,
+       "offer": 0.02541273857066846,
+       "dv01_per_m": 886.0290932622416,
+       "cost_bp": 0.12
+      },
+      {
+       "tenor": 30,
+       "mid": 0.027858931363315537,
+       "bid": 0.027831331363315538,
+       "offer": 0.027886531363315537,
+       "dv01_per_m": 2061.8320234992993,
+       "cost_bp": 0.24
+      }
+     ],
+     "products": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "label": "Bobl future (FGBM)",
+       "price": 119.35957119864078,
+       "dv01_per_unit": 55.42257777739724,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.00% Jul-31."
+      },
+      {
+       "code": "FGBL",
+       "kind": "future",
+       "label": "Bund future (FGBL)",
+       "price": 131.71922299901155,
+       "dv01_per_unit": 108.5085952070076,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.25% Sep-35, CF 0.7467."
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "label": "the 2.25% Sep-35 Bund (Bund CTD)",
+       "clean": 98.59919366728994,
+       "yield": 0.02420789963942861,
+       "asw_bp": -2.194476787139861,
+       "dv01_per_unit": 830.62629373651,
+       "unit": "EUR 1m face",
+       "half_spread": 0.01,
+       "cost_per_unit": 100.0,
+       "info": "Repo at general collateral, ESTR +0bp."
+      }
+     ]
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "client at 15:30",
+       "side": "receive",
+       "notional": 625000000.0,
+       "tenor": 5,
+       "rate": 0.021659
+      }
+     ],
+     "hedges": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "quantity": -5000.0
+      }
+     ],
+     "dv01": 17719.546637009626,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": [
+      {
+       "tenor": 2,
+       "dv01": 14407.512703536791
+      },
+      {
+       "tenor": 5,
+       "dv01": 3322.865251672629
+      },
+      {
+       "tenor": 10,
+       "dv01": 0.0
+      },
+      {
+       "tenor": 30,
+       "dv01": 0.0
+      }
+     ],
+     "slope": {
+      "exposure": -20522.78654816447,
+      "limit": 500000.0
+     },
+     "curvature": 982.9692157921672,
+     "curve_position": null,
+     "spreads": {
+      "swap_spread": -347514.4347695112,
+      "fut_basis": -50000.00000011921
+     },
+     "pnl_so_far": -54387.29788753393
+    },
+    "conditions": {
+     "volatility": "calm",
+     "liquidity": "normal",
+     "flow": "late afternoon: swap liquidity is thin, futures still trade tight.",
+     "swap_cost": {
+      "multiplier": 2.0,
+      "depth_dv01": 125000.0
+     },
+     "desk_expectation": null,
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [],
+    "inquiry": {
+     "name": null,
+     "ctype": "asset_manager",
+     "description": "Real-money asset manager adjusting duration",
+     "short": "real-money asset manager adjusting duration",
+     "action": "receives",
+     "notional": 325000000.0,
+     "tenor": 5,
+     "dv01": -153308.71375121464
+    },
+    "last_inquiry": null,
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": null,
+    "checkpoint": null,
+    "prompt": "Your rate for the client to receive at (or 'pass')?",
+    "input": {
+     "type": "rfq",
+     "hint": "a rate in %, e.g. 2.8465, or 'pass'",
+     "unit": "%"
+    }
+   },
+   "decision": {
+    "type": "rfq",
+    "level": 0.021639728307557855
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "fill",
+      "filled": false,
+      "p_win": 0.35606924555942754
+     }
+    ],
+    "assessment": {
+     "kind": "rfq",
+     "rating": "sound",
+     "reasons": [
+      "A price in line with your book, the conditions and what you know about this client."
+     ],
+     "expected_pnl": -1864.597665704064,
+     "variance": 6287456.243911069,
+     "table": [],
+     "metrics": {
+      "ref_level": 0.021639728307557855,
+      "ref_charge": 0.1008426765820511,
+      "charge": 0.1008426765820511,
+      "street_level": 0.02163946257521606,
+      "p_win": 0.35606924555942754,
+      "p_win_ref": 0.35606924555942754,
+      "trade_dv01": -153308.71375121464,
+      "dv01_after": -135589.16711420502,
+      "reduces": false,
+      "breach": false,
+      "x_after": {
+       "level": -135589.16711420502,
+       "slope": 75295.15897369404,
+       "curvature": -152325.74263400075,
+       "swap_spread": -347514.4347695112,
+       "fut_basis": -50000.00000011921
+      }
+     }
+    },
+    "grade": null,
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "hedge",
+    "episode": {
+     "id": "mm.ep4_products_overnight",
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "level": 4,
+     "round": 1,
+     "rounds": 5,
+     "round_title": "Day 1, 16:30"
+    },
+    "header": {
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "round": 1,
+     "rounds": 5,
+     "round_title": "Day 1, 16:30",
+     "briefing": null,
+     "notes": [],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 0.6,
+     "step_days": 0.0625,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      },
+      {
+       "name": "swap_spread",
+       "label": "swap spread (bond ASW against swaps)",
+       "normal_daily_vol": 0.8,
+       "vol_unit": "bp",
+       "loadings": null
+      },
+      {
+       "name": "fut_basis",
+       "label": "futures basis (futures against their CTD)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": " tick",
+       "loadings": null
+      }
+     ]
+    },
+    "market": {
+     "mode": "ladder",
+     "curve": [],
+     "focus": null,
+     "ladder": [
+      {
+       "tenor": 2,
+       "mid": 0.01849546777821308,
+       "bid": 0.018488567778213078,
+       "offer": 0.01850236777821308,
+       "dv01_per_m": 194.76356069762778,
+       "cost_bp": 0.06
+      },
+      {
+       "tenor": 5,
+       "mid": 0.02164981257521606,
+       "bid": 0.02163946257521606,
+       "offer": 0.02166016257521606,
+       "dv01_per_m": 471.7191192345066,
+       "cost_bp": 0.09
+      },
+      {
+       "tenor": 10,
+       "mid": 0.02539893857066846,
+       "bid": 0.02538513857066846,
+       "offer": 0.02541273857066846,
+       "dv01_per_m": 886.0290932622416,
+       "cost_bp": 0.12
+      },
+      {
+       "tenor": 30,
+       "mid": 0.027858931363315537,
+       "bid": 0.027831331363315538,
+       "offer": 0.027886531363315537,
+       "dv01_per_m": 2061.8320234992993,
+       "cost_bp": 0.24
+      }
+     ],
+     "products": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "label": "Bobl future (FGBM)",
+       "price": 119.35957119864078,
+       "dv01_per_unit": 55.42257777739724,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.00% Jul-31."
+      },
+      {
+       "code": "FGBL",
+       "kind": "future",
+       "label": "Bund future (FGBL)",
+       "price": 131.71922299901155,
+       "dv01_per_unit": 108.5085952070076,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.25% Sep-35, CF 0.7467."
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "label": "the 2.25% Sep-35 Bund (Bund CTD)",
+       "clean": 98.59919366728994,
+       "yield": 0.02420789963942861,
+       "asw_bp": -2.194476787139861,
+       "dv01_per_unit": 830.62629373651,
+       "unit": "EUR 1m face",
+       "half_spread": 0.01,
+       "cost_per_unit": 100.0,
+       "info": "Repo at general collateral, ESTR +0bp."
+      }
+     ]
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "client at 15:30",
+       "side": "receive",
+       "notional": 625000000.0,
+       "tenor": 5,
+       "rate": 0.021659
+      }
+     ],
+     "hedges": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "quantity": -5000.0
+      }
+     ],
+     "dv01": 17719.546637009626,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": [
+      {
+       "tenor": 2,
+       "dv01": 14407.512703536791
+      },
+      {
+       "tenor": 5,
+       "dv01": 3322.865251672629
+      },
+      {
+       "tenor": 10,
+       "dv01": 0.0
+      },
+      {
+       "tenor": 30,
+       "dv01": 0.0
+      }
+     ],
+     "slope": {
+      "exposure": -20522.78654816447,
+      "limit": 500000.0
+     },
+     "curvature": 982.9692157921672,
+     "curve_position": null,
+     "spreads": {
+      "swap_spread": -347514.4347695112,
+      "fut_basis": -50000.00000011921
+     },
+     "pnl_so_far": -54387.29788753393
+    },
+    "conditions": {
+     "volatility": "calm",
+     "liquidity": "normal",
+     "flow": "late afternoon: swap liquidity is thin, futures still trade tight.",
+     "swap_cost": {
+      "multiplier": 2.0,
+      "depth_dv01": 125000.0
+     },
+     "desk_expectation": null,
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [],
+    "inquiry": null,
+    "last_inquiry": {
+     "short": "real-money asset manager adjusting duration",
+     "action": "receives",
+     "notional": 325000000.0,
+     "tenor": 5,
+     "outcome": "it dealt elsewhere"
+    },
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": {
+     "trading_hours": 0.5
+    },
+    "checkpoint": null,
+    "prompt": "Hedge, partly hedge, or warehouse?",
+    "input": {
+     "type": "hedge",
+     "hint": "'none'; '100% 10y' (of your DV01); 'flatten' (level, slope and curvature); or legs: 'pay 150m 10y + receive 60m 30y'; futures and bonds: 'sell 300 fgbl', 'buy 120 fgbm', 'sell 50m ctd'; 'switch' closes product hedges into swaps",
+     "swap_tenors": [
+      2,
+      5,
+      10,
+      30
+     ],
+     "products": [
+      "FGBM",
+      "FGBL",
+      "CTD"
+     ],
+     "can_flatten": true,
+     "can_switch": true,
+     "can_target": false
+    }
+   },
+   "decision": {
+    "type": "hedge",
+    "label": "sell \u20ac40m of the CTD bond",
+    "trades": [
+     {
+      "kind": "bond",
+      "code": "CTD",
+      "face": -40000000.0
+     }
+    ]
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "hedge_trade",
+      "kind": "bond",
+      "code": "CTD",
+      "face": -40000000.0,
+      "cost": -4000.0
+     },
+     {
+      "type": "market",
+      "focus_tenor": 5,
+      "move_bp": 0.214518829759333,
+      "release": false,
+      "tenor_moves": [
+       {
+        "tenor": 2,
+        "bp": 0.10428194198706436
+       },
+       {
+        "tenor": 5,
+        "bp": 0.214518829759333
+       },
+       {
+        "tenor": 10,
+        "bp": -0.11805958166320221
+       },
+       {
+        "tenor": 30,
+        "bp": -0.56167534433189
+       }
+      ],
+      "factor_moves": [
+       {
+        "name": "level",
+        "value": -0.16723163477840694
+       },
+       {
+        "name": "slope",
+        "value": -0.29609960332307367
+       },
+       {
+        "name": "curvature",
+        "value": 0.1966882124608189
+       },
+       {
+        "name": "swap_spread",
+        "value": -0.2766688642022906
+       },
+       {
+        "name": "fut_basis",
+        "value": 0.071629770591475
+       }
+      ],
+      "first_order": [
+       {
+        "name": "level",
+        "pnl": -2593.0109680194323
+       },
+       {
+        "name": "slope",
+        "pnl": -5383.7374717011035
+       },
+       {
+        "name": "curvature",
+        "pnl": 2003.5202568623708
+       },
+       {
+        "name": "swap_spread",
+        "pnl": -106286.36289437537
+       },
+       {
+        "name": "fut_basis",
+        "pnl": 3581.488529582289
+       }
+      ],
+      "first_total": -108678.10254765124,
+      "full_revaluation": -108673.6075905338,
+      "convexity_cross": 4.494957117451122
+     },
+     {
+      "type": "round_pnl",
+      "round_pnl": -112673.6075905338,
+      "total_pnl": -167060.90547806773
+     }
+    ],
+    "assessment": {
+     "kind": "hedge",
+     "rating": "poor",
+     "reasons": [
+      "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: warehouse (no hedge).",
+      "Your choice: cost now \u20ac4,000, risk over the next step sigma \u20ac48,464 (keeping the book as it is: sigma \u20ac44,831).",
+      "You are left with swap-spread risk: -384,165 EUR per bp of ASW tightening. Futures and bonds hedge rates, but they are not swaps: if bonds cheapen against swaps your hedge underperforms."
+     ],
+     "expected_pnl": -59424.80668910891,
+     "variance": 2348760813.8598986,
+     "table": [
+      {
+       "label": "Warehouse (no hedge)",
+       "expected": -46166.24367169963,
+       "sigma": 44831.10413242438,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 50% of the level in the 2Y",
+       "expected": -47244.83673396711,
+       "sigma": 43032.30047833083,
+       "rating": "defensible"
+      },
+      {
+       "label": "Hedge 100% of the level in the 2Y",
+       "expected": -48413.61857700154,
+       "sigma": 42381.85696187763,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 5Y",
+       "expected": -47778.650000568494,
+       "sigma": 43139.82960195106,
+       "rating": "defensible"
+      },
+      {
+       "label": "Hedge 100% of the level in the 5Y",
+       "expected": -49518.92299016686,
+       "sigma": 42539.63976564921,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 10Y",
+       "expected": -48478.584011927574,
+       "sigma": 43328.73192753653,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 10Y",
+       "expected": -50956.46889284754,
+       "sigma": 42818.902638173844,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 30Y",
+       "expected": -50281.59539782596,
+       "sigma": 43792.665838649365,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 30Y",
+       "expected": -54713.203184494465,
+       "sigma": 43921.37370851709,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge level and curve (2Y + 30Y)",
+       "expected": -48652.41914853324,
+       "sigma": 42372.69337099045,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge level and curve (10Y + 2Y)",
+       "expected": -48766.95976415908,
+       "sigma": 42375.59091706428,
+       "rating": "poor"
+      },
+      {
+       "label": "Flatten level, slope and curvature (2Y + 5Y + 30Y)",
+       "expected": -48819.67662396253,
+       "sigma": 42370.797327569344,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with Bobl future (FGBM)",
+       "expected": -52346.655618661134,
+       "sigma": 45259.76609244769,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with Bund future (FGBL)",
+       "expected": -52009.081949256026,
+       "sigma": 45189.13163659188,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with the 2.25% Sep-35 Bund (Bund CTD)",
+       "expected": -53211.30984429889,
+       "sigma": 45060.01067743476,
+       "rating": "poor"
+      },
+      {
+       "label": "Switch the product hedges into 5Y swaps",
+       "expected": -103698.31962448212,
+       "sigma": 13954.119471905175,
+       "rating": "poor"
+      }
+     ],
+     "metrics": {
+      "dv01_before": 17719.546637009626,
+      "dv01_after": -15505.505112450774,
+      "cost": 4000.0,
+      "sigma": 48464.01565966133,
+      "exposures": {
+       "level": -15505.505112450774,
+       "slope": -18182.184005928022,
+       "curvature": -10186.27518036819,
+       "swap_spread": -384164.525346308,
+       "fut_basis": -50000.00000011921
+      },
+      "gap": 5.973034328597339,
+      "r_ref": 625000.0,
+      "curve_after": -27873.124701209756,
+      "slope_after": -18182.184005928022
+     }
+    },
+    "grade": null,
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "overnight",
+    "episode": {
+     "id": "mm.ep4_products_overnight",
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "level": 4,
+     "round": 2,
+     "rounds": 5,
+     "round_title": "Day 1, close"
+    },
+    "header": {
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "round": 2,
+     "rounds": 5,
+     "round_title": "Day 1, close",
+     "briefing": null,
+     "notes": [
+      "The close. Decide what you carry overnight: the next move is the overnight one, and carry, roll-down and funding accrue."
+     ],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 0.6,
+     "step_days": 0.0625,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      },
+      {
+       "name": "swap_spread",
+       "label": "swap spread (bond ASW against swaps)",
+       "normal_daily_vol": 0.8,
+       "vol_unit": "bp",
+       "loadings": null
+      },
+      {
+       "name": "fut_basis",
+       "label": "futures basis (futures against their CTD)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": " tick",
+       "loadings": null
+      }
+     ]
+    },
+    "market": {
+     "mode": "ladder",
+     "curve": [],
+     "focus": null,
+     "ladder": [
+      {
+       "tenor": 2,
+       "mid": 0.018505895972411944,
+       "bid": 0.018498995972411943,
+       "offer": 0.018512795972411945,
+       "dv01_per_m": 194.76124146212277,
+       "cost_bp": 0.06
+      },
+      {
+       "tenor": 5,
+       "mid": 0.021671264458191987,
+       "bid": 0.021660914458191988,
+       "offer": 0.021681614458191986,
+       "dv01_per_m": 471.6963816954467,
+       "cost_bp": 0.09
+      },
+      {
+       "tenor": 10,
+       "mid": 0.025387132612502132,
+       "bid": 0.02537333261250213,
+       "offer": 0.025400932612502133,
+       "dv01_per_m": 886.0128109127174,
+       "cost_bp": 0.12
+      },
+      {
+       "tenor": 30,
+       "mid": 0.027802763828882353,
+       "bid": 0.027775163828882354,
+       "offer": 0.027830363828882352,
+       "dv01_per_m": 2062.957232443763,
+       "cost_bp": 0.24
+      }
+     ],
+     "products": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "label": "Bobl future (FGBM)",
+       "price": 119.36609601386826,
+       "dv01_per_unit": 55.420823939086404,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.00% Jul-31."
+      },
+      {
+       "code": "FGBL",
+       "kind": "future",
+       "label": "Bund future (FGBL)",
+       "price": 131.76166204723114,
+       "dv01_per_unit": 108.52396821847651,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.25% Sep-35, CF 0.7467."
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "label": "the 2.25% Sep-35 Bund (Bund CTD)",
+       "clean": 98.63120836611672,
+       "yield": 0.024168428739326363,
+       "asw_bp": -2.4711456513421517,
+       "dv01_per_unit": 830.7476064253133,
+       "unit": "EUR 1m face",
+       "half_spread": 0.01,
+       "cost_per_unit": 100.0,
+       "info": "Repo at general collateral, ESTR +0bp."
+      }
+     ]
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "client at 15:30",
+       "side": "receive",
+       "notional": 625000000.0,
+       "tenor": 5,
+       "rate": 0.021659
+      }
+     ],
+     "hedges": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "quantity": -5000.0
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "quantity": -40000000.0
+      }
+     ],
+     "dv01": -15534.445280529559,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": [
+      {
+       "tenor": 2,
+       "dv01": 14437.558443576097
+      },
+      {
+       "tenor": 5,
+       "dv01": -3045.77507571131
+      },
+      {
+       "tenor": 10,
+       "dv01": -26886.693400800228
+      },
+      {
+       "tenor": 30,
+       "dv01": 0.0
+      }
+     ],
+     "slope": {
+      "exposure": -18160.644759505987,
+      "limit": 500000.0
+     },
+     "curvature": -10203.132368266582,
+     "curve_position": null,
+     "spreads": {
+      "swap_spread": -384149.57722400874,
+      "fut_basis": -50000.0
+     },
+     "pnl_so_far": -167060.90547806773
+    },
+    "conditions": {
+     "volatility": "calm",
+     "liquidity": "normal",
+     "flow": "late afternoon: swap liquidity is thin, futures still trade tight.",
+     "swap_cost": {
+      "multiplier": 2.0,
+      "depth_dv01": 125000.0
+     },
+     "desk_expectation": null,
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [],
+    "inquiry": null,
+    "last_inquiry": null,
+    "hedge_menu": null,
+    "overnight": {
+     "time_pnl": -4412.568242405424
+    },
+    "next_step": null,
+    "checkpoint": null,
+    "prompt": "What do you carry overnight? Hedge, partly hedge, switch, or keep.",
+    "input": {
+     "type": "hedge",
+     "hint": "'none'; '100% 10y' (of your DV01); 'flatten' (level, slope and curvature); or legs: 'pay 150m 10y + receive 60m 30y'; futures and bonds: 'sell 300 fgbl', 'buy 120 fgbm', 'sell 50m ctd'; 'switch' closes product hedges into swaps",
+     "swap_tenors": [
+      2,
+      5,
+      10,
+      30
+     ],
+     "products": [
+      "FGBM",
+      "FGBL",
+      "CTD"
+     ],
+     "can_flatten": true,
+     "can_switch": true,
+     "can_target": false
+    }
+   },
+   "decision": {
+    "type": "hedge",
+    "label": "Warehouse (no hedge)",
+    "trades": []
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "no_trade"
+     },
+     {
+      "type": "overnight",
+      "causes": [
+       {
+        "name": "time: swap carry",
+        "amount": 5764.9519048692755
+       },
+       {
+        "name": "time: swap roll-down",
+        "amount": 5883.55526734246
+       },
+       {
+        "name": "time: futures convergence",
+        "amount": -14820.229449629784
+       },
+       {
+        "name": "time: bond accrual and roll",
+        "amount": -3217.8508700728416
+       },
+       {
+        "name": "funding (repo)",
+        "amount": 1977.004905085466
+       }
+      ]
+     },
+     {
+      "type": "market",
+      "focus_tenor": 5,
+      "move_bp": -2.699804750520114,
+      "release": false,
+      "tenor_moves": [
+       {
+        "tenor": 2,
+        "bp": -2.420654639295191
+       },
+       {
+        "tenor": 5,
+        "bp": -2.699804750520114
+       },
+       {
+        "tenor": 10,
+        "bp": -2.258436845811977
+       },
+       {
+        "tenor": 30,
+        "bp": -1.7076684422931878
+       }
+      ],
+      "factor_moves": [
+       {
+        "name": "level",
+        "value": -2.1720922658040713
+       },
+       {
+        "name": "slope",
+        "value": 0.2917346634950723
+       },
+       {
+        "name": "curvature",
+        "value": -0.34537832003162217
+       },
+       {
+        "name": "swap_spread",
+        "value": 0.5561476733940743
+       },
+       {
+        "name": "fut_basis",
+        "value": -0.38937642606003675
+       }
+      ],
+      "first_order": [
+       {
+        "name": "level",
+        "pnl": -100972.05555039631
+       },
+       {
+        "name": "slope",
+        "pnl": -3755.5868677858293
+       },
+       {
+        "name": "curvature",
+        "pnl": 1685.3937801576487
+       },
+       {
+        "name": "swap_spread",
+        "pnl": 213647.49190936267
+       },
+       {
+        "name": "fut_basis",
+        "pnl": -19468.821303001838
+       }
+      ],
+      "first_total": 91136.42196833633,
+      "full_revaluation": 91215.01545140147,
+      "convexity_cross": 78.59348306513857
+     },
+     {
+      "type": "round_pnl",
+      "round_pnl": 86802.44720899605,
+      "total_pnl": -80258.45826907168
+     }
+    ],
+    "assessment": {
+     "kind": "overnight",
+     "rating": "poor",
+     "reasons": [
+      "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% with bund future (fgbl).",
+      "Your choice: cost now \u20ac0, risk over the next step sigma \u20ac137,085 (keeping the book as it is: sigma \u20ac137,085).",
+      "You are left with swap-spread risk: -384,150 EUR per bp of ASW tightening. Futures and bonds hedge rates, but they are not swaps: if bonds cheapen against swaps your hedge underperforms.",
+      "Overnight carry, roll-down and funding of the book you keep: -4,413 EUR on an unchanged curve."
+     ],
+     "expected_pnl": -57741.67779096664,
+     "variance": 18792304065.518154,
+     "table": [
+      {
+       "label": "Warehouse (no hedge)",
+       "expected": -57741.67779096664,
+       "sigma": 137085.0249499126,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 2Y",
+       "expected": -58870.531092522186,
+       "sigma": 135011.66249543696,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 2Y",
+       "expected": -60068.70514346936,
+       "sigma": 135255.964279679,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 5Y",
+       "expected": -58524.19375938396,
+       "sigma": 134551.48294470628,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 5Y",
+       "expected": -59404.98875601378,
+       "sigma": 134218.1842328996,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 10Y",
+       "expected": -58450.57663071676,
+       "sigma": 134057.4454608874,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 10Y",
+       "expected": -59286.712777500215,
+       "sigma": 133021.87206841295,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 30Y",
+       "expected": -58979.91565982041,
+       "sigma": 133548.2930045036,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 30Y",
+       "expected": -60461.22395099094,
+       "sigma": 132337.67890138997,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge level and curve (2Y + 30Y)",
+       "expected": -60705.06928086104,
+       "sigma": 132331.11758909395,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge level and curve (5Y + 30Y)",
+       "expected": -60935.1860615764,
+       "sigma": 132382.1593913103,
+       "rating": "poor"
+      },
+      {
+       "label": "Flatten level, slope and curvature (2Y + 5Y + 30Y)",
+       "expected": -61577.07198912612,
+       "sigma": 132099.08180186385,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with Bobl future (FGBM)",
+       "expected": -56343.82049187235,
+       "sigma": 127537.82044216237,
+       "rating": "defensible"
+      },
+      {
+       "label": "Hedge 100% with Bund future (FGBL)",
+       "expected": -55502.43889663463,
+       "sigma": 127116.10161594402,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 100% with the 2.25% Sep-35 Bund (Bund CTD)",
+       "expected": -56774.19183714934,
+       "sigma": 127432.42980846243,
+       "rating": "defensible"
+      },
+      {
+       "label": "Switch the product hedges into 5Y swaps",
+       "expected": -127637.79922902305,
+       "sigma": 34601.12284792904,
+       "rating": "poor"
+      }
+     ],
+     "metrics": {
+      "dv01_before": -15534.445280529559,
+      "dv01_after": -15534.445280529559,
+      "cost": 0.0,
+      "sigma": 137085.0249499126,
+      "exposures": {
+       "level": -15534.445280529559,
+       "slope": -18160.644759505987,
+       "curvature": -10203.132368266582,
+       "swap_spread": -384149.57722400874,
+       "fut_basis": -50000.0
+      },
+      "gap": 1.2159436139121276,
+      "r_ref": 1767766.952966369,
+      "curve_after": -27869.67305983696,
+      "slope_after": -18160.644759505987
+     }
+    },
+    "grade": null,
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "rehedge",
+    "episode": {
+     "id": "mm.ep4_products_overnight",
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "level": 4,
+     "round": 3,
+     "rounds": 5,
+     "round_title": "Day 2, 08:30"
+    },
+    "header": {
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "round": 3,
+     "rounds": 5,
+     "round_title": "Day 2, 08:30",
+     "briefing": null,
+     "notes": [
+      "Morning: swap liquidity is back. Review the hedges you carried."
+     ],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 0.6,
+     "step_days": 0.125,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      },
+      {
+       "name": "swap_spread",
+       "label": "swap spread (bond ASW against swaps)",
+       "normal_daily_vol": 0.8,
+       "vol_unit": "bp",
+       "loadings": null
+      },
+      {
+       "name": "fut_basis",
+       "label": "futures basis (futures against their CTD)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": " tick",
+       "loadings": null
+      }
+     ]
+    },
+    "market": {
+     "mode": "ladder",
+     "curve": [],
+     "focus": null,
+     "ladder": [
+      {
+       "tenor": 2,
+       "mid": 0.018263830508482348,
+       "bid": 0.01825831050848235,
+       "offer": 0.018269350508482347,
+       "dv01_per_m": 195.35758381358792,
+       "cost_bp": 0.024
+      },
+      {
+       "tenor": 5,
+       "mid": 0.021401283983140024,
+       "bid": 0.021393003983140025,
+       "offer": 0.021409563983140024,
+       "dv01_per_m": 472.0537716249029,
+       "cost_bp": 0.036
+      },
+      {
+       "tenor": 10,
+       "mid": 0.025161288927920942,
+       "bid": 0.02515024892792094,
+       "offer": 0.025172328927920942,
+       "dv01_per_m": 887.1590596110368,
+       "cost_bp": 0.048
+      },
+      {
+       "tenor": 30,
+       "mid": 0.02763199698465304,
+       "bid": 0.027609916984653038,
+       "offer": 0.02765407698465304,
+       "dv01_per_m": 2068.448611116769,
+       "cost_bp": 0.096
+      }
+     ],
+     "products": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "label": "Bobl future (FGBM)",
+       "price": 119.48463036560526,
+       "dv01_per_unit": 55.49840915817185,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.00% Jul-31."
+      },
+      {
+       "code": "FGBL",
+       "kind": "future",
+       "label": "Bund future (FGBL)",
+       "price": 131.95206833737524,
+       "dv01_per_unit": 108.75040759923286,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.25% Sep-35, CF 0.7467."
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "label": "the 2.25% Sep-35 Bund (Bund CTD)",
+       "clean": 98.77407712517422,
+       "yield": 0.023992919830843715,
+       "asw_bp": -1.914997977948078,
+       "dv01_per_unit": 832.2734268166823,
+       "unit": "EUR 1m face",
+       "half_spread": 0.01,
+       "cost_per_unit": 100.0,
+       "info": "Repo at general collateral, ESTR +0bp."
+      }
+     ]
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "client at 15:30",
+       "side": "receive",
+       "notional": 625000000.0,
+       "tenor": 5,
+       "rate": 0.021659
+      }
+     ],
+     "hedges": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "quantity": -5000.0
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "quantity": -40000000.0
+      }
+     ],
+     "dv01": -46484.32185378671,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": [
+      {
+       "tenor": 2,
+       "dv01": -16521.122375890613
+      },
+      {
+       "tenor": 5,
+       "dv01": -3078.704841762781
+      },
+      {
+       "tenor": 10,
+       "dv01": -26898.11471196264
+      },
+      {
+       "tenor": 30,
+       "dv01": 0.0
+      }
+     ],
+     "slope": {
+      "exposure": 12828.8897421062,
+      "limit": 500000.0
+     },
+     "curvature": 4888.904269345105,
+     "curve_position": null,
+     "spreads": {
+      "swap_spread": -384402.9419750869,
+      "fut_basis": -50000.0
+     },
+     "pnl_so_far": -80258.45826907168
+    },
+    "conditions": {
+     "volatility": "calm",
+     "liquidity": "deep (easy to hedge in size)",
+     "flow": "morning: the swap market is deep again.",
+     "swap_cost": null,
+     "desk_expectation": null,
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [],
+    "inquiry": null,
+    "last_inquiry": null,
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": {
+     "trading_hours": 1.0
+    },
+    "checkpoint": null,
+    "prompt": "Liquidity is back. Re-hedge, switch, or keep your hedges as they are?",
+    "input": {
+     "type": "hedge",
+     "hint": "'none'; '100% 10y' (of your DV01); 'flatten' (level, slope and curvature); or legs: 'pay 150m 10y + receive 60m 30y'; futures and bonds: 'sell 300 fgbl', 'buy 120 fgbm', 'sell 50m ctd'; 'switch' closes product hedges into swaps",
+     "swap_tenors": [
+      2,
+      5,
+      10,
+      30
+     ],
+     "products": [
+      "FGBM",
+      "FGBL",
+      "CTD"
+     ],
+     "can_flatten": true,
+     "can_switch": true,
+     "can_target": false
+    }
+   },
+   "decision": {
+    "type": "hedge",
+    "label": "Switch the product hedges into 5Y swaps",
+    "trades": [
+     {
+      "kind": "future",
+      "code": "FGBM",
+      "contracts": 5000.0
+     },
+     {
+      "kind": "bond",
+      "code": "CTD",
+      "face": 40000000.0
+     },
+     {
+      "kind": "swap",
+      "tenor": 5,
+      "side": "pay",
+      "notional": 658363520.311997
+     }
+    ]
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "hedge_trade",
+      "kind": "future",
+      "code": "FGBM",
+      "contracts": 5000.0,
+      "cost": -25000.0
+     },
+     {
+      "type": "hedge_trade",
+      "kind": "bond",
+      "code": "CTD",
+      "face": 40000000.0,
+      "cost": -4000.0
+     },
+     {
+      "type": "hedge_trade",
+      "kind": "swap",
+      "side": "pay",
+      "notional": 658363520.311997,
+      "tenor": 5,
+      "rate": 0.021404883983140024,
+      "cost": -11188.18719260176
+     },
+     {
+      "type": "market",
+      "focus_tenor": 5,
+      "move_bp": -1.4588119234898644,
+      "release": false,
+      "tenor_moves": [
+       {
+        "tenor": 2,
+        "bp": -1.6858926792880968
+       },
+       {
+        "tenor": 5,
+        "bp": -1.4588119234898644
+       },
+       {
+        "tenor": 10,
+        "bp": -1.3644202889680213
+       },
+       {
+        "tenor": 30,
+        "bp": -1.1646948808516073
+       }
+      ],
+      "factor_moves": [
+       {
+        "name": "level",
+        "value": -1.3914751739021682
+       },
+       {
+        "name": "slope",
+        "value": 0.280890062918855
+       },
+       {
+        "name": "curvature",
+        "value": 0.10821953973658817
+       },
+       {
+        "name": "swap_spread",
+        "value": -0.03601444315017491
+       },
+       {
+        "name": "fut_basis",
+        "value": -0.06088902077423853
+       }
+      ],
+      "first_order": [
+       {
+        "name": "level",
+        "pnl": -64686.37160041559
+       },
+       {
+        "name": "slope",
+        "pnl": -11374.58319861535
+       },
+       {
+        "name": "curvature",
+        "pnl": 67.29341364964783
+       },
+       {
+        "name": "swap_spread",
+        "pnl": 0.0
+       },
+       {
+        "name": "fut_basis",
+        "pnl": 0.0
+       }
+      ],
+      "first_total": -75993.66138538129,
+      "full_revaluation": -76008.85366725354,
+      "convexity_cross": -15.192281872252352
+     },
+     {
+      "type": "round_pnl",
+      "round_pnl": -116197.0408598553,
+      "total_pnl": -196455.49912892698
+     }
+    ],
+    "assessment": {
+     "kind": "rehedge",
+     "rating": "sound",
+     "reasons": [
+      "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: switch the product hedges into 5y swaps.",
+      "Your choice: cost now \u20ac40,188, risk over the next step sigma \u20ac52,211 (keeping the book as it is: sigma \u20ac82,642).",
+      "You are left with a curve position: +40,492 EUR per bp of slope. A DV01 hedge in another tenor hedges the level, not the curve.",
+      "Client flow over the rest of the day should net away roughly 90% of what you keep: that is the case for warehousing it rather than paying to hedge it now."
+     ],
+     "expected_pnl": -42780.32717080498,
+     "variance": 2726039876.391742,
+     "table": [
+      {
+       "label": "Warehouse (no hedge)",
+       "expected": -49402.735101210186,
+       "sigma": 82642.2479412441,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 2Y",
+       "expected": -49693.80612109469,
+       "sigma": 70679.33427216017,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 2Y",
+       "expected": -51605.34391782671,
+       "sigma": 67617.09836500214,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 5Y",
+       "expected": -49449.763426149344,
+       "sigma": 70795.4971142443,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 5Y",
+       "expected": -51117.25852793601,
+       "sigma": 67337.15505332037,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 10Y",
+       "expected": -50396.55509677931,
+       "sigma": 70785.93572842985,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 10Y",
+       "expected": -51471.37510014321,
+       "sigma": 66408.13551910172,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 30Y",
+       "expected": -52906.70811682486,
+       "sigma": 72194.97109992395,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 30Y",
+       "expected": -56491.68114023431,
+       "sigma": 70827.66270442019,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge level and curve (10Y + 2Y)",
+       "expected": -50393.74836180618,
+       "sigma": 66138.55958212487,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge level and curve (5Y + 30Y)",
+       "expected": -50742.862980430145,
+       "sigma": 66541.45014286034,
+       "rating": "poor"
+      },
+      {
+       "label": "Flatten level, slope and curvature (2Y + 10Y + 30Y)",
+       "expected": -50643.330367652095,
+       "sigma": 66091.98066190889,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with Bobl future (FGBM)",
+       "expected": -46194.49580618086,
+       "sigma": 57553.22716859112,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with Bund future (FGBL)",
+       "expected": -44605.91669425074,
+       "sigma": 57483.78635289649,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with the 2.25% Sep-35 Bund (Bund CTD)",
+       "expected": -48166.83541631256,
+       "sigma": 57833.03267550628,
+       "rating": "poor"
+      },
+      {
+       "label": "Switch the product hedges into 5Y swaps",
+       "expected": -42780.32717080498,
+       "sigma": 52211.49180392897,
+       "rating": "sound"
+      }
+     ],
+     "metrics": {
+      "dv01_before": -46484.32185378671,
+      "dv01_after": -46484.32185378671,
+      "cost": 40188.18738308696,
+      "sigma": 52211.49180392897,
+      "exposures": {
+       "level": -46484.32185378671,
+       "slope": 40492.20562776044,
+       "curvature": -620.1598603088642,
+       "swap_spread": -2.828892320394516e-08,
+       "fut_basis": -7.275957614183426e-08
+      },
+      "gap": 0.0,
+      "r_ref": 883883.4764831845,
+      "curve_after": 11439.50446914375,
+      "slope_after": 40492.20562776044
+     }
+    },
+    "grade": null,
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "rfq",
+    "episode": {
+     "id": "mm.ep4_products_overnight",
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "level": 4,
+     "round": 4,
+     "rounds": 5,
+     "round_title": "Day 2, 09:30"
+    },
+    "header": {
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "round": 4,
+     "rounds": 5,
+     "round_title": "Day 2, 09:30",
+     "briefing": null,
+     "notes": [],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 0.6,
+     "step_days": 0.125,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      },
+      {
+       "name": "swap_spread",
+       "label": "swap spread (bond ASW against swaps)",
+       "normal_daily_vol": 0.8,
+       "vol_unit": "bp",
+       "loadings": null
+      },
+      {
+       "name": "fut_basis",
+       "label": "futures basis (futures against their CTD)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": " tick",
+       "loadings": null
+      }
+     ]
+    },
+    "market": {
+     "mode": "ladder",
+     "curve": [],
+     "focus": null,
+     "ladder": [
+      {
+       "tenor": 2,
+       "mid": 0.018095241240553533,
+       "bid": 0.018089721240553535,
+       "offer": 0.018100761240553532,
+       "dv01_per_m": 195.4072394232953,
+       "cost_bp": 0.024
+      },
+      {
+       "tenor": 5,
+       "mid": 0.021255402790790984,
+       "bid": 0.021247122790790985,
+       "offer": 0.021263682790790984,
+       "dv01_per_m": 472.270582640294,
+       "cost_bp": 0.036
+      },
+      {
+       "tenor": 10,
+       "mid": 0.02502484689902412,
+       "bid": 0.02501380689902412,
+       "offer": 0.02503588689902412,
+       "dv01_per_m": 887.8341884968333,
+       "cost_bp": 0.048
+      },
+      {
+       "tenor": 30,
+       "mid": 0.027515527496567865,
+       "bid": 0.027493447496567864,
+       "offer": 0.027537607496567865,
+       "dv01_per_m": 2072.025046061077,
+       "cost_bp": 0.096
+      }
+     ],
+     "products": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "label": "Bobl future (FGBM)",
+       "price": 119.56786552878533,
+       "dv01_per_unit": 55.54705281429051,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.00% Jul-31."
+      },
+      {
+       "code": "FGBL",
+       "kind": "future",
+       "label": "Bund future (FGBL)",
+       "price": 132.1056438502272,
+       "dv01_per_unit": 108.90044777144794,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.25% Sep-35, CF 0.7467."
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "label": "the 2.25% Sep-35 Bund (Bund CTD)",
+       "clean": 98.8919029641014,
+       "yield": 0.02384798947951018,
+       "asw_bp": -1.9510124210982527,
+       "dv01_per_unit": 833.4507384044118,
+       "unit": "EUR 1m face",
+       "half_spread": 0.01,
+       "cost_per_unit": 100.0,
+       "info": "Repo at general collateral, ESTR +0bp."
+      }
+     ]
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "client at 15:30",
+       "side": "receive",
+       "notional": 625000000.0,
+       "tenor": 5,
+       "rate": 0.021659
+      },
+      {
+       "label": "hedge, round 4",
+       "side": "pay",
+       "notional": 658363520.311997,
+       "tenor": 5,
+       "rate": 0.021404883983140024
+      }
+     ],
+     "hedges": [],
+     "dv01": -46507.04884386383,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": [
+      {
+       "tenor": 2,
+       "dv01": -30726.133091015916
+      },
+      {
+       "tenor": 5,
+       "dv01": -15780.915456632618
+      },
+      {
+       "tenor": 10,
+       "dv01": 0.0
+      },
+      {
+       "tenor": 30,
+       "dv01": 0.0
+      }
+     ],
+     "slope": {
+      "exposure": 40509.92617502296,
+      "limit": 500000.0
+     },
+     "curvature": -630.0939311598777,
+     "curve_position": null,
+     "spreads": null,
+     "pnl_so_far": -196455.49912892698
+    },
+    "conditions": {
+     "volatility": "calm",
+     "liquidity": "deep (easy to hedge in size)",
+     "flow": "morning: the swap market is deep again.",
+     "swap_cost": null,
+     "desk_expectation": null,
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [],
+    "inquiry": {
+     "name": null,
+     "ctype": "pension",
+     "description": "Pension fund (LDI) extending hedges on a schedule",
+     "short": "pension fund (ldi) extending hedges on a schedule",
+     "action": "receives",
+     "notional": 400000000.0,
+     "tenor": 5,
+     "dv01": -188908.2330561176
+    },
+    "last_inquiry": null,
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": null,
+    "checkpoint": null,
+    "prompt": "Your rate for the client to receive at (or 'pass')?",
+    "input": {
+     "type": "rfq",
+     "hint": "a rate in %, e.g. 2.8465, or 'pass'",
+     "unit": "%"
+    }
+   },
+   "decision": {
+    "type": "rfq",
+    "level": 0.02124713664324173
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "fill",
+      "filled": true,
+      "p_win": 0.350262664831444,
+      "action": "receives",
+      "notional": 400000000.0,
+      "tenor": 5,
+      "rate": 0.02124713664324173,
+      "dealer_side": "pay",
+      "edge": 15615.433011140212
+     }
+    ],
+    "assessment": {
+     "kind": "rfq",
+     "rating": "sound",
+     "reasons": [
+      "A price in line with your book, the conditions and what you know about this client."
+     ],
+     "expected_pnl": 2491.9657217895556,
+     "variance": 11519353.4385832,
+     "table": [],
+     "metrics": {
+      "ref_level": 0.02124713664324173,
+      "ref_charge": 0.08266147549253894,
+      "charge": 0.08266147549253894,
+      "street_level": 0.021247122790790985,
+      "p_win": 0.350262664831444,
+      "p_win_ref": 0.350262664831444,
+      "trade_dv01": -188908.2330561176,
+      "dv01_after": -235415.28189998143,
+      "reduces": false,
+      "breach": false,
+      "x_after": {
+       "level": -235415.28189998143,
+       "slope": 158577.57112879615,
+       "curvature": -189538.32464284726,
+       "swap_spread": 0.0,
+       "fut_basis": 0.0
+      }
+     }
+    },
+    "grade": null,
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "hedge",
+    "episode": {
+     "id": "mm.ep4_products_overnight",
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "level": 4,
+     "round": 4,
+     "rounds": 5,
+     "round_title": "Day 2, 09:30"
+    },
+    "header": {
+     "title": "Level 4: hedging with other products, and holding risk overnight",
+     "round": 4,
+     "rounds": 5,
+     "round_title": "Day 2, 09:30",
+     "briefing": null,
+     "notes": [],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 0.6,
+     "step_days": 0.125,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      },
+      {
+       "name": "swap_spread",
+       "label": "swap spread (bond ASW against swaps)",
+       "normal_daily_vol": 0.8,
+       "vol_unit": "bp",
+       "loadings": null
+      },
+      {
+       "name": "fut_basis",
+       "label": "futures basis (futures against their CTD)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": " tick",
+       "loadings": null
+      }
+     ]
+    },
+    "market": {
+     "mode": "ladder",
+     "curve": [],
+     "focus": null,
+     "ladder": [
+      {
+       "tenor": 2,
+       "mid": 0.018095241240553533,
+       "bid": 0.018089721240553535,
+       "offer": 0.018100761240553532,
+       "dv01_per_m": 195.4072394232953,
+       "cost_bp": 0.024
+      },
+      {
+       "tenor": 5,
+       "mid": 0.021255402790790984,
+       "bid": 0.021247122790790985,
+       "offer": 0.021263682790790984,
+       "dv01_per_m": 472.270582640294,
+       "cost_bp": 0.036
+      },
+      {
+       "tenor": 10,
+       "mid": 0.02502484689902412,
+       "bid": 0.02501380689902412,
+       "offer": 0.02503588689902412,
+       "dv01_per_m": 887.8341884968333,
+       "cost_bp": 0.048
+      },
+      {
+       "tenor": 30,
+       "mid": 0.027515527496567865,
+       "bid": 0.027493447496567864,
+       "offer": 0.027537607496567865,
+       "dv01_per_m": 2072.025046061077,
+       "cost_bp": 0.096
+      }
+     ],
+     "products": [
+      {
+       "code": "FGBM",
+       "kind": "future",
+       "label": "Bobl future (FGBM)",
+       "price": 119.56786552878533,
+       "dv01_per_unit": 55.54705281429051,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.00% Jul-31."
+      },
+      {
+       "code": "FGBL",
+       "kind": "future",
+       "label": "Bund future (FGBL)",
+       "price": 132.1056438502272,
+       "dv01_per_unit": 108.90044777144794,
+       "unit": "contract",
+       "half_spread_ticks": 0.5,
+       "cost_per_unit": 5.0,
+       "info": "CTD 2.25% Sep-35, CF 0.7467."
+      },
+      {
+       "code": "CTD",
+       "kind": "bond",
+       "label": "the 2.25% Sep-35 Bund (Bund CTD)",
+       "clean": 98.8919029641014,
+       "yield": 0.02384798947951018,
+       "asw_bp": -1.9510124210982527,
+       "dv01_per_unit": 833.4507384044118,
+       "unit": "EUR 1m face",
+       "half_spread": 0.01,
+       "cost_per_unit": 100.0,
+       "info": "Repo at general collateral, ESTR +0bp."
+      }
+     ]
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "client at 15:30",
+       "side": "receive",
+       "notional": 625000000.0,
+       "tenor": 5,
+       "rate": 0.021659
+      },
+      {
+       "label": "hedge, round 4",
+       "side": "pay",
+       "notional": 658363520.311997,
+       "tenor": 5,
+       "rate": 0.021404883983140024
+      },
+      {
+       "label": "client, round 5",
+       "side": "pay",
+       "notional": 400000000.0,
+       "tenor": 5,
+       "rate": 0.02124713664324173
+      }
+     ],
+     "hedges": [],
+     "dv01": -235410.67494704007,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": [
+      {
+       "tenor": 2,
+       "dv01": -30724.306382659066
+      },
+      {
+       "tenor": 5,
+       "dv01": -204686.36505086147
+      },
+      {
+       "tenor": 10,
+       "dv01": 0.0
+      },
+      {
+       "tenor": 30,
+       "dv01": 0.0
+      }
+     ],
+     "slope": {
+      "exposure": 158573.96760663216,
+      "limit": 500000.0
+     },
+     "curvature": -189536.00282595295,
+     "curve_position": null,
+     "spreads": null,
+     "pnl_so_far": -180840.06611778677
+    },
+    "conditions": {
+     "volatility": "calm",
+     "liquidity": "deep (easy to hedge in size)",
+     "flow": "morning: the swap market is deep again.",
+     "swap_cost": null,
+     "desk_expectation": null,
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [],
+    "inquiry": null,
+    "last_inquiry": {
+     "short": "pension fund (ldi) extending hedges on a schedule",
+     "action": "receives",
+     "notional": 400000000.0,
+     "tenor": 5,
+     "outcome": "it dealt with you"
+    },
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": {
+     "trading_hours": 1.0
+    },
+    "checkpoint": null,
+    "prompt": "Hedge, partly hedge, or warehouse?",
+    "input": {
+     "type": "hedge",
+     "hint": "'none'; '100% 10y' (of your DV01); 'flatten' (level, slope and curvature); or legs: 'pay 150m 10y + receive 60m 30y'; futures and bonds: 'sell 300 fgbl', 'buy 120 fgbm', 'sell 50m ctd'; 'switch' closes product hedges into swaps",
+     "swap_tenors": [
+      2,
+      5,
+      10,
+      30
+     ],
+     "products": [
+      "FGBM",
+      "FGBL",
+      "CTD"
+     ],
+     "can_flatten": true,
+     "can_switch": false,
+     "can_target": false
+    }
+   },
+   "decision": {
+    "type": "hedge",
+    "label": "sell \u20ac40m of the CTD bond",
+    "trades": [
+     {
+      "kind": "bond",
+      "code": "CTD",
+      "face": -40000000.0
+     }
+    ]
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "hedge_trade",
+      "kind": "bond",
+      "code": "CTD",
+      "face": -40000000.0,
+      "cost": -4000.0
+     },
+     {
+      "type": "market",
+      "focus_tenor": 5,
+      "move_bp": -0.12146645140989977,
+      "release": false,
+      "tenor_moves": [
+       {
+        "tenor": 2,
+        "bp": -0.27963340488790045
+       },
+       {
+        "tenor": 5,
+        "bp": -0.12146645140989977
+       },
+       {
+        "tenor": 10,
+        "bp": -0.07728725222993163
+       },
+       {
+        "tenor": 30,
+        "bp": 0.031016447592308767
+       }
+      ],
+      "factor_moves": [
+       {
+        "name": "level",
+        "value": -0.09818557508231572
+       },
+       {
+        "name": "slope",
+        "value": 0.17099866837939268
+       },
+       {
+        "name": "curvature",
+        "value": 0.08359329140953638
+       },
+       {
+        "name": "swap_spread",
+        "value": 0.11759010062798446
+       },
+       {
+        "name": "fut_basis",
+        "value": -0.06493802083132351
+       }
+      ],
+      "first_order": [
+       {
+        "name": "level",
+        "pnl": -26387.24610231286
+       },
+       {
+        "name": "slope",
+        "pnl": -27522.60027138656
+       },
+       {
+        "name": "curvature",
+        "pnl": 16782.71573554262
+       },
+       {
+        "name": "swap_spread",
+        "pnl": 4317.50478480301
+       },
+       {
+        "name": "fut_basis",
+        "pnl": 0.0
+       }
+      ],
+      "first_total": -32809.62585335379,
+      "full_revaluation": -32811.089998207986,
+      "convexity_cross": -1.4641448541951831
+     },
+     {
+      "type": "round_pnl",
+      "round_pnl": -21195.65698706777,
+      "total_pnl": -217651.15611599476
+     }
+    ],
+    "assessment": {
+     "kind": "hedge",
+     "rating": "error",
+     "reasons": [
+      "Your choice: cost now \u20ac4,000, risk over the next step sigma \u20ac296,260 (keeping the book as it is: sigma \u20ac261,703).",
+      "The hedge ADDS to your risk: DV01 goes from -235,411 to -268,749. To reduce a short you receive fixed (or sell futures / bonds)."
+     ],
+     "expected_pnl": -35081.125293461606,
+     "variance": 87769750690.75156,
+     "table": [
+      {
+       "label": "Warehouse (no hedge)",
+       "expected": -23833.447760808427,
+       "sigma": 261702.61944977936,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 2Y",
+       "expected": -11588.853751706432,
+       "sigma": 133282.80616678114,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 2Y",
+       "expected": -10260.058639153436,
+       "sigma": 56746.815367590825,
+       "rating": "defensible"
+      },
+      {
+       "label": "Hedge 50% of the level in the 5Y",
+       "expected": -15649.687920947857,
+       "sigma": 130840.73388931318,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 5Y",
+       "expected": -9161.322096787337,
+       "sigma": 10875.134242357977,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 50% of the level in the 10Y",
+       "expected": -21476.102099479685,
+       "sigma": 145829.25336964737,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 10Y",
+       "expected": -20814.150453850994,
+       "sigma": 72764.98213172446,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 50% of the level in the 30Y",
+       "expected": -34188.27672044538,
+       "sigma": 179170.78195422495,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% of the level in the 30Y",
+       "expected": -46238.499695782375,
+       "sigma": 179410.61285228573,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge level and curve (10Y + 2Y)",
+       "expected": -7493.937174899387,
+       "sigma": 40336.60353435493,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge level and curve (2Y + 30Y)",
+       "expected": -8415.97802061596,
+       "sigma": 49505.08652856479,
+       "rating": "sound"
+      },
+      {
+       "label": "Flatten level, slope and curvature (2Y + 5Y + 10Y)",
+       "expected": -8073.437575487634,
+       "sigma": 9.075960982477322e-12,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 100% with Bobl future (FGBM)",
+       "expected": -59497.119039262936,
+       "sigma": 53030.28260791326,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with Bund future (FGBL)",
+       "expected": -53322.36716881703,
+       "sigma": 80709.3996997637,
+       "rating": "poor"
+      },
+      {
+       "label": "Hedge 100% with the 2.25% Sep-35 Bund (Bund CTD)",
+       "expected": -69423.45274038668,
+       "sigma": 78109.47876515776,
+       "rating": "poor"
+      }
+     ],
+     "metrics": {
+      "dv01_before": -235410.67494704007,
+      "dv01_after": -268748.7044832165,
+      "cost": 4000.0,
+      "sigma": 296259.60016639385,
+      "exposures": {
+       "level": -268748.7044832165,
+       "slope": 160952.13215534308,
+       "curvature": -200766.29897633835,
+       "swap_spread": -36716.56680065673,
+       "fut_basis": 0.0
+      },
+      "gap": 7.0925384546901045,
+      "r_ref": 883883.4764831845,
+      "curve_after": -7015.808146667259,
+      "slope_after": 160952.13215534308
+     }
+    },
+    "grade": null,
+    "done": true
+   }
+  }
+ ],
+ "debrief": {
+  "schema": 1,
+  "decisions": [
+   {
+    "round": 0,
+    "kind": "rfq",
+    "rating": "sound",
+    "headline": "Risk-adding trade with your limit getting full: pricing it wide is the right instinct.",
+    "reasons": [
+     "Risk-adding trade with your limit getting full: pricing it wide is the right instinct."
+    ]
+   },
+   {
+    "round": 0,
+    "kind": "hedge",
+    "rating": "poor",
+    "headline": "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge level and curve (10y + 2y).",
+    "reasons": [
+     "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge level and curve (10y + 2y).",
+     "Your choice: cost now \u20ac25,000, risk over the next step sigma \u20ac44,828 (keeping the book as it is: sigma \u20ac232,118).",
+     "You are left with swap-spread risk: -347,476 EUR per bp of ASW tightening. Futures and bonds hedge rates, but they are not swaps: if bonds cheapen against swaps your hedge underperforms."
+    ]
+   },
+   {
+    "round": 1,
+    "kind": "rfq",
+    "rating": "sound",
+    "headline": "A price in line with your book, the conditions and what you know about this client.",
+    "reasons": [
+     "A price in line with your book, the conditions and what you know about this client."
+    ]
+   },
+   {
+    "round": 1,
+    "kind": "hedge",
+    "rating": "poor",
+    "headline": "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: warehouse (no hedge).",
+    "reasons": [
+     "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: warehouse (no hedge).",
+     "Your choice: cost now \u20ac4,000, risk over the next step sigma \u20ac48,464 (keeping the book as it is: sigma \u20ac44,831).",
+     "You are left with swap-spread risk: -384,165 EUR per bp of ASW tightening. Futures and bonds hedge rates, but they are not swaps: if bonds cheapen against swaps your hedge underperforms."
+    ]
+   },
+   {
+    "round": 2,
+    "kind": "overnight",
+    "rating": "poor",
+    "headline": "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% with bund future (fgbl).",
+    "reasons": [
+     "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% with bund future (fgbl).",
+     "Your choice: cost now \u20ac0, risk over the next step sigma \u20ac137,085 (keeping the book as it is: sigma \u20ac137,085).",
+     "You are left with swap-spread risk: -384,150 EUR per bp of ASW tightening. Futures and bonds hedge rates, but they are not swaps: if bonds cheapen against swaps your hedge underperforms.",
+     "Overnight carry, roll-down and funding of the book you keep: -4,413 EUR on an unchanged curve."
+    ]
+   },
+   {
+    "round": 3,
+    "kind": "rehedge",
+    "rating": "sound",
+    "headline": "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: switch the product hedges into 5y swaps.",
+    "reasons": [
+     "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: switch the product hedges into 5y swaps.",
+     "Your choice: cost now \u20ac40,188, risk over the next step sigma \u20ac52,211 (keeping the book as it is: sigma \u20ac82,642).",
+     "You are left with a curve position: +40,492 EUR per bp of slope. A DV01 hedge in another tenor hedges the level, not the curve.",
+     "Client flow over the rest of the day should net away roughly 90% of what you keep: that is the case for warehousing it rather than paying to hedge it now."
+    ]
+   },
+   {
+    "round": 4,
+    "kind": "rfq",
+    "rating": "sound",
+    "headline": "A price in line with your book, the conditions and what you know about this client.",
+    "reasons": [
+     "A price in line with your book, the conditions and what you know about this client."
+    ]
+   },
+   {
+    "round": 4,
+    "kind": "hedge",
+    "rating": "error",
+    "headline": "Your choice: cost now \u20ac4,000, risk over the next step sigma \u20ac296,260 (keeping the book as it is: sigma \u20ac261,703).",
+    "reasons": [
+     "Your choice: cost now \u20ac4,000, risk over the next step sigma \u20ac296,260 (keeping the book as it is: sigma \u20ac261,703).",
+     "The hedge ADDS to your risk: DV01 goes from -235,411 to -268,749. To reduce a short you receive fixed (or sell futures / bonds)."
+    ]
+   }
+  ],
+  "calculation_checks": [
+   {
+    "correct": true,
+    "expected": "-5,320 contracts"
+   }
+  ],
+  "outcome": {
+   "by_cause": [
+    {
+     "cause": "hedge cost",
+     "amount": -73188.18719260176
+    },
+    {
+     "cause": "market: level",
+     "amount": -188603.04133229138
+    },
+    {
+     "cause": "market: slope",
+     "amount": -42089.02167901137
+    },
+    {
+     "cause": "market: curvature",
+     "amount": 20420.83245177031
+    },
+    {
+     "cause": "market: swap_spread",
+     "amount": 64036.93284822586
+    },
+    {
+     "cause": "market: fut_basis",
+     "amount": -9494.840791929477
+    },
+    {
+     "cause": "convexity/cross",
+     "amount": 63.3048111082353
+    },
+    {
+     "cause": "time: swap carry",
+     "amount": 5764.9519048692755
+    },
+    {
+     "cause": "time: swap roll-down",
+     "amount": 5883.55526734246
+    },
+    {
+     "cause": "time: futures convergence",
+     "amount": -14820.229449629784
+    },
+    {
+     "cause": "time: bond accrual and roll",
+     "amount": -3217.8508700728416
+    },
+    {
+     "cause": "funding (repo)",
+     "amount": 1977.004905085466
+    },
+    {
+     "cause": "edge",
+     "amount": 15615.433011140212
+    }
+   ],
+   "total": -217651.15611599476,
+   "exposures_by_round": [
+    {
+     "round": 0,
+     "level": 17722.419300245645,
+     "slope": -20524.053766414887
+    },
+    {
+     "round": 1,
+     "level": -15505.505112446845,
+     "slope": -18182.18400592357
+    },
+    {
+     "round": 2,
+     "level": -46486.08032910526,
+     "slope": 12873.296655230224
+    },
+    {
+     "round": 3,
+     "level": -46487.62177985042,
+     "slope": 40494.78675185921
+    },
+    {
+     "round": 4,
+     "level": -268748.70448322594,
+     "slope": 160952.13215533644
+    }
+   ],
+   "spread_note": {
+    "swap_spread": 64036.93284822586,
+    "fut_basis": -9494.840791929477
+   },
+   "risk_left": {
+    "dv01": -268769.9101422727,
+    "flatten_cost": 9675.716765121817
+   }
+  },
+  "luck": {
+   "label": "Expected P&L from execution uncertainty",
+   "expected_pnl": -86599.66163014593,
+   "realised_pnl": -217651.15611599476,
+   "luck": -131051.49448584883,
+   "sigma_units": -0.3886969912831274
+  },
+  "clients": [
+   {
+    "round": 0,
+    "name": null,
+    "ctype": "bank_treasury",
+    "action": "pays",
+    "notional": 225000000.0,
+    "tenor": 5,
+    "informed": false,
+    "traded": false
+   },
+   {
+    "round": 1,
+    "name": null,
+    "ctype": "asset_manager",
+    "action": "receives",
+    "notional": 325000000.0,
+    "tenor": 5,
+    "informed": false,
+    "traded": false
+   },
+   {
+    "round": 4,
+    "name": null,
+    "ctype": "pension",
+    "action": "receives",
+    "notional": 400000000.0,
+    "tenor": 5,
+    "informed": false,
+    "traded": true
+   }
+  ],
+  "evidence_vs_truth": null,
+  "view_truth": null,
+  "counterfactuals": null,
+  "market_paths": null
+ },
+ "debrief_full": {
+  "schema": 1,
+  "decisions": [
+   {
+    "round": 0,
+    "kind": "rfq",
+    "rating": "sound",
+    "headline": "Risk-adding trade with your limit getting full: pricing it wide is the right instinct.",
+    "reasons": [
+     "Risk-adding trade with your limit getting full: pricing it wide is the right instinct."
+    ]
+   },
+   {
+    "round": 0,
+    "kind": "hedge",
+    "rating": "poor",
+    "headline": "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge level and curve (10y + 2y).",
+    "reasons": [
+     "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge level and curve (10y + 2y).",
+     "Your choice: cost now \u20ac25,000, risk over the next step sigma \u20ac44,828 (keeping the book as it is: sigma \u20ac232,118).",
+     "You are left with swap-spread risk: -347,476 EUR per bp of ASW tightening. Futures and bonds hedge rates, but they are not swaps: if bonds cheapen against swaps your hedge underperforms."
+    ]
+   },
+   {
+    "round": 1,
+    "kind": "rfq",
+    "rating": "sound",
+    "headline": "A price in line with your book, the conditions and what you know about this client.",
+    "reasons": [
+     "A price in line with your book, the conditions and what you know about this client."
+    ]
+   },
+   {
+    "round": 1,
+    "kind": "hedge",
+    "rating": "poor",
+    "headline": "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: warehouse (no hedge).",
+    "reasons": [
+     "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: warehouse (no hedge).",
+     "Your choice: cost now \u20ac4,000, risk over the next step sigma \u20ac48,464 (keeping the book as it is: sigma \u20ac44,831).",
+     "You are left with swap-spread risk: -384,165 EUR per bp of ASW tightening. Futures and bonds hedge rates, but they are not swaps: if bonds cheapen against swaps your hedge underperforms."
+    ]
+   },
+   {
+    "round": 2,
+    "kind": "overnight",
+    "rating": "poor",
+    "headline": "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% with bund future (fgbl).",
+    "reasons": [
+     "Clearly beaten: another choice costs less, or removes much more risk for little extra cost, whatever your risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% with bund future (fgbl).",
+     "Your choice: cost now \u20ac0, risk over the next step sigma \u20ac137,085 (keeping the book as it is: sigma \u20ac137,085).",
+     "You are left with swap-spread risk: -384,150 EUR per bp of ASW tightening. Futures and bonds hedge rates, but they are not swaps: if bonds cheapen against swaps your hedge underperforms.",
+     "Overnight carry, roll-down and funding of the book you keep: -4,413 EUR on an unchanged curve."
+    ]
+   },
+   {
+    "round": 3,
+    "kind": "rehedge",
+    "rating": "sound",
+    "headline": "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: switch the product hedges into 5y swaps.",
+    "reasons": [
+     "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: switch the product hedges into 5y swaps.",
+     "Your choice: cost now \u20ac40,188, risk over the next step sigma \u20ac52,211 (keeping the book as it is: sigma \u20ac82,642).",
+     "You are left with a curve position: +40,492 EUR per bp of slope. A DV01 hedge in another tenor hedges the level, not the curve.",
+     "Client flow over the rest of the day should net away roughly 90% of what you keep: that is the case for warehousing it rather than paying to hedge it now."
+    ]
+   },
+   {
+    "round": 4,
+    "kind": "rfq",
+    "rating": "sound",
+    "headline": "A price in line with your book, the conditions and what you know about this client.",
+    "reasons": [
+     "A price in line with your book, the conditions and what you know about this client."
+    ]
+   },
+   {
+    "round": 4,
+    "kind": "hedge",
+    "rating": "error",
+    "headline": "Your choice: cost now \u20ac4,000, risk over the next step sigma \u20ac296,260 (keeping the book as it is: sigma \u20ac261,703).",
+    "reasons": [
+     "Your choice: cost now \u20ac4,000, risk over the next step sigma \u20ac296,260 (keeping the book as it is: sigma \u20ac261,703).",
+     "The hedge ADDS to your risk: DV01 goes from -235,411 to -268,749. To reduce a short you receive fixed (or sell futures / bonds)."
+    ]
+   }
+  ],
+  "calculation_checks": [
+   {
+    "correct": true,
+    "expected": "-5,320 contracts"
+   }
+  ],
+  "outcome": {
+   "by_cause": [
+    {
+     "cause": "hedge cost",
+     "amount": -73188.18719260176
+    },
+    {
+     "cause": "market: level",
+     "amount": -188603.04133229138
+    },
+    {
+     "cause": "market: slope",
+     "amount": -42089.02167901137
+    },
+    {
+     "cause": "market: curvature",
+     "amount": 20420.83245177031
+    },
+    {
+     "cause": "market: swap_spread",
+     "amount": 64036.93284822586
+    },
+    {
+     "cause": "market: fut_basis",
+     "amount": -9494.840791929477
+    },
+    {
+     "cause": "convexity/cross",
+     "amount": 63.3048111082353
+    },
+    {
+     "cause": "time: swap carry",
+     "amount": 5764.9519048692755
+    },
+    {
+     "cause": "time: swap roll-down",
+     "amount": 5883.55526734246
+    },
+    {
+     "cause": "time: futures convergence",
+     "amount": -14820.229449629784
+    },
+    {
+     "cause": "time: bond accrual and roll",
+     "amount": -3217.8508700728416
+    },
+    {
+     "cause": "funding (repo)",
+     "amount": 1977.004905085466
+    },
+    {
+     "cause": "edge",
+     "amount": 15615.433011140212
+    }
+   ],
+   "total": -217651.15611599476,
+   "exposures_by_round": [
+    {
+     "round": 0,
+     "level": 17722.419300245645,
+     "slope": -20524.053766414887
+    },
+    {
+     "round": 1,
+     "level": -15505.505112446845,
+     "slope": -18182.18400592357
+    },
+    {
+     "round": 2,
+     "level": -46486.08032910526,
+     "slope": 12873.296655230224
+    },
+    {
+     "round": 3,
+     "level": -46487.62177985042,
+     "slope": 40494.78675185921
+    },
+    {
+     "round": 4,
+     "level": -268748.70448322594,
+     "slope": 160952.13215533644
+    }
+   ],
+   "spread_note": {
+    "swap_spread": 64036.93284822586,
+    "fut_basis": -9494.840791929477
+   },
+   "risk_left": {
+    "dv01": -268769.9101422727,
+    "flatten_cost": 9675.716765121817
+   }
+  },
+  "luck": {
+   "label": "Expected P&L from execution uncertainty",
+   "expected_pnl": -86599.66163014593,
+   "realised_pnl": -217651.15611599476,
+   "luck": -131051.49448584883,
+   "sigma_units": -0.3886969912831274
+  },
+  "clients": [
+   {
+    "round": 0,
+    "name": null,
+    "ctype": "bank_treasury",
+    "action": "pays",
+    "notional": 225000000.0,
+    "tenor": 5,
+    "informed": false,
+    "traded": false
+   },
+   {
+    "round": 1,
+    "name": null,
+    "ctype": "asset_manager",
+    "action": "receives",
+    "notional": 325000000.0,
+    "tenor": 5,
+    "informed": false,
+    "traded": false
+   },
+   {
+    "round": 4,
+    "name": null,
+    "ctype": "pension",
+    "action": "receives",
+    "notional": 400000000.0,
+    "tenor": 5,
+    "informed": false,
+    "traded": true
+   }
+  ],
+  "evidence_vs_truth": null,
+  "view_truth": null,
+  "counterfactuals": {
+   "policies": [
+    {
+     "name": "reference desk (model prices, mid-appetite hedge)",
+     "pnl": 314345.5890279813,
+     "ratings": [
+      "sound",
+      "sound",
+      "sound",
+      "sound",
+      "sound",
+      "sound",
+      "sound",
+      "sound"
+     ]
+    },
+    {
+     "name": "swaps only (pay the late-day spread)",
+     "pnl": -81745.63733820467,
+     "ratings": [
+      "sound",
+      "poor",
+      "sound",
+      "sound",
+      "sound",
+      "sound",
+      "sound",
+      "sound"
+     ]
+    },
+    {
+     "name": "futures, switched into swaps next morning",
+     "pnl": -190020.33229845762,
+     "ratings": [
+      "sound",
+      "poor",
+      "sound",
+      "sound",
+      "sound",
+      "sound",
+      "sound",
+      "poor"
+     ]
+    },
+    {
+     "name": "futures, kept",
+     "pnl": -75938.21786862635,
+     "ratings": [
+      "sound",
+      "poor",
+      "sound",
+      "sound",
+      "sound",
+      "poor",
+      "sound",
+      "sound"
+     ]
+    },
+    {
+     "name": "never hedge",
+     "pnl": 1177519.3789363545,
+     "ratings": [
+      "sound",
+      "poor",
+      "sound",
+      "sound",
+      "poor",
+      "poor",
+      "sound",
+      "defensible"
+     ]
+    }
+   ],
+   "you": -217651.15611599476
+  },
+  "market_paths": null
+ }
+}

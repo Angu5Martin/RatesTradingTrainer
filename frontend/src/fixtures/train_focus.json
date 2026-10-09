@@ -1,0 +1,325 @@
+{
+ "start": {
+  "id": "fx",
+  "mode": "focused",
+  "label": "Swap DV01 and P&L for a rate move",
+  "selection": {
+   "tracks": [],
+   "skills": [
+    "swaps.dv01"
+   ],
+   "difficulty": null,
+   "max_difficulty": null,
+   "kind": "conceptual",
+   "count": 2,
+   "pool": 2
+  },
+  "started": "2026-10-09T11:00:59",
+  "index": 0,
+  "total": 2,
+  "phase": "answering",
+  "ended_early": false,
+  "parts_correct": 0,
+  "parts_answered": 0,
+  "question": {
+   "id": "curated.dv01_30y_vs_10y#596853",
+   "template_id": "curated.dv01_30y_vs_10y",
+   "skill": "swaps.dv01",
+   "skill_title": "Swap DV01 and P&L for a rate move",
+   "track": "swaps",
+   "track_title": "Swaps, OIS and FRAs",
+   "difficulty": 2,
+   "difficulty_label": "concept and calculation",
+   "kind": "conceptual",
+   "curated": true,
+   "stem": "A \u20ac100m 30Y EUR par swap has a DV01 of roughly how many times that of a \u20ac100m 10Y par swap?",
+   "parts_total": 1,
+   "parts_done": [],
+   "current": {
+    "index": 0,
+    "kind": "choice",
+    "prompt": "Roughly how many times?",
+    "options": [
+     "About 4x",
+     "About 1.5x",
+     "A bit over twice (about 2.1 - 2.6x)",
+     "About 3x, since 30Y is three times 10Y"
+    ]
+   },
+   "solution": null,
+   "question_correct": null
+  }
+ },
+ "steps": [
+  {
+   "answer": "C",
+   "result": {
+    "correct": true,
+    "skipped": false,
+    "status": "correct",
+    "feedback": "Correct.",
+    "expected": "C. A bit over twice (about 2.1 - 2.6x)",
+    "detail": "",
+    "why": ""
+   },
+   "after": {
+    "id": "fx",
+    "mode": "focused",
+    "label": "Swap DV01 and P&L for a rate move",
+    "selection": {
+     "tracks": [],
+     "skills": [
+      "swaps.dv01"
+     ],
+     "difficulty": null,
+     "max_difficulty": null,
+     "kind": "conceptual",
+     "count": 2,
+     "pool": 2
+    },
+    "started": "2026-10-09T11:00:59",
+    "index": 0,
+    "total": 2,
+    "phase": "feedback",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 1,
+    "question": {
+     "id": "curated.dv01_30y_vs_10y#596853",
+     "template_id": "curated.dv01_30y_vs_10y",
+     "skill": "swaps.dv01",
+     "skill_title": "Swap DV01 and P&L for a rate move",
+     "track": "swaps",
+     "track_title": "Swaps, OIS and FRAs",
+     "difficulty": 2,
+     "difficulty_label": "concept and calculation",
+     "kind": "conceptual",
+     "curated": true,
+     "stem": "A \u20ac100m 30Y EUR par swap has a DV01 of roughly how many times that of a \u20ac100m 10Y par swap?",
+     "parts_total": 1,
+     "parts_done": [
+      {
+       "index": 0,
+       "kind": "choice",
+       "prompt": "Roughly how many times?",
+       "options": [
+        "About 4x",
+        "About 1.5x",
+        "A bit over twice (about 2.1 - 2.6x)",
+        "About 3x, since 30Y is three times 10Y"
+       ],
+       "submitted": "C",
+       "result": {
+        "correct": true,
+        "skipped": false,
+        "status": "correct",
+        "feedback": "Correct.",
+        "expected": "C. A bit over twice (about 2.1 - 2.6x)",
+        "detail": "",
+        "why": ""
+       }
+      }
+     ],
+     "current": null,
+     "solution": [
+      "DV01 per unit notional is the swap's annuity (PV of 1bp per year of fixed payments). Discounting means distant payments are worth less, so the annuity grows much more slowly than maturity: roughly 8.5-9 for 10Y but ~19-22 for 30Y. Do not scale DV01 linearly with tenor."
+     ],
+     "question_correct": true
+    }
+   },
+   "next": {
+    "id": "fx",
+    "mode": "focused",
+    "label": "Swap DV01 and P&L for a rate move",
+    "selection": {
+     "tracks": [],
+     "skills": [
+      "swaps.dv01"
+     ],
+     "difficulty": null,
+     "max_difficulty": null,
+     "kind": "conceptual",
+     "count": 2,
+     "pool": 2
+    },
+    "started": "2026-10-09T11:00:59",
+    "index": 1,
+    "total": 2,
+    "phase": "answering",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 1,
+    "question": {
+     "id": "curated.positive_dv01#888598",
+     "template_id": "curated.positive_dv01",
+     "skill": "swaps.dv01",
+     "skill_title": "Swap DV01 and P&L for a rate move",
+     "track": "swaps",
+     "track_title": "Swaps, OIS and FRAs",
+     "difficulty": 1,
+     "difficulty_label": "single concept",
+     "kind": "conceptual",
+     "curated": true,
+     "stem": "Which of these positions has POSITIVE DV01 (it makes money when rates fall)?",
+     "parts_total": 1,
+     "parts_done": [],
+     "current": {
+      "index": 0,
+      "kind": "choice",
+      "prompt": "Which is correct?",
+      "options": [
+       "Receive fixed on a 5Y swap",
+       "Pay fixed on a 10Y forward-starting swap",
+       "Short \u20ac50m of 10Y Bunds",
+       "Pay fixed on a 5Y swap"
+      ]
+     },
+     "solution": null,
+     "question_correct": null
+    }
+   }
+  },
+  {
+   "answer": "B",
+   "result": {
+    "correct": false,
+    "skipped": false,
+    "status": "incorrect",
+    "feedback": "Not quite.",
+    "expected": "A. Receive fixed on a 5Y swap",
+    "detail": "",
+    "why": ""
+   },
+   "after": {
+    "id": "fx",
+    "mode": "focused",
+    "label": "Swap DV01 and P&L for a rate move",
+    "selection": {
+     "tracks": [],
+     "skills": [
+      "swaps.dv01"
+     ],
+     "difficulty": null,
+     "max_difficulty": null,
+     "kind": "conceptual",
+     "count": 2,
+     "pool": 2
+    },
+    "started": "2026-10-09T11:00:59",
+    "index": 1,
+    "total": 2,
+    "phase": "feedback",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 2,
+    "question": {
+     "id": "curated.positive_dv01#888598",
+     "template_id": "curated.positive_dv01",
+     "skill": "swaps.dv01",
+     "skill_title": "Swap DV01 and P&L for a rate move",
+     "track": "swaps",
+     "track_title": "Swaps, OIS and FRAs",
+     "difficulty": 1,
+     "difficulty_label": "single concept",
+     "kind": "conceptual",
+     "curated": true,
+     "stem": "Which of these positions has POSITIVE DV01 (it makes money when rates fall)?",
+     "parts_total": 1,
+     "parts_done": [
+      {
+       "index": 0,
+       "kind": "choice",
+       "prompt": "Which is correct?",
+       "options": [
+        "Receive fixed on a 5Y swap",
+        "Pay fixed on a 10Y forward-starting swap",
+        "Short \u20ac50m of 10Y Bunds",
+        "Pay fixed on a 5Y swap"
+       ],
+       "submitted": "B",
+       "result": {
+        "correct": false,
+        "skipped": false,
+        "status": "incorrect",
+        "feedback": "Not quite.",
+        "expected": "A. Receive fixed on a 5Y swap",
+        "detail": "",
+        "why": ""
+       }
+      }
+     ],
+     "current": null,
+     "solution": [
+      "Receiving fixed is like owning a bond: you lock in a fixed rate that becomes more valuable as market rates fall. Paying fixed and shorting bonds are short duration (negative DV01)."
+     ],
+     "question_correct": false
+    }
+   },
+   "next": {
+    "id": "fx",
+    "mode": "focused",
+    "label": "Swap DV01 and P&L for a rate move",
+    "selection": {
+     "tracks": [],
+     "skills": [
+      "swaps.dv01"
+     ],
+     "difficulty": null,
+     "max_difficulty": null,
+     "kind": "conceptual",
+     "count": 2,
+     "pool": 2
+    },
+    "started": "2026-10-09T11:00:59",
+    "index": 1,
+    "total": 2,
+    "phase": "done",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 2,
+    "question": null
+   }
+  }
+ ],
+ "summary": {
+  "parts_total": 2,
+  "parts_correct": 1,
+  "questions": [
+   {
+    "id": "curated.dv01_30y_vs_10y#596853",
+    "skill": "swaps.dv01",
+    "skill_title": "Swap DV01 and P&L for a rate move",
+    "difficulty": 2,
+    "kind": "conceptual",
+    "parts_correct": 1,
+    "parts_answered": 1,
+    "parts_total": 1,
+    "correct": true
+   },
+   {
+    "id": "curated.positive_dv01#888598",
+    "skill": "swaps.dv01",
+    "skill_title": "Swap DV01 and P&L for a rate move",
+    "difficulty": 1,
+    "kind": "conceptual",
+    "parts_correct": 0,
+    "parts_answered": 1,
+    "parts_total": 1,
+    "correct": false
+   }
+  ],
+  "questions_planned": 2,
+  "ended_early": false,
+  "by_skill": [
+   {
+    "skill": "swaps.dv01",
+    "title": "Swap DV01 and P&L for a rate move",
+    "correct": 1,
+    "total": 2
+   }
+  ],
+  "missed": [
+   "curated.positive_dv01#888598"
+  ]
+ }
+}

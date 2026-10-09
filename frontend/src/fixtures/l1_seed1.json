@@ -1,0 +1,981 @@
+{
+ "steps": [
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "quote",
+    "episode": {
+     "id": "mm.ep1_single_trade",
+     "title": "Level 1: one client, one trade",
+     "level": 1,
+     "round": 0,
+     "rounds": 1,
+     "round_title": ""
+    },
+    "header": {
+     "title": "Level 1: one client, one trade",
+     "round": 0,
+     "rounds": 1,
+     "round_title": "",
+     "briefing": "Make a two-way market, see whether the client deals, decide how much risk to keep, then watch the market move.",
+     "notes": [],
+     "show_risk_card": true
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 1.8,
+     "step_days": 0.25,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      }
+     ]
+    },
+    "market": {
+     "mode": "single",
+     "curve": [
+      {
+       "tenor": 2,
+       "mid": 0.03149
+      },
+      {
+       "tenor": 5,
+       "mid": 0.03309
+      },
+      {
+       "tenor": 10,
+       "mid": 0.03629
+      },
+      {
+       "tenor": 30,
+       "mid": 0.03363
+      }
+     ],
+     "focus": {
+      "tenor": 5,
+      "mid": 0.03309000000000005,
+      "bid": 0.03306612218181823,
+      "offer": 0.03311387781818187,
+      "dv01_per_m": 455.3618476888232
+     },
+     "ladder": [],
+     "products": []
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "earlier today",
+       "side": "receive",
+       "notional": 550000000.0,
+       "tenor": 5,
+       "rate": 0.03285
+      }
+     ],
+     "hedges": [],
+     "dv01": 250275.31643219973,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": null,
+     "slope": null,
+     "curvature": null,
+     "curve_position": null,
+     "spreads": null,
+     "pnl_so_far": 0
+    },
+    "conditions": {
+     "volatility": "stressed (data-heavy, jumpy)",
+     "liquidity": "deep (easy to hedge in size)",
+     "flow": "two-way: recent inquiries show no clear direction.",
+     "swap_cost": null,
+     "desk_expectation": "sales expects an insurer's ALM desk to pay fixed on about \u20ac625m 5Y later today (70% likely).",
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [
+     "corporate treasurer hedging a new bond issue",
+     "pension fund (ldi) extending hedges on a schedule",
+     "real-money asset manager adjusting duration",
+     "bank treasury managing its balance-sheet hedge",
+     "macro hedge fund"
+    ],
+    "inquiry": null,
+    "last_inquiry": null,
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": null,
+    "checkpoint": null,
+    "prompt": "Show your two-way market in the 5Y (bid / offer).",
+    "input": {
+     "type": "quote",
+     "hint": "two rates in %, e.g. 2.843 2.847 (you pay fixed at your bid, receive at your offer)",
+     "unit": "%"
+    }
+   },
+   "decision": {
+    "type": "quote",
+    "bid": 0.03308917006208209,
+    "offer": 0.03313692569844573
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "client_arrives",
+      "name": null,
+      "short": "pension fund (ldi) extending hedges on a schedule",
+      "description": "Pension fund (LDI) extending hedges on a schedule",
+      "action": "receives",
+      "notional": 575000000.0,
+      "your_rate": 0.03308917006208209,
+      "street_rate": 0.03306612218181823
+     },
+     {
+      "type": "fill",
+      "filled": true,
+      "p_win": 0.7861070764628181,
+      "action": "receives",
+      "notional": 575000000.0,
+      "tenor": 5,
+      "rate": 0.03308917006208209,
+      "dealer_side": "pay",
+      "edge": 2173.0518311266487
+     }
+    ],
+    "assessment": {
+     "kind": "quote",
+     "rating": "sound",
+     "reasons": [
+      "Skew in the right direction: higher, because of your long risk (clients who receive fixed hit your bid)."
+     ],
+     "expected_pnl": -25607.434894745005,
+     "variance": 3856800464.6510735,
+     "table": [],
+     "metrics": {
+      "shift_bp": 0.23047880263860065,
+      "half_width_bp": 0.23877818181819443,
+      "ref": {
+       "quote": {
+        "bid": 0.03308917006208209,
+        "offer": 0.03313692569844573
+       },
+       "fair_value": 0.03309000000000005,
+       "inventory_skew_bp": 0.14870818834058436,
+       "flow_skew_bp": 0.0817706142980252,
+       "view_skew_bp": 0.0,
+       "bid_half_width_bp": 0.23877818181818186,
+       "offer_half_width_bp": 0.23877818181818186,
+       "core_half_spread_bp": 0.23877818181818186,
+       "limit_widening_bp": 0.0
+      },
+      "street": {
+       "bid": 0.03306612218181823,
+       "offer": 0.03311387781818187
+      },
+      "p_fill_pays": 0.09180439934137666,
+      "p_fill_receives": 0.7740704089884771,
+      "ref_p_fill_pays": 0.09180439934137666,
+      "ref_p_fill_receives": 0.7740704089884771,
+      "E_ref": -25607.434894745005
+     }
+    },
+    "grade": null,
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "checkpoint",
+    "episode": {
+     "id": "mm.ep1_single_trade",
+     "title": "Level 1: one client, one trade",
+     "level": 1,
+     "round": 0,
+     "rounds": 1,
+     "round_title": ""
+    },
+    "header": {
+     "title": "Level 1: one client, one trade",
+     "round": 0,
+     "rounds": 1,
+     "round_title": "",
+     "briefing": null,
+     "notes": [],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 1.8,
+     "step_days": 0.25,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      }
+     ]
+    },
+    "market": null,
+    "book": null,
+    "conditions": null,
+    "clients_today": [],
+    "inquiry": null,
+    "last_inquiry": null,
+    "hedge_menu": null,
+    "overnight": null,
+    "next_step": null,
+    "checkpoint": {
+     "intro": "Before you decide on a hedge:",
+     "with_screen": false,
+     "inquiry": null,
+     "prompt": "What is the DV01 of your whole book now (EUR per bp, + if long duration)?",
+     "note": "add the new trade's DV01 to what you had"
+    },
+    "prompt": "What is the DV01 of your whole book now (EUR per bp, + if long duration)?",
+    "input": {
+     "type": "number",
+     "hint": "add the new trade's DV01 to what you had",
+     "unit": "EUR"
+    }
+   },
+   "decision": {
+    "type": "checkpoint",
+    "raw": "-11557.118018960697"
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "checkpoint_grade",
+      "correct": true,
+      "feedback": "Correct.",
+      "expected": "-\u20ac11.6k",
+      "label": null
+     }
+    ],
+    "assessment": null,
+    "grade": {
+     "correct": true,
+     "feedback": "Correct.",
+     "expected": "-\u20ac11.6k"
+    },
+    "done": false
+   }
+  },
+  {
+   "observation": {
+    "schema": 1,
+    "kind": "hedge",
+    "episode": {
+     "id": "mm.ep1_single_trade",
+     "title": "Level 1: one client, one trade",
+     "level": 1,
+     "round": 0,
+     "rounds": 1,
+     "round_title": ""
+    },
+    "header": {
+     "title": "Level 1: one client, one trade",
+     "round": 0,
+     "rounds": 1,
+     "round_title": "",
+     "briefing": null,
+     "notes": [],
+     "show_risk_card": false
+    },
+    "risk_card": {
+     "title": "Training assumptions (a simplified model for this exercise, not estimates of true market volatility)",
+     "regime_vol": 1.8,
+     "step_days": 0.25,
+     "factors": [
+      {
+       "name": "level",
+       "label": "level (all rates together)",
+       "normal_daily_vol": 5.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "slope",
+       "label": "slope (2s30s twist about the 10Y)",
+       "normal_daily_vol": 2.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -1.0
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": -0.625
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.0
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": 1.0
+        }
+       ]
+      },
+      {
+       "name": "curvature",
+       "label": "curvature (5Y belly against the wings)",
+       "normal_daily_vol": 1.0,
+       "vol_unit": "bp",
+       "loadings": [
+        {
+         "tenor": 2,
+         "bp_per_unit": -0.125
+        },
+        {
+         "tenor": 5,
+         "bp_per_unit": 1.0
+        },
+        {
+         "tenor": 10,
+         "bp_per_unit": 0.25
+        },
+        {
+         "tenor": 30,
+         "bp_per_unit": -0.5
+        }
+       ]
+      }
+     ]
+    },
+    "market": {
+     "mode": "single",
+     "curve": [
+      {
+       "tenor": 2,
+       "mid": 0.03149
+      },
+      {
+       "tenor": 5,
+       "mid": 0.03309
+      },
+      {
+       "tenor": 10,
+       "mid": 0.03629
+      },
+      {
+       "tenor": 30,
+       "mid": 0.03363
+      }
+     ],
+     "focus": {
+      "tenor": 5,
+      "mid": 0.03309000000000005,
+      "bid": 0.03306612218181823,
+      "offer": 0.03311387781818187,
+      "dv01_per_m": 455.3618476888232
+     },
+     "ladder": [],
+     "products": []
+    },
+    "book": {
+     "swaps": [
+      {
+       "label": "earlier today",
+       "side": "receive",
+       "notional": 550000000.0,
+       "tenor": 5,
+       "rate": 0.03285
+      },
+      {
+       "label": "client, round 1",
+       "side": "pay",
+       "notional": 575000000.0,
+       "tenor": 5,
+       "rate": 0.03308917006208209
+      }
+     ],
+     "hedges": [],
+     "dv01": -11557.118018960697,
+     "limit_dv01": 500000.0,
+     "focus_tenor": 5,
+     "buckets": null,
+     "slope": null,
+     "curvature": null,
+     "curve_position": null,
+     "spreads": null,
+     "pnl_so_far": 2173.0518311266487
+    },
+    "conditions": {
+     "volatility": "stressed (data-heavy, jumpy)",
+     "liquidity": "deep (easy to hedge in size)",
+     "flow": "two-way: recent inquiries show no clear direction.",
+     "swap_cost": null,
+     "desk_expectation": "sales expects an insurer's ALM desk to pay fixed on about \u20ac625m 5Y later today (70% likely).",
+     "research": null,
+     "named_clients": [],
+     "calendar": null,
+     "extra_lines": []
+    },
+    "clients_today": [],
+    "inquiry": null,
+    "last_inquiry": {
+     "short": "pension fund (ldi) extending hedges on a schedule",
+     "action": "receives",
+     "notional": 575000000.0,
+     "tenor": 5,
+     "outcome": "it dealt with you"
+    },
+    "hedge_menu": [
+     {
+      "tenor": 5,
+      "dv01_per_m": 455.3618476888232,
+      "cost_bp": 0.10800000000000001
+     },
+     {
+      "tenor": 2,
+      "dv01_per_m": 191.13642897408687,
+      "cost_bp": 0.07200000000000001
+     },
+     {
+      "tenor": 10,
+      "dv01_per_m": 833.8270496872635,
+      "cost_bp": 0.14400000000000002
+     }
+    ],
+    "overnight": null,
+    "next_step": {
+     "trading_hours": 2.0
+    },
+    "checkpoint": null,
+    "prompt": "Hedge, partly hedge, or warehouse?",
+    "input": {
+     "type": "hedge",
+     "hint": "'none'; '50%' (of your DV01, in the 5Y); '100% 5y'; 'pay 150m 10y'; or two legs: 'pay 150m 10y + receive 60m 30y'",
+     "swap_tenors": [
+      5,
+      2,
+      10
+     ],
+     "products": [],
+     "can_flatten": false,
+     "can_switch": false,
+     "can_target": false
+    }
+   },
+   "decision": {
+    "type": "hedge",
+    "label": "Hedge 100% in the 2Y",
+    "trades": [
+     {
+      "kind": "swap",
+      "tenor": 2,
+      "side": "receive",
+      "notional": 60465281.68906798
+     }
+    ]
+   },
+   "result": {
+    "schema": 1,
+    "events": [
+     {
+      "type": "hedge_trade",
+      "kind": "swap",
+      "side": "receive",
+      "notional": 60465281.68906798,
+      "tenor": 2,
+      "rate": 0.03148279999999992,
+      "cost": -832.1124933605098
+     },
+     {
+      "type": "market",
+      "focus_tenor": 5,
+      "move_bp": 0.6483190724163859,
+      "release": false,
+      "tenor_moves": [
+       {
+        "tenor": 2,
+        "bp": 2.0037909301283956
+       },
+       {
+        "tenor": 5,
+        "bp": 0.6483190724163859
+       },
+       {
+        "tenor": 10,
+        "bp": 1.3113340332695642
+       },
+       {
+        "tenor": 30,
+        "bp": 1.871220589427816
+       }
+      ],
+      "factor_moves": [
+       {
+        "name": "level",
+        "value": 1.5896325783844716
+       },
+       {
+        "name": "slope",
+        "value": -0.2750090791864704
+       },
+       {
+        "name": "curvature",
+        "value": -1.1131941804596297
+       }
+      ],
+      "first_order": [
+       {
+        "name": "level",
+        "pnl": 0.19438206176360343
+       },
+       {
+        "name": "slope",
+        "pnl": -1184.4163723442437
+       },
+       {
+        "name": "curvature",
+        "pnl": -14378.75104363996
+       }
+      ],
+      "first_total": -15562.97303392244,
+      "full_revaluation": -15558.399910688866,
+      "convexity_cross": 4.573123233574734
+     },
+     {
+      "type": "round_pnl",
+      "round_pnl": -14217.460572922728,
+      "total_pnl": -14217.460572922728
+     }
+    ],
+    "assessment": {
+     "kind": "hedge",
+     "rating": "sound",
+     "reasons": [
+      "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% in the 2y.",
+      "Your choice: cost now \u20ac832, risk over the next step sigma \u20ac13,973 (keeping the book as it is: sigma \u20ac54,604)."
+     ],
+     "expected_pnl": -832.1124973651703,
+     "variance": 195242503.19773453,
+     "table": [
+      {
+       "label": "Warehouse (no hedge)",
+       "expected": -1560.2109325596946,
+       "sigma": 54604.43368483265,
+       "rating": "defensible"
+      },
+      {
+       "label": "Hedge 25% in the 5Y",
+       "expected": -1482.2003859317097,
+       "sigma": 40952.61309352397,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 50% in the 5Y",
+       "expected": -1404.189839303725,
+       "sigma": 27300.81756305032,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 75% in the 5Y",
+       "expected": -1326.17929267574,
+       "sigma": 13649.122290848736,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 100% in the 5Y",
+       "expected": -1248.1687460477553,
+       "sigma": 90.65476618853819,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 100% in the 2Y",
+       "expected": -832.1124973651703,
+       "sigma": 13972.920353230907,
+       "rating": "sound"
+      },
+      {
+       "label": "Hedge 100% in the 10Y",
+       "expected": -1664.2249947303405,
+       "sigma": 15165.034372027292,
+       "rating": "sound"
+      }
+     ],
+     "metrics": {
+      "dv01_before": -11557.118018960697,
+      "dv01_after": 0.0,
+      "cost": 832.1124973651703,
+      "sigma": 13972.920353230907,
+      "exposures": {
+       "level": 0.0,
+       "slope": -4306.948716994841,
+       "curvature": -12916.690690781308
+      },
+      "gap": 0.0,
+      "r_ref": 1250000.0,
+      "curve_after": -4306.948716994841,
+      "slope_after": -4306.948716994841
+     }
+    },
+    "grade": null,
+    "done": true
+   }
+  }
+ ],
+ "debrief": {
+  "schema": 1,
+  "decisions": [
+   {
+    "round": 0,
+    "kind": "quote",
+    "rating": "sound",
+    "headline": "Skew in the right direction: higher, because of your long risk (clients who receive fixed hit your bid).",
+    "reasons": [
+     "Skew in the right direction: higher, because of your long risk (clients who receive fixed hit your bid)."
+    ]
+   },
+   {
+    "round": 0,
+    "kind": "hedge",
+    "rating": "sound",
+    "headline": "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% in the 2y.",
+    "reasons": [
+     "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% in the 2y.",
+     "Your choice: cost now \u20ac832, risk over the next step sigma \u20ac13,973 (keeping the book as it is: sigma \u20ac54,604)."
+    ]
+   }
+  ],
+  "calculation_checks": [
+   {
+    "correct": true,
+    "expected": "-\u20ac11.6k"
+   }
+  ],
+  "outcome": {
+   "by_cause": [
+    {
+     "cause": "edge",
+     "amount": 2173.0518311266487
+    },
+    {
+     "cause": "hedge cost",
+     "amount": -832.1124933605098
+    },
+    {
+     "cause": "market: level",
+     "amount": 0.19438206176360343
+    },
+    {
+     "cause": "market: slope",
+     "amount": -1184.4163723442437
+    },
+    {
+     "cause": "market: curvature",
+     "amount": -14378.75104363996
+    },
+    {
+     "cause": "convexity/cross",
+     "amount": 4.573123233574734
+    }
+   ],
+   "total": -14217.460572922728,
+   "exposures_by_round": null,
+   "spread_note": null,
+   "risk_left": {
+    "dv01": -0.8521470001433045,
+    "flatten_cost": 0.0920318760154769
+   }
+  },
+  "luck": {
+   "label": "Expected P&L from execution uncertainty",
+   "expected_pnl": -26439.547392110177,
+   "realised_pnl": -14217.460572922728,
+   "luck": 12222.086819187449,
+   "sigma_units": 0.19200314540979613
+  },
+  "clients": [
+   {
+    "round": 0,
+    "name": null,
+    "ctype": "pension",
+    "action": "receives",
+    "notional": 575000000.0,
+    "tenor": null,
+    "informed": false,
+    "traded": true
+   }
+  ],
+  "evidence_vs_truth": null,
+  "view_truth": null,
+  "counterfactuals": null,
+  "market_paths": null
+ },
+ "debrief_full": {
+  "schema": 1,
+  "decisions": [
+   {
+    "round": 0,
+    "kind": "quote",
+    "rating": "sound",
+    "headline": "Skew in the right direction: higher, because of your long risk (clients who receive fixed hit your bid).",
+    "reasons": [
+     "Skew in the right direction: higher, because of your long risk (clients who receive fixed hit your bid)."
+    ]
+   },
+   {
+    "round": 0,
+    "kind": "hedge",
+    "rating": "sound",
+    "headline": "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% in the 2y.",
+    "reasons": [
+     "A reasonable trade-off for a reasonable risk appetite. For a middle-of-the-range appetite the best balance is: hedge 100% in the 2y.",
+     "Your choice: cost now \u20ac832, risk over the next step sigma \u20ac13,973 (keeping the book as it is: sigma \u20ac54,604)."
+    ]
+   }
+  ],
+  "calculation_checks": [
+   {
+    "correct": true,
+    "expected": "-\u20ac11.6k"
+   }
+  ],
+  "outcome": {
+   "by_cause": [
+    {
+     "cause": "edge",
+     "amount": 2173.0518311266487
+    },
+    {
+     "cause": "hedge cost",
+     "amount": -832.1124933605098
+    },
+    {
+     "cause": "market: level",
+     "amount": 0.19438206176360343
+    },
+    {
+     "cause": "market: slope",
+     "amount": -1184.4163723442437
+    },
+    {
+     "cause": "market: curvature",
+     "amount": -14378.75104363996
+    },
+    {
+     "cause": "convexity/cross",
+     "amount": 4.573123233574734
+    }
+   ],
+   "total": -14217.460572922728,
+   "exposures_by_round": null,
+   "spread_note": null,
+   "risk_left": {
+    "dv01": -0.8521470001433045,
+    "flatten_cost": 0.0920318760154769
+   }
+  },
+  "luck": {
+   "label": "Expected P&L from execution uncertainty",
+   "expected_pnl": -26439.547392110177,
+   "realised_pnl": -14217.460572922728,
+   "luck": 12222.086819187449,
+   "sigma_units": 0.19200314540979613
+  },
+  "clients": [
+   {
+    "round": 0,
+    "name": null,
+    "ctype": "pension",
+    "action": "receives",
+    "notional": 575000000.0,
+    "tenor": null,
+    "informed": false,
+    "traded": true
+   }
+  ],
+  "evidence_vs_truth": null,
+  "view_truth": null,
+  "counterfactuals": {
+   "policies": [
+    {
+     "name": "reference desk (model quotes, mid-appetite hedge)",
+     "pnl": -14217.460572922728,
+     "ratings": [
+      "sound",
+      "sound"
+     ]
+    },
+    {
+     "name": "model quotes, always hedge fully",
+     "pnl": 1027.4105173097657,
+     "ratings": [
+      "sound",
+      "sound"
+     ]
+    },
+    {
+     "name": "model quotes, never hedge",
+     "pnl": 9765.152277075422,
+     "ratings": [
+      "sound",
+      "defensible"
+     ]
+    }
+   ],
+   "you": -14217.460572922728
+  },
+  "market_paths": null
+ }
+}

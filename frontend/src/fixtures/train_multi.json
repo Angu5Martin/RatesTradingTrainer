@@ -1,0 +1,509 @@
+{
+ "start": {
+  "id": "fx",
+  "mode": "single",
+  "label": "basis.irs_vs_ois",
+  "selection": {
+   "template": "basis.irs_vs_ois"
+  },
+  "started": "2026-10-09T11:00:57",
+  "index": 0,
+  "total": 1,
+  "phase": "answering",
+  "ended_early": false,
+  "parts_correct": 0,
+  "parts_answered": 0,
+  "question": {
+   "id": "basis.irs_vs_ois#1",
+   "template_id": "basis.irs_vs_ois",
+   "skill": "swaps.ois_vs_ibor",
+   "skill_title": "OIS vs Euribor swaps, discounting and tenor basis",
+   "track": "swaps",
+   "track_title": "Swaps, OIS and FRAs",
+   "difficulty": 2,
+   "difficulty_label": "concept and calculation",
+   "kind": "calculation",
+   "curated": false,
+   "stem": "EUR curves, 30Y: IRS (6M Euribor) 2.780%, ESTR OIS 2.732% (IRS - OIS = +4.8bp; part of this is accrual convention: OIS is ACT/360, the IRS fixed leg 30E/360).\nYou pay fixed on \u20ac200m 30Y IRS and receive fixed on \u20ac197m 30Y OIS, sized to be DV01-neutral. 'The IRS-OIS spread' means IRS rate minus OIS rate.",
+   "parts_total": 3,
+   "parts_done": [],
+   "current": {
+    "index": 0,
+    "kind": "choice",
+    "prompt": "Which describes the position?",
+    "options": [
+     "Flat risk: it is DV01-neutral so no market move matters",
+     "Long the IRS-OIS spread: it gains if the spread widens",
+     "Directional: it gains if rates fall regardless of the spread",
+     "Short the IRS-OIS spread: it gains if the spread narrows"
+    ]
+   },
+   "solution": null,
+   "question_correct": null
+  }
+ },
+ "steps": [
+  {
+   "answer": "B",
+   "result": {
+    "correct": true,
+    "skipped": false,
+    "status": "correct",
+    "feedback": "Correct.",
+    "expected": "B. Long the IRS-OIS spread: it gains if the spread widens",
+    "detail": "",
+    "why": "Paying fixed in the IRS (and receiving OIS) gains when the IRS rate rises against OIS: long the spread. Receiving the IRS and paying OIS is the opposite: short the spread."
+   },
+   "after": {
+    "id": "fx",
+    "mode": "single",
+    "label": "basis.irs_vs_ois",
+    "selection": {
+     "template": "basis.irs_vs_ois"
+    },
+    "started": "2026-10-09T11:00:57",
+    "index": 0,
+    "total": 1,
+    "phase": "feedback",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 1,
+    "question": {
+     "id": "basis.irs_vs_ois#1",
+     "template_id": "basis.irs_vs_ois",
+     "skill": "swaps.ois_vs_ibor",
+     "skill_title": "OIS vs Euribor swaps, discounting and tenor basis",
+     "track": "swaps",
+     "track_title": "Swaps, OIS and FRAs",
+     "difficulty": 2,
+     "difficulty_label": "concept and calculation",
+     "kind": "calculation",
+     "curated": false,
+     "stem": "EUR curves, 30Y: IRS (6M Euribor) 2.780%, ESTR OIS 2.732% (IRS - OIS = +4.8bp; part of this is accrual convention: OIS is ACT/360, the IRS fixed leg 30E/360).\nYou pay fixed on \u20ac200m 30Y IRS and receive fixed on \u20ac197m 30Y OIS, sized to be DV01-neutral. 'The IRS-OIS spread' means IRS rate minus OIS rate.",
+     "parts_total": 3,
+     "parts_done": [
+      {
+       "index": 0,
+       "kind": "choice",
+       "prompt": "Which describes the position?",
+       "options": [
+        "Flat risk: it is DV01-neutral so no market move matters",
+        "Long the IRS-OIS spread: it gains if the spread widens",
+        "Directional: it gains if rates fall regardless of the spread",
+        "Short the IRS-OIS spread: it gains if the spread narrows"
+       ],
+       "submitted": "B",
+       "result": {
+        "correct": true,
+        "skipped": false,
+        "status": "correct",
+        "feedback": "Correct.",
+        "expected": "B. Long the IRS-OIS spread: it gains if the spread widens",
+        "detail": "",
+        "why": "Paying fixed in the IRS (and receiving OIS) gains when the IRS rate rises against OIS: long the spread. Receiving the IRS and paying OIS is the opposite: short the spread."
+       }
+      }
+     ],
+     "current": null,
+     "solution": null,
+     "question_correct": null
+    }
+   },
+   "next": {
+    "id": "fx",
+    "mode": "single",
+    "label": "basis.irs_vs_ois",
+    "selection": {
+     "template": "basis.irs_vs_ois"
+    },
+    "started": "2026-10-09T11:00:57",
+    "index": 0,
+    "total": 1,
+    "phase": "answering",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 1,
+    "question": {
+     "id": "basis.irs_vs_ois#1",
+     "template_id": "basis.irs_vs_ois",
+     "skill": "swaps.ois_vs_ibor",
+     "skill_title": "OIS vs Euribor swaps, discounting and tenor basis",
+     "track": "swaps",
+     "track_title": "Swaps, OIS and FRAs",
+     "difficulty": 2,
+     "difficulty_label": "concept and calculation",
+     "kind": "calculation",
+     "curated": false,
+     "stem": "EUR curves, 30Y: IRS (6M Euribor) 2.780%, ESTR OIS 2.732% (IRS - OIS = +4.8bp; part of this is accrual convention: OIS is ACT/360, the IRS fixed leg 30E/360).\nYou pay fixed on \u20ac200m 30Y IRS and receive fixed on \u20ac197m 30Y OIS, sized to be DV01-neutral. 'The IRS-OIS spread' means IRS rate minus OIS rate.",
+     "parts_total": 3,
+     "parts_done": [
+      {
+       "index": 0,
+       "kind": "choice",
+       "prompt": "Which describes the position?",
+       "options": [
+        "Flat risk: it is DV01-neutral so no market move matters",
+        "Long the IRS-OIS spread: it gains if the spread widens",
+        "Directional: it gains if rates fall regardless of the spread",
+        "Short the IRS-OIS spread: it gains if the spread narrows"
+       ],
+       "submitted": "B",
+       "result": {
+        "correct": true,
+        "skipped": false,
+        "status": "correct",
+        "feedback": "Correct.",
+        "expected": "B. Long the IRS-OIS spread: it gains if the spread widens",
+        "detail": "",
+        "why": "Paying fixed in the IRS (and receiving OIS) gains when the IRS rate rises against OIS: long the spread. Receiving the IRS and paying OIS is the opposite: short the spread."
+       }
+      }
+     ],
+     "current": {
+      "index": 1,
+      "kind": "numeric",
+      "prompt": "The IRS rate moves +2bp but the OIS rate does not (spread widens). What is your P&L?",
+      "unit": "EUR",
+      "unit_label": "euros",
+      "note": "",
+      "bare_scale": 1.0,
+      "entry_hint": "Type a number; k, m and bn suffixes are read (-225k, 1.2m). A bare number is read as euros."
+     },
+     "solution": null,
+     "question_correct": null
+    }
+   }
+  },
+  {
+   "answer": "-811744.9920487241",
+   "result": {
+    "correct": false,
+    "skipped": false,
+    "status": "incorrect",
+    "feedback": "Right size, wrong sign. Only the IRS leg moves; the OIS leg has no move.",
+    "expected": "+\u20ac811.7k",
+    "detail": "first-order estimate (-DV01 x move): +\u20ac811.7k | precise: +\u20ac811.7k | difference \u20ac0 (-0.0% of the precise figure)",
+    "why": ""
+   },
+   "after": {
+    "id": "fx",
+    "mode": "single",
+    "label": "basis.irs_vs_ois",
+    "selection": {
+     "template": "basis.irs_vs_ois"
+    },
+    "started": "2026-10-09T11:00:57",
+    "index": 0,
+    "total": 1,
+    "phase": "feedback",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 2,
+    "question": {
+     "id": "basis.irs_vs_ois#1",
+     "template_id": "basis.irs_vs_ois",
+     "skill": "swaps.ois_vs_ibor",
+     "skill_title": "OIS vs Euribor swaps, discounting and tenor basis",
+     "track": "swaps",
+     "track_title": "Swaps, OIS and FRAs",
+     "difficulty": 2,
+     "difficulty_label": "concept and calculation",
+     "kind": "calculation",
+     "curated": false,
+     "stem": "EUR curves, 30Y: IRS (6M Euribor) 2.780%, ESTR OIS 2.732% (IRS - OIS = +4.8bp; part of this is accrual convention: OIS is ACT/360, the IRS fixed leg 30E/360).\nYou pay fixed on \u20ac200m 30Y IRS and receive fixed on \u20ac197m 30Y OIS, sized to be DV01-neutral. 'The IRS-OIS spread' means IRS rate minus OIS rate.",
+     "parts_total": 3,
+     "parts_done": [
+      {
+       "index": 0,
+       "kind": "choice",
+       "prompt": "Which describes the position?",
+       "options": [
+        "Flat risk: it is DV01-neutral so no market move matters",
+        "Long the IRS-OIS spread: it gains if the spread widens",
+        "Directional: it gains if rates fall regardless of the spread",
+        "Short the IRS-OIS spread: it gains if the spread narrows"
+       ],
+       "submitted": "B",
+       "result": {
+        "correct": true,
+        "skipped": false,
+        "status": "correct",
+        "feedback": "Correct.",
+        "expected": "B. Long the IRS-OIS spread: it gains if the spread widens",
+        "detail": "",
+        "why": "Paying fixed in the IRS (and receiving OIS) gains when the IRS rate rises against OIS: long the spread. Receiving the IRS and paying OIS is the opposite: short the spread."
+       }
+      },
+      {
+       "index": 1,
+       "kind": "numeric",
+       "prompt": "The IRS rate moves +2bp but the OIS rate does not (spread widens). What is your P&L?",
+       "unit": "EUR",
+       "unit_label": "euros",
+       "note": "",
+       "bare_scale": 1.0,
+       "entry_hint": "Type a number; k, m and bn suffixes are read (-225k, 1.2m). A bare number is read as euros.",
+       "submitted": "-811744.9920487241",
+       "result": {
+        "correct": false,
+        "skipped": false,
+        "status": "incorrect",
+        "feedback": "Right size, wrong sign. Only the IRS leg moves; the OIS leg has no move.",
+        "expected": "+\u20ac811.7k",
+        "detail": "first-order estimate (-DV01 x move): +\u20ac811.7k | precise: +\u20ac811.7k | difference \u20ac0 (-0.0% of the precise figure)",
+        "why": ""
+       }
+      }
+     ],
+     "current": null,
+     "solution": null,
+     "question_correct": null
+    }
+   },
+   "next": {
+    "id": "fx",
+    "mode": "single",
+    "label": "basis.irs_vs_ois",
+    "selection": {
+     "template": "basis.irs_vs_ois"
+    },
+    "started": "2026-10-09T11:00:57",
+    "index": 0,
+    "total": 1,
+    "phase": "answering",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 2,
+    "question": {
+     "id": "basis.irs_vs_ois#1",
+     "template_id": "basis.irs_vs_ois",
+     "skill": "swaps.ois_vs_ibor",
+     "skill_title": "OIS vs Euribor swaps, discounting and tenor basis",
+     "track": "swaps",
+     "track_title": "Swaps, OIS and FRAs",
+     "difficulty": 2,
+     "difficulty_label": "concept and calculation",
+     "kind": "calculation",
+     "curated": false,
+     "stem": "EUR curves, 30Y: IRS (6M Euribor) 2.780%, ESTR OIS 2.732% (IRS - OIS = +4.8bp; part of this is accrual convention: OIS is ACT/360, the IRS fixed leg 30E/360).\nYou pay fixed on \u20ac200m 30Y IRS and receive fixed on \u20ac197m 30Y OIS, sized to be DV01-neutral. 'The IRS-OIS spread' means IRS rate minus OIS rate.",
+     "parts_total": 3,
+     "parts_done": [
+      {
+       "index": 0,
+       "kind": "choice",
+       "prompt": "Which describes the position?",
+       "options": [
+        "Flat risk: it is DV01-neutral so no market move matters",
+        "Long the IRS-OIS spread: it gains if the spread widens",
+        "Directional: it gains if rates fall regardless of the spread",
+        "Short the IRS-OIS spread: it gains if the spread narrows"
+       ],
+       "submitted": "B",
+       "result": {
+        "correct": true,
+        "skipped": false,
+        "status": "correct",
+        "feedback": "Correct.",
+        "expected": "B. Long the IRS-OIS spread: it gains if the spread widens",
+        "detail": "",
+        "why": "Paying fixed in the IRS (and receiving OIS) gains when the IRS rate rises against OIS: long the spread. Receiving the IRS and paying OIS is the opposite: short the spread."
+       }
+      },
+      {
+       "index": 1,
+       "kind": "numeric",
+       "prompt": "The IRS rate moves +2bp but the OIS rate does not (spread widens). What is your P&L?",
+       "unit": "EUR",
+       "unit_label": "euros",
+       "note": "",
+       "bare_scale": 1.0,
+       "entry_hint": "Type a number; k, m and bn suffixes are read (-225k, 1.2m). A bare number is read as euros.",
+       "submitted": "-811744.9920487241",
+       "result": {
+        "correct": false,
+        "skipped": false,
+        "status": "incorrect",
+        "feedback": "Right size, wrong sign. Only the IRS leg moves; the OIS leg has no move.",
+        "expected": "+\u20ac811.7k",
+        "detail": "first-order estimate (-DV01 x move): +\u20ac811.7k | precise: +\u20ac811.7k | difference \u20ac0 (-0.0% of the precise figure)",
+        "why": ""
+       }
+      }
+     ],
+     "current": {
+      "index": 2,
+      "kind": "choice",
+      "prompt": "Instead both curves rise 5bp together. What is your P&L?",
+      "options": [
+       "Positive if you are long the spread",
+       "Negative if you are short the spread",
+       "About \u20ac2.03m",
+       "About zero: DV01-neutral and the spread is unchanged"
+      ]
+     },
+     "solution": null,
+     "question_correct": null
+    }
+   }
+  },
+  {
+   "answer": null,
+   "result": {
+    "correct": false,
+    "skipped": true,
+    "status": "skipped",
+    "feedback": "Skipped.",
+    "expected": "D. About zero: DV01-neutral and the spread is unchanged",
+    "detail": "",
+    "why": "A parallel move is hedged out; what is left is spread risk. Exact: -\u20ac1."
+   },
+   "after": {
+    "id": "fx",
+    "mode": "single",
+    "label": "basis.irs_vs_ois",
+    "selection": {
+     "template": "basis.irs_vs_ois"
+    },
+    "started": "2026-10-09T11:00:57",
+    "index": 0,
+    "total": 1,
+    "phase": "feedback",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 3,
+    "question": {
+     "id": "basis.irs_vs_ois#1",
+     "template_id": "basis.irs_vs_ois",
+     "skill": "swaps.ois_vs_ibor",
+     "skill_title": "OIS vs Euribor swaps, discounting and tenor basis",
+     "track": "swaps",
+     "track_title": "Swaps, OIS and FRAs",
+     "difficulty": 2,
+     "difficulty_label": "concept and calculation",
+     "kind": "calculation",
+     "curated": false,
+     "stem": "EUR curves, 30Y: IRS (6M Euribor) 2.780%, ESTR OIS 2.732% (IRS - OIS = +4.8bp; part of this is accrual convention: OIS is ACT/360, the IRS fixed leg 30E/360).\nYou pay fixed on \u20ac200m 30Y IRS and receive fixed on \u20ac197m 30Y OIS, sized to be DV01-neutral. 'The IRS-OIS spread' means IRS rate minus OIS rate.",
+     "parts_total": 3,
+     "parts_done": [
+      {
+       "index": 0,
+       "kind": "choice",
+       "prompt": "Which describes the position?",
+       "options": [
+        "Flat risk: it is DV01-neutral so no market move matters",
+        "Long the IRS-OIS spread: it gains if the spread widens",
+        "Directional: it gains if rates fall regardless of the spread",
+        "Short the IRS-OIS spread: it gains if the spread narrows"
+       ],
+       "submitted": "B",
+       "result": {
+        "correct": true,
+        "skipped": false,
+        "status": "correct",
+        "feedback": "Correct.",
+        "expected": "B. Long the IRS-OIS spread: it gains if the spread widens",
+        "detail": "",
+        "why": "Paying fixed in the IRS (and receiving OIS) gains when the IRS rate rises against OIS: long the spread. Receiving the IRS and paying OIS is the opposite: short the spread."
+       }
+      },
+      {
+       "index": 1,
+       "kind": "numeric",
+       "prompt": "The IRS rate moves +2bp but the OIS rate does not (spread widens). What is your P&L?",
+       "unit": "EUR",
+       "unit_label": "euros",
+       "note": "",
+       "bare_scale": 1.0,
+       "entry_hint": "Type a number; k, m and bn suffixes are read (-225k, 1.2m). A bare number is read as euros.",
+       "submitted": "-811744.9920487241",
+       "result": {
+        "correct": false,
+        "skipped": false,
+        "status": "incorrect",
+        "feedback": "Right size, wrong sign. Only the IRS leg moves; the OIS leg has no move.",
+        "expected": "+\u20ac811.7k",
+        "detail": "first-order estimate (-DV01 x move): +\u20ac811.7k | precise: +\u20ac811.7k | difference \u20ac0 (-0.0% of the precise figure)",
+        "why": ""
+       }
+      },
+      {
+       "index": 2,
+       "kind": "choice",
+       "prompt": "Instead both curves rise 5bp together. What is your P&L?",
+       "options": [
+        "Positive if you are long the spread",
+        "Negative if you are short the spread",
+        "About \u20ac2.03m",
+        "About zero: DV01-neutral and the spread is unchanged"
+       ],
+       "submitted": "",
+       "result": {
+        "correct": false,
+        "skipped": true,
+        "status": "skipped",
+        "feedback": "Skipped.",
+        "expected": "D. About zero: DV01-neutral and the spread is unchanged",
+        "detail": "",
+        "why": "A parallel move is hedged out; what is left is spread risk. Exact: -\u20ac1."
+       }
+      }
+     ],
+     "current": null,
+     "solution": [
+      "The IRS DV01 is -\u20ac405.9k/bp; the OIS leg (\u20ac197m, +\u20ac405.9k/bp) offsets it.",
+      "A move of the IRS rate alone is a move in the spread: first-order +\u20ac811.7k (= -(+2) x -\u20ac405.9k); full revaluation +\u20ac811.7k.",
+      "IRS-OIS is the Euribor-ESTR basis. It widens when term/credit premium in Euribor rises vs overnight funding.",
+      "Because the OIS notional differs slightly from the IRS notional for the same DV01, 'equal notional' is NOT quite DV01-neutral (ACT/360 vs 30E/360 accrual)."
+     ],
+     "question_correct": false
+    }
+   },
+   "next": {
+    "id": "fx",
+    "mode": "single",
+    "label": "basis.irs_vs_ois",
+    "selection": {
+     "template": "basis.irs_vs_ois"
+    },
+    "started": "2026-10-09T11:00:57",
+    "index": 0,
+    "total": 1,
+    "phase": "done",
+    "ended_early": false,
+    "parts_correct": 1,
+    "parts_answered": 3,
+    "question": null
+   }
+  }
+ ],
+ "summary": {
+  "parts_total": 3,
+  "parts_correct": 1,
+  "questions": [
+   {
+    "id": "basis.irs_vs_ois#1",
+    "skill": "swaps.ois_vs_ibor",
+    "skill_title": "OIS vs Euribor swaps, discounting and tenor basis",
+    "difficulty": 2,
+    "kind": "calculation",
+    "parts_correct": 1,
+    "parts_answered": 3,
+    "parts_total": 3,
+    "correct": false
+   }
+  ],
+  "questions_planned": 1,
+  "ended_early": false,
+  "by_skill": [
+   {
+    "skill": "swaps.ois_vs_ibor",
+    "title": "OIS vs Euribor swaps, discounting and tenor basis",
+    "correct": 1,
+    "total": 3
+   }
+  ],
+  "missed": [
+   "basis.irs_vs_ois#1"
+  ]
+ }
+}

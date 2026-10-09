@@ -1,0 +1,20 @@
+#!/usr/bin/env python3
+"""Launcher: ./trainer [list] [-n 10] [--track mm] ...  |  ./trainer episode -L 3  |  ./trainer ui   (src/ on the path; no install needed)."""
+import os
+import pathlib
+import sys
+
+root = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(root / "src"))
+
+if sys.argv[1:2] == ["ui"]:      # the web UI needs fastapi/uvicorn: use the project's virtualenv if this interpreter lacks them
+    try:
+        import uvicorn  # noqa: F401
+    except ImportError:
+        venv = root / ".venv" / "bin" / "python"
+        if venv.exists() and pathlib.Path(sys.prefix).resolve() != (root / ".venv").resolve():
+            os.execv(str(venv), [str(venv), str(pathlib.Path(__file__).resolve()), *sys.argv[1:]])
+
+from rates_trainer.cli import main  # noqa: E402
+
+raise SystemExit(main())
