@@ -100,14 +100,17 @@ If you already have the project's `.venv`, you do not need to recreate it. The l
 
 **Every subsequent session**
 
-1. Double-click **Rates Trainer** on your Desktop.
-2. A Terminal window starts the local server, and your browser opens once the application is ready.
-3. Leave the Terminal window open while using the workstation.
-4. Press `Ctrl+C` in that window when you finish.
+1. Double-click **Rates Trainer** (the navy app with the blue yield-curve icon) on your Desktop.
+2. The server starts in the background and your browser opens once the application is ready. If it is already running, the app just opens it again; it never starts a second server.
+3. The server keeps running after the browser is closed. Stop it with `scripts/stop_server.sh` (it stops only this application's server, on this data directory, and nothing else).
 
-The workstation normally runs at [http://127.0.0.1:8765](http://127.0.0.1:8765). If that port is occupied, the launcher checks the existing server and may use another free port. It does not terminate unrelated processes.
+The workstation normally runs at [http://127.0.0.1:8765](http://127.0.0.1:8765). If that port is occupied, the launcher checks the existing server and may use another free port. It does not terminate unrelated processes. A failed start is explained in a dialog, and the logs are in `~/Library/Logs/Rates Trainer/` (`launcher.log`, `server.log`).
 
-If macOS blocks the launcher on first use, right-click it, select **Open**, and confirm.
+macOS keeps a newly created app out of `~/Documents` until you allow it (System Settings > Privacy & Security > Files and Folders). Until then the app opens a Terminal window and runs the launcher there; the server still runs in the background and the window can be closed.
+
+The app is a small bundle that points at this project folder, so it needs recreating only if you move the folder or change the icon: run `scripts/install_launcher.sh` again. It replaces only an app it created itself, and removes the older `Rates Trainer.command` stub it used to put on the Desktop. `scripts/install_launcher.sh --command` installs that older Terminal-based launcher instead (a Terminal window stays open and `Ctrl+C` stops the server).
+
+The icon is vector artwork in `scripts/assets/icon.svg` (with a simplified `icon_small.svg` for 16-64 px); `scripts/assets/make_icon.sh` renders `AppIcon.icns` from it using Chrome, `sips` and `iconutil`. After changing it, run `make_icon.sh` and then `install_launcher.sh`.
 
 You can also start the workstation directly from Terminal:
 

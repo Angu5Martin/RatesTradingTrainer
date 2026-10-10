@@ -3,8 +3,11 @@
 
     launch.py                 build the frontend if its sources changed, start `./trainer ui`, wait until it answers, open the browser, stay in the foreground
     launch.py --stop          stop this application's server (only one that identifies itself as the trainer, on the same data directory)
+    launch.py --detach        for the desktop app: start the server in the background (its own session, output in the log folder), open the browser and exit; the
+                              server keeps running until --stop. A second launch at the same time waits for the first and then just opens the running server.
     launch.py --port 8800     a different preferred port (default 8765); RATES_TRAINER_PORT does the same
 
+Logs (--detach): $RATES_TRAINER_LOG_DIR, else ~/Library/Logs/Rates Trainer on macOS: server.log is the server's own output.
 What it will not do: kill anything, delete or move any data, or reuse a server that is not this application on the same data directory.
 The data directory is $RATES_TRAINER_HOME, else ~/.rates_trainer (the same rule as web/store.py).
 
@@ -14,6 +17,7 @@ Exit codes: 0 ok; 2 the setup is incomplete (virtualenv, npm, frontend); 3 the s
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import importlib.util
 import json
@@ -43,6 +47,15 @@ def say(msg: str = "") -> None:
 
 def data_dir() -> Path:
     return Path(os.environ.get("RATES_TRAINER_HOME") or Path.home() / ".rates_trainer")
+
+
+def log_dir() -> Path:
+    """Where --detach keeps its logs and lock: outside the project and outside the data directory."""
+    if os.environ.get("RATES_TRAINER_LOG_DIR"):
+        return Path(os.environ["RATES_TRAINER_LOG_DIR"]).expanduser()
+    if sys.platform == "darwin":
+        return Path.home() / "Library" / "Logs" / "Rates Trainer"
+    return Path.home() / ".local" / "state" / "rates-trainer"
 
 
 def same_dir(a: str | Path, b: str | Path) -> bool:
@@ -249,6 +262,63 @@ def run_server(root: Path, port: int, mine: Path, timeout: float, browser: bool)
         stop_child(proc)
 
 
+@contextlib.contextmanager
+def launch_lock(logs: Path, timeout: float):
+    """One launch at a time (an exclusive lock on a file in the log folder, released when the process ends). Two quick double-clicks therefore cannot both decide
+    to start a server: the second waits, then finds the first one's server and just opens it."""
+    import fcntl
+    logs.mkdir(parents=True, exist_ok=True)
+    with open(logs / "launcher.lock", "w") as fh:
+        end = time.monotonic() + timeout
+        while True:
+            try:
+                fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if time.monotonic() >= end:
+                    raise SystemExit(_fail(TIMEOUT, "Another launch of Rates Trainer is still in progress and did not finish in time. Try again in a minute."))
+                time.sleep(0.2)
+        try:
+            yield
+        finally:
+            fcntl.flock(fh, fcntl.LOCK_UN)
+
+
+def tail(path: Path, lines: int = 12) -> str:
+    try:
+        return "\n".join(path.read_text(errors="replace").splitlines()[-lines:])
+    except OSError:
+        return ""
+
+
+def run_detached(root: Path, port: int, mine: Path, timeout: float, browser: bool, logs: Path) -> int:
+    """Start the server in its own session with its output in server.log, wait until it answers as this application on this data directory, open the browser, and
+    return leaving it running. A server that dies or never answers is reported with the end of its log, and a child that never answered is not left behind."""
+    url = f"http://{HOST}:{port}/"
+    server_log = logs / "server.log"
+    if server_log.is_file() and server_log.stat().st_size > 1_000_000:
+        server_log.write_text("")                                                 # keep it small: start afresh once past 1 MB
+    say(f"Starting the server on {url} …")
+    with open(server_log, "a") as out:
+        out.write(f"\n=== {time.strftime('%Y-%m-%d %H:%M:%S')} start on port {port}, data {mine} ===\n")
+        out.flush()
+        proc = subprocess.Popen([sys.executable, str(root / "trainer"), "ui", "--port", str(port), "--no-browser"], cwd=root, stdin=subprocess.DEVNULL,
+                                stdout=out, stderr=subprocess.STDOUT, start_new_session=True)
+    code = wait_ready(proc, port, mine, timeout)
+    if code != OK:
+        stop_child(proc)
+        t = tail(server_log)
+        if t:
+            print(f"\nThe end of {server_log}:\n{t}", file=sys.stderr, flush=True)
+        return code
+    say(f"\nRates Trainer is running at {url}")
+    say(f"Your data: {mine}")
+    say("It keeps running in the background. To stop it:  scripts/stop_server.sh")
+    if browser:
+        open_browser(url)
+    return OK
+
+
 def stop_servers(preferred: int, mine: Path) -> int:
     """SIGTERM to this application's server(s) on this data directory, identified by what they answer; anything else is left alone."""
     stopped = 0
@@ -286,6 +356,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--no-browser", action="store_true")
     ap.add_argument("--no-build", action="store_true", help="never build the frontend (use what is there)")
     ap.add_argument("--stop", action="store_true", help="stop this application's server instead of starting one")
+    ap.add_argument("--detach", action="store_true", help="start the server in the background, open the browser and exit (the desktop app uses this)")
     a = ap.parse_args(argv)
     root, mine = a.root.resolve(), data_dir()
 
@@ -297,6 +368,14 @@ def main(argv: list[str] | None = None) -> int:
         return code
     say(f"Project: {root}")
     say(f"Data:    {mine}  (existing sessions and practice history are used as they are)")
+    if a.detach:
+        logs = log_dir()
+        with launch_lock(logs, a.timeout + 30):
+            return start_or_reuse(a, root, mine, logs)
+    return start_or_reuse(a, root, mine, None)
+
+
+def start_or_reuse(a: argparse.Namespace, root: Path, mine: Path, logs: Path | None) -> int:
     action, port = choose(a.port, mine)
     if action == "reuse":
         say(f"Rates Trainer is already running on port {port} with this data: opening it.")
@@ -309,6 +388,8 @@ def main(argv: list[str] | None = None) -> int:
             return code
     elif not (static_dir(root) / "index.html").is_file():
         return _fail(SETUP, "The frontend has not been built (and --no-build was given).")
+    if logs is not None:
+        return run_detached(root, port, mine, a.timeout, not a.no_browser, logs)
     return run_server(root, port, mine, a.timeout, not a.no_browser)
 
 

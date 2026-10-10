@@ -442,11 +442,11 @@ def test_the_installer_puts_an_executable_launcher_on_the_desktop_and_it_starts_
     proj = fake_checkout(tmp_path, 'echo "PY $@"')
     desktop = tmp_path / "Desktop"
     desktop.mkdir()
-    r = run_sh(["bash", str(INSTALL), "--dest", str(desktop), "--root", str(proj)])
+    r = run_sh(["bash", str(INSTALL), "--command", "--dest", str(desktop), "--root", str(proj)])
     target = desktop / "Rates Trainer.command"
     assert r.returncode == 0 and f"Installed: {target}" in r.stdout
     assert os.access(target, os.X_OK) and "rates-trainer-launcher" in target.read_text()
-    again = run_sh(["bash", str(INSTALL), "--dest", str(desktop), "--root", str(proj)])      # running it twice is fine
+    again = run_sh(["bash", str(INSTALL), "--command", "--dest", str(desktop), "--root", str(proj)])      # running it twice is fine
     assert again.returncode == 0
     go = run_sh([str(target), "--flag"])
     assert go.returncode == 0 and go.stdout.strip() == f"PY {proj.resolve()}/scripts/launch.py --flag"
@@ -458,18 +458,18 @@ def test_the_installer_never_overwrites_a_file_that_is_not_its_own_unless_forced
     desktop.mkdir()
     mine = desktop / "Rates Trainer.command"
     mine.write_text("#!/bin/sh\necho my own script\n")
-    r = run_sh(["bash", str(INSTALL), "--dest", str(desktop), "--root", str(proj)])
+    r = run_sh(["bash", str(INSTALL), "--command", "--dest", str(desktop), "--root", str(proj)])
     assert r.returncode == 1 and "not overwriting" in r.stderr and "my own script" in mine.read_text()
-    assert run_sh(["bash", str(INSTALL), "--dest", str(desktop), "--root", str(proj), "--force"]).returncode == 0
+    assert run_sh(["bash", str(INSTALL), "--command", "--dest", str(desktop), "--root", str(proj), "--force"]).returncode == 0
     assert "rates-trainer-launcher" in mine.read_text()
-    assert run_sh(["bash", str(INSTALL), "--dest", str(tmp_path / "missing"), "--root", str(proj)]).returncode == 1
+    assert run_sh(["bash", str(INSTALL), "--command", "--dest", str(tmp_path / "missing"), "--root", str(proj)]).returncode == 1
 
 
 def test_a_desktop_launcher_whose_project_has_moved_says_so(tmp_path):
     proj = fake_checkout(tmp_path, "true")
     desktop = tmp_path / "Desktop"
     desktop.mkdir()
-    assert run_sh(["bash", str(INSTALL), "--dest", str(desktop), "--root", str(proj)]).returncode == 0
+    assert run_sh(["bash", str(INSTALL), "--command", "--dest", str(desktop), "--root", str(proj)]).returncode == 0
     proj.rename(tmp_path / "moved")
     r = run_sh([str(desktop / "Rates Trainer.command")])
     assert r.returncode == 2 and "no longer at" in r.stdout and "install_launcher.sh" in r.stdout
